@@ -5,6 +5,8 @@
 // the NIH's adult upper limit for supplements: magnesium 350 mg (2 x 133 = 266), vitamin C 2,000 mg (2 x 1,000),
 // zinc 40 mg (1 x 25). B-complex stays at 1: its 15 mg of flushing-type niacin is under the 30-50 mg where flushing
 // starts, but its 75 mg total niacin is over the 35 mg limit on paper, so a pharmacist should sign it off.
+// Glycine, NAC and the probiotic have no official upper limit. Glycine goes to 3 (2,550 mg; studies use 3 to 15 g a day),
+// NAC to 2 (1,200 mg; studies commonly use up to 1,800 mg a day). The probiotic stays at its 1-capsule label serving.
 // signature = how many the default pouch has.
 // facts = Supplement Facts rows per capsule [nutrient, amount, % Daily Value], copied from OK Capsule. other = other ingredients. warn = label warnings beyond 'keep out of reach of children'.
 // \u2020 means no Daily Value is established.
@@ -45,12 +47,12 @@ export const INGREDIENTS = [
     other: 'Vegetable capsule, rice flour.',
   },
   {
-    id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '850 mg', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 1, signature: 1,
+    id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '850 mg', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 3, signature: 1,
     facts: [['L-glycine', '850 mg', '\u2020']],
     other: 'Hypromellose (capsule).',
   },
   {
-    id: 'prime', name: 'Prime', ingredient: 'NAC', dose: '600 mg', blurb: 'A form of the amino acid cysteine that your body uses to make the antioxidant glutathione.*', img: 'cap-nac', max: 1, signature: 0,
+    id: 'prime', name: 'Prime', ingredient: 'NAC', dose: '600 mg', blurb: 'A form of the amino acid cysteine that your body uses to make the antioxidant glutathione.*', img: 'cap-nac', max: 2, signature: 0,
     facts: [['N-acetyl cysteine', '600 mg', '\u2020']],
     other: 'Hypromellose (natural vegetable capsule), rice (Oryza sativa cera) bran, magnesium stearate, silica.',
   },
