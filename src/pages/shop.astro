@@ -40,7 +40,7 @@ const jsonld = {
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
         <p class="tag">One pouch. One night.</p>
-        <p>Stay for the last track, then make the rest easy. Each pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and L-theanine, sealed and ready on one 30-night roll.*</p>
+        <p>Stay for the last track, then take one before bed. Each pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and L-theanine, sealed and ready on one 30-night roll.*</p>
         <div class="spec"><b>Suggested use</b><span>Take 1 pouch before bed, with water.</span></div>
         <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.</span></div>
         <div class="row" id="buyrow">
@@ -55,7 +55,7 @@ const jsonld = {
 
   <section class="sec state">
     <div class="w stack rv" style="gap:30px">
-      <h2>Feel good about tomorrow for <span>less than a bottle of water</span> at the club.</h2>
+      <h2>A night of Blue Hour costs <span>less than a bottle of water</span> at the club.</h2>
       {reviews.length > 0 && (
         <div class="bubbles">
           {reviews.map((r) => (
@@ -70,9 +70,9 @@ const jsonld = {
     <div class="w stack" style="gap:30px;align-items:stretch">
       <h2 style="text-align:center;font-size:clamp(34px,8.6vw,60px)">Made for nights like these</h2>
       <div class="track" tabindex="0" aria-label="Situations Blue Hour fits">
-        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-alarm"/></svg><div><h3>Work at nine?</h3><p>Stay for the last track, then keep your morning routine simple. One pouch, then lights out.</p></div></article>
-        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-tent"/></svg><div><h3>Out all weekend?</h3><p>Tear off what you need and leave the roll at home. Same routine from the first night to the last.</p></div></article>
-        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-moon"/></svg><div><h3>Can't switch off?</h3><p>Make one pouch the last thing you do before the lights go out.</p></div></article>
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-alarm"/></svg><div><h3>Work at nine?</h3><p>Stay for the last track anyway. One pouch before bed, alarm set, done.</p></div></article>
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-tent"/></svg><div><h3>Festival trip?</h3><p>Pack a strip of pouches instead of a bag of bottles. One a night, nothing to sort.</p></div></article>
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-moon"/></svg><div><h3>Out all weekend?</h3><p>Tear off one for each night and keep the same routine from Friday to Sunday.</p></div></article>
         <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-group"/></svg><div><h3>Going with friends?</h3><p>Thirty pouches go a long way. Tear one off and hand it over.</p></div></article>
       </div>
       <div class="dots lt"></div>
@@ -83,11 +83,11 @@ const jsonld = {
     <div class="w stack" style="gap:40px;align-items:stretch">
       <h2 class="rv" style="color:var(--deep)">6 capsules in every pouch.</h2>
       <div class="cgrid">
-        <article class="rv"><div class="pic two"><img src="/images/cap-still.webp" alt="" loading="lazy" width="900" height="340"><img src="/images/cap-still.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Still (x2)</h3><div class="ing">Magnesium</div><p>Helps support normal muscle function and relaxation.*</p></article>
+        <article class="rv"><div class="pic two"><img src="/images/cap-still.webp" alt="" loading="lazy" width="900" height="340"><img src="/images/cap-still.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Level (x2)</h3><div class="ing">Magnesium</div><p>Helps support normal muscle and nerve function.*</p></article>
         <article class="rv"><div class="pic"><img src="/images/cap-bright.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Bright</h3><div class="ing">Vitamin C</div><p>An antioxidant that helps support normal immune function.*</p></article>
-        <article class="rv"><div class="pic"><img src="/images/cap-steady.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Steady</h3><div class="ing">Methyl B-complex</div><p>B vitamins that help support normal energy metabolism.*</p></article>
-        <article class="rv"><div class="pic"><img src="/images/cap-guard.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Guard</h3><div class="ing">Zinc</div><p>An essential mineral that helps support normal immune function.*</p></article>
-        <article class="rv"><div class="pic"><img src="/images/cap-hush.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Hush</h3><div class="ing">L-theanine</div><p>An amino acid found in tea, taken to help you wind down.*</p></article>
+        <article class="rv"><div class="pic"><img src="/images/cap-steady.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Spark</h3><div class="ing">Methyl B-complex</div><p>B vitamins that help support normal energy metabolism.*</p></article>
+        <article class="rv"><div class="pic"><img src="/images/cap-guard.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Core</h3><div class="ing">Zinc</div><p>An essential mineral that helps support normal immune function.*</p></article>
+        <article class="rv"><div class="pic"><img src="/images/cap-hush.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Clear</h3><div class="ing">L-theanine</div><p>An amino acid found naturally in green and black tea.</p></article>
         <article class="none rv"><h3>Nothing else.</h3><p>No 5-HTP. No caffeine. No stimulants.</p></article>
       </div>
       <p class="fine">Capsules shown are illustrations.</p>
@@ -98,7 +98,7 @@ const jsonld = {
 
   <section class="sec worth">
     <div class="w stack" style="gap:42px;align-items:stretch">
-      <h2 class="rv" style="max-width:12em">What's a slow morning worth?</h2>
+      <h2 class="rv" style="max-width:12em">The cheapest part of your night out.</h2>
       <div class="wgrid">
         <article class="us"><div class="ic"><img src="/images/pouch.webp" alt="" loading="lazy" width="1122" height="1402"></div><b>$3.97</b><span>One night of Blue Hour</span></article>
         <article><div class="ic"><svg viewBox="0 0 96 96"><use href="#i-cocktail"/></svg></div><b>$16</b><span>One cocktail</span></article>
@@ -148,7 +148,7 @@ const jsonld = {
         <article><h3>Vitamin C</h3><p>An antioxidant nutrient that helps protect cells and supports normal immune function.*</p><img src="/images/powder-bright.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article><h3>Methyl B-complex</h3><p>B vitamins that help your body turn food into energy.*</p><img src="/images/powder-steady.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article><h3>Zinc</h3><p>An essential mineral that helps support normal immune function.*</p><img src="/images/powder-guard.webp" alt="" loading="lazy" width="1300" height="560"></article>
-        <article><h3>L-theanine</h3><p>An amino acid found naturally in tea, and the quiet one in the pouch.*</p><img src="/images/powder-hush.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>L-theanine</h3><p>An amino acid found naturally in green and black tea.</p><img src="/images/powder-hush.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article class="out"><h3>What we left out</h3><p>5-HTP, caffeine and stimulants. Five ingredients is the whole list.</p></article>
       </div>
     </div>
@@ -157,7 +157,7 @@ const jsonld = {
   <section class="sec sky tagband">
     <div class="grain"></div>
     <div class="w">
-      <h2>The quiet after the night.</h2>
+      <h2>Stay late.<br>Show up anyway.</h2>
       <button class="btn" data-add>Add 30 nights, $119</button>
     </div>
   </section>

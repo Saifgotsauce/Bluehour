@@ -29,7 +29,7 @@ function paint() {
   $('#checkout').textContent = 'Checkout • ' + money(cart * PRICE);
   const box = $('#citems');
   if (!cart) {
-    box.innerHTML = '<div class="empty"><h3>Your cart is empty.</h3><p>Thirty quiet mornings are one tap away.</p><a class="btn solid" href="/shop">Shop 30 nights</a></div>';
+    box.innerHTML = '<div class="empty"><h3>Your cart is empty.</h3><p>Your next 30 nights are one tap away.</p><a class="btn solid" href="/shop">Shop 30 nights</a></div>';
     return;
   }
   box.innerHTML =

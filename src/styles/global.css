@@ -376,7 +376,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .pitch h2{font-size:clamp(26px,7vw,36px);font-style:italic}
 .pitch p{font-size:16px}
 .pitch .btn{justify-self:start}
-.note{max-width:680px;margin:28px auto 0;font-size:13.5px;line-height:1.5;color:var(--soft)}
+.disclaimer{max-width:680px;margin:28px auto 0;font-size:13.5px;line-height:1.5;color:var(--soft)}
 .more{max-width:1240px;margin:clamp(64px,12vw,110px) auto 0}
 .more>h2{font-size:clamp(28px,7vw,40px);margin-bottom:22px;color:var(--deep)}
 @media (min-width:700px){.pitch{grid-template-columns:140px minmax(0,1fr);align-items:center}.pitch img{width:140px;grid-row:span 3}}
