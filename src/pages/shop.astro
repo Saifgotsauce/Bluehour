@@ -1,0 +1,188 @@
+---
+import Base from '../layouts/Base.astro';
+import Top from '../components/Top.astro';
+import Promo from '../components/Promo.astro';
+import Marquee from '../components/Marquee.astro';
+import Foot from '../components/Foot.astro';
+import { reviews } from '../data/reviews';
+const site = Astro.site!;
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: 'Blue Hour nightly pouches',
+  description: 'One sealed pouch of 6 capsules for each night: magnesium, vitamin C, methyl B-complex, zinc and L-theanine. 30 pouches on one roll. No 5-HTP, caffeine or stimulants.',
+  image: ['angle', 'flat', 'exploded', 'pouch'].map((n) => new URL(`/images/${n}.webp`, site).href),
+  brand: { '@type': 'Brand', name: 'Blue Hour' },
+  offers: { '@type': 'Offer', price: '119.00', priceCurrency: 'USD', url: new URL('/shop', site).href },
+};
+---
+<Base
+  title="Blue Hour Nightly Pouches, 30 Nights | Blue Hour"
+  description="30 sealed nightly pouches on one roll for $119 with free US shipping. Each pouch holds 6 capsules: magnesium, vitamin C, B-complex, zinc and L-theanine. No 5-HTP, caffeine or stimulants."
+  jsonld={jsonld}
+>
+
+  <Promo text="Free US shipping on every roll. No subscription." />
+  <section class="phero">
+    <div class="grain"></div>
+    <Top />
+    <div class="pgrid">
+      <div class="gal" data-car>
+        <div class="track" tabindex="0" aria-label="Product photos">
+          <figure><img src="/images/angle.webp" alt="Blue Hour dispenser with pouches rising from the top" width="1122" height="1402"></figure>
+          <figure><img src="/images/flat.webp" alt="Pouch ribbon curving out of the Blue Hour dispenser" width="1122" height="1402" loading="lazy"></figure>
+          <figure><img src="/images/exploded.webp" alt="Dispenser, tray and roll of pouches floating apart" width="1122" height="1402" loading="lazy"></figure>
+          <figure><img src="/images/hand.webp" alt="A hand holding one Blue Hour pouch" width="1122" height="1402" loading="lazy"></figure>
+          <figure><img src="/images/pouch.webp" alt="One frosted Blue Hour pouch floating" width="1122" height="1402" loading="lazy"></figure>
+        </div>
+        <div class="dots"></div>
+      </div>
+      <div class="buy" id="buybox">
+        <h1>Blue Hour nightly pouches</h1>
+        <p class="tag">One pouch. One night.</p>
+        <p>Stay for the last track, then make the rest easy. Each pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and L-theanine, sealed and ready on one 30-night roll.*</p>
+        <div class="spec"><b>Suggested use</b><span>Take 1 pouch before bed, with water.</span></div>
+        <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.</span></div>
+        <div class="row" id="buyrow">
+          <label class="sel"><span class="pr" data-price>$119.00</span><span class="op"><span data-rolls>1 roll</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></span>
+            <select id="sel-main" data-qty aria-label="How many rolls"><option value="1">1 roll, 30 nights</option><option value="2">2 rolls, 60 nights</option><option value="3">3 rolls, 90 nights</option></select></label>
+          <button class="add" data-add>Add<span class="tc"> to cart</span></button>
+        </div>
+        <p class="caps-note">30 nights. $3.97 a night.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec state">
+    <div class="w stack rv" style="gap:30px">
+      <h2>Feel good about tomorrow for <span>less than a bottle of water</span> at the club.</h2>
+      {reviews.length > 0 && (
+        <div class="bubbles">
+          {reviews.map((r) => (
+            <div class="bub"><i>{r.name.charAt(0)}</i><div><b>{r.name}</b>{r.text}</div></div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="sec dark scen slant" data-car data-auto>
+    <div class="w stack" style="gap:30px;align-items:stretch">
+      <h2 style="text-align:center;font-size:clamp(34px,8.6vw,60px)">Made for nights like these</h2>
+      <div class="track" tabindex="0" aria-label="Situations Blue Hour fits">
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-alarm"/></svg><div><h3>Work at nine?</h3><p>Stay for the last track, then keep your morning routine simple. One pouch, then lights out.</p></div></article>
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-tent"/></svg><div><h3>Out all weekend?</h3><p>Tear off what you need and leave the roll at home. Same routine from the first night to the last.</p></div></article>
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-moon"/></svg><div><h3>Can't switch off?</h3><p>Make one pouch the last thing you do before the lights go out.</p></div></article>
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-group"/></svg><div><h3>Going with friends?</h3><p>Thirty pouches go a long way. Tear one off and hand it over.</p></div></article>
+      </div>
+      <div class="dots lt"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="caps">
+    <div class="w stack" style="gap:40px;align-items:stretch">
+      <h2 class="rv" style="color:var(--deep)">6 capsules in every pouch.</h2>
+      <div class="cgrid">
+        <article class="rv"><div class="pic two"><img src="/images/cap-still.webp" alt="" loading="lazy" width="900" height="340"><img src="/images/cap-still.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Still (x2)</h3><div class="ing">Magnesium</div><p>Helps support normal muscle function and relaxation.*</p></article>
+        <article class="rv"><div class="pic"><img src="/images/cap-bright.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Bright</h3><div class="ing">Vitamin C</div><p>An antioxidant that helps support normal immune function.*</p></article>
+        <article class="rv"><div class="pic"><img src="/images/cap-steady.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Steady</h3><div class="ing">Methyl B-complex</div><p>B vitamins that help support normal energy metabolism.*</p></article>
+        <article class="rv"><div class="pic"><img src="/images/cap-guard.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Guard</h3><div class="ing">Zinc</div><p>An essential mineral that helps support normal immune function.*</p></article>
+        <article class="rv"><div class="pic"><img src="/images/cap-hush.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Hush</h3><div class="ing">L-theanine</div><p>An amino acid found in tea, taken to help you wind down.*</p></article>
+        <article class="none rv"><h3>Nothing else.</h3><p>No 5-HTP. No caffeine. No stimulants.</p></article>
+      </div>
+      <p class="fine">Capsules shown are illustrations.</p>
+    </div>
+  </section>
+
+  <Marquee />
+
+  <section class="sec worth">
+    <div class="w stack" style="gap:42px;align-items:stretch">
+      <h2 class="rv" style="max-width:12em">What's a slow morning worth?</h2>
+      <div class="wgrid">
+        <article class="us"><div class="ic"><img src="/images/pouch.webp" alt="" loading="lazy" width="1122" height="1402"></div><b>$3.97</b><span>One night of Blue Hour</span></article>
+        <article><div class="ic"><svg viewBox="0 0 96 96"><use href="#i-cocktail"/></svg></div><b>$16</b><span>One cocktail</span></article>
+        <article><div class="ic"><svg viewBox="0 0 96 96"><use href="#i-car"/></svg></div><b>$28</b><span>Ride home</span></article>
+        <article><div class="ic"><svg viewBox="0 0 96 96"><use href="#i-slice"/></svg></div><b>$14</b><span>Late-night food</span></article>
+        <article><div class="ic"><svg viewBox="0 0 96 96"><use href="#i-ticket"/></svg></div><b>$40</b><span>Club entry</span></article>
+        <article><div class="ic"><svg viewBox="0 0 96 96"><use href="#i-water"/></svg></div><b>$12</b><span>Two venue waters</span></article>
+      </div>
+      <p class="fine" style="text-align:center;max-width:none">Example US prices for comparison. Yours will vary by city and venue.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="w stack" style="gap:30px;align-items:stretch">
+      <h2 class="rv">Not your usual recovery pill.</h2>
+      <div class="tbw rv"><table class="tb">
+        <thead><tr><th></th><th class="us">Blue Hour</th><th>Typical rave supplement</th></tr></thead>
+        <tbody>
+          <tr><td>5-HTP</td><td class="us">None</td><td>Often included</td></tr>
+          <tr><td>Caffeine or stimulants</td><td class="us">None</td><td>Varies</td></tr>
+          <tr><td>Format</td><td class="us">One dispenser, 30 sealed pouches</td><td>Bottles or loose packs</td></tr>
+          <tr><td>Subscription</td><td class="us">None</td><td>Often the default</td></tr>
+          <tr><td>What we promise</td><td class="us">Support, never a cure</td><td>Often big recovery claims</td></tr>
+        </tbody>
+      </table></div>
+      <p class="fine">Based on common products in the category. Individual brands differ.</p>
+    </div>
+  </section>
+
+  <section class="sec dark slant">
+    <div class="w"><div class="tgrid">
+      <article class="rv"><svg viewBox="0 0 96 96"><use href="#i-roll"/></svg>30 single-serve pouches on one roll</article>
+      <article class="rv"><svg viewBox="0 0 96 96"><use href="#i-ban"/></svg>No 5-HTP, no caffeine and no stimulants</article>
+      <article class="rv"><svg viewBox="0 0 96 96"><use href="#i-list"/></svg>Every ingredient listed on the label</article>
+      <article class="rv"><svg viewBox="0 0 96 96"><use href="#i-truck"/></svg>Free shipping anywhere in the US</article>
+      <article class="rv"><svg viewBox="0 0 96 96"><use href="#i-free"/></svg>One-time purchase with no subscription</article>
+      <article class="rv"><svg viewBox="0 0 96 96"><use href="#i-spark"/></svg>Support for your routine, never a cure</article>
+    </div></div>
+  </section>
+
+  <section class="sec" id="ingredients">
+    <div class="w">
+      <h2 class="rv" style="color:var(--deep)">Ingredients</h2>
+      <p class="sub-h rv" style="margin-top:14px">Five things, and we'll tell you why each one is there.</p>
+      <div class="ingr">
+        <article><h3>Magnesium</h3><p>A mineral your body uses for normal muscle and nerve function. It takes up two of the six capsules.*</p><img src="/images/powder-still.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>Vitamin C</h3><p>An antioxidant nutrient that helps protect cells and supports normal immune function.*</p><img src="/images/powder-bright.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>Methyl B-complex</h3><p>B vitamins that help your body turn food into energy.*</p><img src="/images/powder-steady.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>Zinc</h3><p>An essential mineral that helps support normal immune function.*</p><img src="/images/powder-guard.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>L-theanine</h3><p>An amino acid found naturally in tea, and the quiet one in the pouch.*</p><img src="/images/powder-hush.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article class="out"><h3>What we left out</h3><p>5-HTP, caffeine and stimulants. Five ingredients is the whole list.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sky tagband">
+    <div class="grain"></div>
+    <div class="w">
+      <h2>The quiet after the night.</h2>
+      <button class="btn" data-add>Add 30 nights, $119</button>
+    </div>
+  </section>
+
+  <section class="sec faq" id="faq" style="background:#FAFBFF">
+    <div class="w">
+      <h2 style="color:var(--deep);margin-bottom:18px">FAQs</h2>
+      <details><summary>Does Blue Hour contain 5-HTP?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. We left it out, along with caffeine and other stimulants, to keep the formula simple.</p></details>
+      <details><summary>How and when do I take it?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pull one pouch from the dispenser, tear it off along the perforated line, and take the capsules with water before bed. Always follow the directions on the label.</p></details>
+      <details><summary>Is it a hangover cure?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Blue Hour is a dietary supplement. It isn't intended to prevent, treat or cure hangovers or anything else, and it doesn't make alcohol or any other substance safer.</p></details>
+      <details><summary>Why does it cost what it does?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. It works out at $3.97 a night.</p></details>
+      <details><summary>Is this a subscription?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. You buy a roll when you want one, and nothing renews.</p></details>
+      <details><summary>Is it right for me?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Blue Hour is for adults only. Talk to your doctor first if you're pregnant or nursing, take medication, or have a medical condition.</p></details>
+      <details><summary>Do you ship to my country?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>We ship within the US for now.</p></details>
+    </div>
+  </section>
+  <Foot id="em-shop" />
+  <div class="stick" id="stick">
+    <div class="in">
+      <div class="row">
+        <label class="sel"><span class="pr" data-price>$119.00</span><span class="op"><span data-rolls>1 roll</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></span>
+          <select id="sel-stick" data-qty aria-label="How many rolls"><option value="1">1 roll, 30 nights</option><option value="2">2 rolls, 60 nights</option><option value="3">3 rolls, 90 nights</option></select></label>
+        <button class="add" data-add>Add</button>
+      </div>
+      <p class="caps-note">Free US shipping. No subscription.</p>
+    </div>
+  </div>
+</Base>

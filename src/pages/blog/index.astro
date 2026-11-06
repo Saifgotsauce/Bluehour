@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import Top from '../../components/Top.astro';
+import Foot from '../../components/Foot.astro';
+import { getPosts, readingTime, formatDate } from '../../lib/posts';
+
+const posts = await getPosts();
+---
+<Base
+  title="Journal | Blue Hour"
+  description="Guides for big nights and the mornings after: what to bring, how to protect your hearing, how to reset your sleep and plain-English ingredient explainers."
+>
+  <header class="jhero">
+    <div class="mesh"><i></i><i></i><i></i></div>
+    <div class="grain"></div>
+    <Top />
+    <div class="in">
+      <p class="crumb"><span>Blue Hour</span><span>/</span><span>Journal</span></p>
+      <h1>The Journal</h1>
+      <p class="dek">Guides for big nights and the mornings after. What to bring, how to look after your ears and sleep, and what's actually in the supplements people talk about.</p>
+    </div>
+  </header>
+
+  <main class="w sec" style="padding-top:clamp(24px,5vw,50px)">
+    {posts.length === 0 ? (
+      <div class="jempty">
+        <h2>First posts are on the way.</h2>
+        <a class="btn solid" href="/shop">Shop 30 nights</a>
+      </div>
+    ) : (
+      <div class="posts">
+        {posts.map((post, i) => (
+          <a class:list={['pcard', { feature: i === 0 }]} href={`/blog/${post.id}`}>
+            <span class="cat">{post.data.category}</span>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+            <span class="meta">{formatDate(post.data.pubDate)} · {readingTime(post.body)} min read</span>
+          </a>
+        ))}
+      </div>
+    )}
+  </main>
+
+  <Foot id="em-journal" />
+</Base>

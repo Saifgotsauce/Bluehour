@@ -1,0 +1,5 @@
+---
+const items = ["The quiet after the night.", "Big night. Slow morning.", "See you at the next one.", "One pouch. One night."];
+const loop = [...items, ...items, ...items, ...items];
+---
+<div class="mq" aria-hidden="true"><div>{loop.map((t) => (<><span>{t}</span><em>*</em></>))}</div></div>

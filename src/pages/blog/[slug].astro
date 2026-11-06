@@ -1,0 +1,97 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Top from '../../components/Top.astro';
+import Foot from '../../components/Foot.astro';
+import { getPosts, readingTime, formatDate } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, posts } }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { post, posts } = Astro.props;
+const { Content } = await render(post);
+const { title, description, pubDate, updatedDate, category, author, image } = post.data;
+const site = Astro.site!;
+const url = new URL(`/blog/${post.id}`, site).href;
+const more = posts.filter((p) => p.id !== post.id).slice(0, 3);
+
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description,
+    datePublished: pubDate.toISOString(),
+    dateModified: (updatedDate ?? pubDate).toISOString(),
+    author: { '@type': 'Person', name: author },
+    publisher: { '@type': 'Organization', name: 'Blue Hour', logo: { '@type': 'ImageObject', url: new URL('/favicon-512.png', site).href } },
+    image: new URL(image ?? '/images/og.jpg', site).href,
+    mainEntityOfPage: url,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Journal', item: new URL('/blog', site).href },
+      { '@type': 'ListItem', position: 2, name: title, item: url },
+    ],
+  },
+];
+---
+<Base title={`${title} | Blue Hour`} description={description} image={image} type="article" jsonld={jsonld}>
+  <header class="jhero">
+    <div class="mesh"><i></i><i></i><i></i></div>
+    <div class="grain"></div>
+    <Top />
+    <div class="in">
+      <nav class="crumb" aria-label="Breadcrumb"><a href="/blog">Journal</a><span>/</span><span>{category}</span></nav>
+      <h1>{title}</h1>
+      <p class="dek">{description}</p>
+      <p class="meta">
+        By {author} · <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time> · {readingTime(post.body)} min read
+        {updatedDate && <> · Updated <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time></>}
+      </p>
+    </div>
+  </header>
+
+  <main class="w sec" style="padding-top:clamp(24px,5vw,50px)">
+    <article class="prose">
+      <Content />
+    </article>
+
+    <aside class="pitch" aria-label="About Blue Hour">
+      <img src="/images/pouch.webp" alt="One frosted Blue Hour pouch" width="1122" height="1402" loading="lazy" />
+      <h2>One pouch. One night.</h2>
+      <p>Blue Hour is one sealed pouch before bed: magnesium, vitamin C, B-complex, zinc and L-theanine. No 5-HTP, caffeine or stimulants. 30 nights for $119.</p>
+      <a class="btn" href="/shop">See Blue Hour</a>
+    </aside>
+
+    <p class="note">This article is general information, not medical advice. Talk to a doctor or pharmacist before starting a supplement, especially if you take medication, have a medical condition, or are pregnant or nursing. We make Blue Hour, so we're not neutral, but we only link to sources we think are solid.</p>
+
+    {more.length > 0 && (
+      <section class="more">
+        <h2>More from the Journal</h2>
+        <div class="posts">
+          {more.map((p) => (
+            <a class="pcard" href={`/blog/${p.id}`}>
+              <span class="cat">{p.data.category}</span>
+              <h2>{p.data.title}</h2>
+              <p>{p.data.description}</p>
+              <span class="meta">{formatDate(p.data.pubDate)} · {readingTime(p.body)} min read</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+
+  <Foot id="em-post" />
+</Base>

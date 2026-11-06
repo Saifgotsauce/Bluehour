@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+import Top from '../components/Top.astro';
+import Promo from '../components/Promo.astro';
+import Marquee from '../components/Marquee.astro';
+import Foot from '../components/Foot.astro';
+const site = Astro.site!;
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Blue Hour',
+  url: site.href,
+  logo: new URL('/favicon-512.png', site).href,
+};
+---
+<Base
+  title="Blue Hour | One nightly pouch for big nights"
+  description="One sealed pouch before bed, 30 nights on one roll. Magnesium, vitamin C, B-complex, zinc and L-theanine, with no 5-HTP, caffeine or stimulants. Free US shipping."
+  jsonld={jsonld}
+>
+
+  <Promo text="Free US shipping on every roll." link="Shop 30 nights" href="/shop" />
+  <header class="hero">
+    <div class="mesh"><i></i><i></i><i></i></div><div class="grain"></div>
+    <Top />
+    <div class="copy">
+      <h1>Big night.<br>Slow morning.</h1>
+      <p class="sub">One nightly pouch for people who stay until the end. Pull it off the roll, take it before bed, and let the morning be slow.</p>
+      <a class="btn" href="/shop">Buy now</a>
+      <p class="note">30 nights. $119. Free US shipping.</p>
+    </div>
+    <div class="shot">
+      <img class="ph" src="/images/angle.webp" alt="White Blue Hour dispenser with clear pouches of capsules rising from the top" width="1122" height="1402" fetchpriority="high">
+      <div class="spin" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ" textLength="284" lengthAdjust="spacing">30 NIGHTS * ONE ROLL * </textPath></text></svg>
+        <b>$119</b>
+      </div>
+      <button class="cap" data-float=".14" style="--x:3%;--y:22%;--w:27%;--r:-38deg;--t:5.200s" aria-label="Spin capsule"><span><img src="/images/cap-steady.webp" alt="" width="900" height="340"></span></button>
+      <button class="cap" data-float=".22" style="--x:72%;--y:50%;--w:25%;--r:18deg;--t:4.300s" aria-label="Spin capsule"><span><img src="/images/cap-still.webp" alt="" width="900" height="340"></span></button>
+      <button class="cap" data-float=".1" style="--x:0%;--y:70%;--w:21%;--r:62deg;--t:6s" aria-label="Spin capsule"><span><img src="/images/cap-guard.webp" alt="" width="900" height="340"></span></button>
+      <button class="cap" data-float=".18" style="--x:73%;--y:82%;--w:24%;--r:-24deg;--t:4.800s" aria-label="Spin capsule"><span><img src="/images/cap-bright.webp" alt="" width="900" height="340"></span></button>
+    </div>
+  </header>
+  <Marquee />
+
+  <section class="sec band-mist">
+    <div class="w two">
+      <div class="stack rv">
+        <h2>6 capsules.<br>1 pouch.<br>Zero sorting.</h2>
+        <p>Everything sits in one sealed pouch, so there are no bottles to carry and nothing to count at 5am. Take it before bed, then go to sleep.</p>
+        <a class="btn" href="/shop">Find out more</a>
+      </div>
+      <div class="rv" style="position:relative"><img src="/images/hand.webp" alt="A hand holding one frosted Blue Hour pouch against a blue sky" width="1122" height="1402" loading="lazy" style="border-radius:24px;box-shadow:0 26px 60px rgba(11,31,158,.28)"></div>
+    </div>
+  </section>
+
+  <section class="sec dark slant">
+    <div class="w stack" style="gap:34px">
+      <p class="lead rv">Every capsule has a job. Together they help support:</p>
+      <ol class="glist rv">
+        <li><i>1</i><b>Muscle function*</b></li>
+        <li style="--dl:-1.200s"><i>2</i><b>Energy metabolism*</b></li>
+        <li style="--dl:-2.400s"><i>3</i><b>Immune function*</b></li>
+        <li style="--dl:-3.600s"><i>4</i><b>Antioxidant defense*</b></li>
+        <li style="--dl:-4.800s"><i>5</i><b>Winding down*</b></li>
+      </ol>
+      <a class="btn" href="/shop#caps">See the formula</a>
+    </div>
+  </section>
+
+  <section class="sec sky">
+    <img class="burst" src="/images/burst.webp" alt="" loading="lazy" width="1100" height="820">
+    <div class="grain"></div>
+    <div class="w stack rv">
+      <h2>Nothing extra<br>in the pouch.</h2>
+      <p style="font-size:clamp(19px,5vw,23px);line-height:1.28;font-weight:600">Magnesium, vitamin C, B-complex, zinc and L-theanine. We tell you why each one is there.</p>
+      <div class="chips"><span>No 5-HTP</span><span>No caffeine</span><span>No stimulants</span></div>
+      <a class="btn" href="/shop#ingredients">See what's inside</a>
+    </div>
+  </section>
+
+  <section class="sec nights" id="nights">
+    <div class="w two">
+      <div class="stack" style="gap:18px">
+        <div class="ncount"><span class="thin">Night</span> <span id="ncount">30</span></div>
+        <div class="ngrid" id="ngrid" aria-hidden="true"></div>
+        <p style="font-weight:600">30 pouches on one roll, from the first night to the last.</p>
+      </div>
+      <div class="stack rv" style="gap:28px">
+        <h2>Pull. Tear.<br>Sleep.</h2>
+        <ol class="steps">
+          <li>Pull one pouch from the dispenser.</li>
+          <li>Tear it off along the perforated line.</li>
+          <li>Take it before bed and get some rest.</li>
+        </ol>
+        <a class="btn" href="/shop">Get the roll</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="fullshot cropd"><img class="ph" src="/images/exploded.webp" alt="The Blue Hour dispenser, pulp tray and roll of pouches floating on a blue background" loading="lazy" width="1122" height="1402"></div>
+
+  <section class="sec pricey">
+    <div class="w stack rv">
+      <div class="bign">$3.97</div>
+      <h2 style="max-width:13em">a night. Less than a bottle of water at the club.</h2>
+      <a class="btn solid" href="/shop">Buy 30 nights</a>
+    </div>
+  </section>
+  <Foot id="em-home" />
+</Base>

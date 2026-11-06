@@ -1,0 +1,19 @@
+---
+interface Props { id: string }
+const { id } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="foot">
+  <div class="grain"></div>
+  <div class="w signup">
+    <h2>See you at the next one.</h2>
+    <p>New drops and restocks, only when there's something worth opening.</p>
+    <form class="form" novalidate><label for={id} style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Email address</label><input id={id} type="email" placeholder="Email address" autocomplete="email"><button type="submit">Subscribe</button></form>
+    <p class="formnote" role="status"></p>
+  </div>
+  <div class="w">
+    <img class="fbig" src="/images/logo-white.webp" alt="blue hour" loading="lazy" width="1000" height="247">
+    <nav class="fnav" aria-label="Footer"><a href="/shop">Shop</a><a href="/shop#ingredients">Ingredients</a><a href="/#nights">How it works</a><a href="/blog">Journal</a><a href="/shop#faq">FAQs</a></nav>
+    <p class="legal">*These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease. For adults only. Keep out of reach of children. &copy; {year} Blue Hour.</p>
+  </div>
+</footer>

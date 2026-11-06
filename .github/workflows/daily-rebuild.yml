@@ -1,0 +1,18 @@
+# Rebuilds the site once a day so blog posts with a future pubDate go live on their date.
+# Setup: Vercel > Project > Settings > Git > Deploy Hooks > create a hook for the main branch,
+# then add its URL in GitHub > Settings > Secrets and variables > Actions as VERCEL_DEPLOY_HOOK.
+name: Daily rebuild
+on:
+  schedule:
+    - cron: "17 13 * * *"
+  workflow_dispatch:
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger the Vercel deploy hook
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "VERCEL_DEPLOY_HOOK is not set, skipping."; exit 0; fi
+          curl -fsS -X POST "$HOOK"

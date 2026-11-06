@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import Top from '../components/Top.astro';
+import Foot from '../components/Foot.astro';
+---
+<Base title="Page not found | Blue Hour" description="This page went home early." noindex>
+  <header class="jhero">
+    <div class="mesh"><i></i><i></i><i></i></div>
+    <div class="grain"></div>
+    <Top />
+    <div class="in">
+      <p class="crumb"><span>404</span></p>
+      <h1>This page went home early.</h1>
+      <p class="dek">The link may be old or mistyped. Try the shop or the Journal instead.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <a class="btn" href="/shop">Shop 30 nights</a>
+        <a class="btn" href="/blog">Read the Journal</a>
+      </div>
+    </div>
+  </header>
+  <Foot id="em-404" />
+</Base>
