@@ -1,7 +1,11 @@
 // The capsule menu for "Build your pouch". Used by the shop page and the cart.
 // Every item is from OK Capsule's formulary. Before launch, have a pharmacist or formulator
 // confirm the menu, the per-capsule doses and the max counts below.
-// max = the most of one capsule allowed in a pouch. signature = how many the default pouch has.
+// max = the most of one capsule allowed in a pouch. One pouch is one day, so each max keeps that nutrient at or under
+// the NIH's adult upper limit for supplements: magnesium 350 mg (2 x 133 = 266), vitamin C 2,000 mg (2 x 1,000),
+// zinc 40 mg (1 x 25). B-complex stays at 1: its 15 mg of flushing-type niacin is under the 30-50 mg where flushing
+// starts, but its 75 mg total niacin is over the 35 mg limit on paper, so a pharmacist should sign it off.
+// signature = how many the default pouch has.
 // facts = Supplement Facts rows per capsule [nutrient, amount, % Daily Value], copied from OK Capsule. other = other ingredients. warn = label warnings beyond 'keep out of reach of children'.
 // \u2020 means no Daily Value is established.
 
@@ -15,7 +19,7 @@ export const INGREDIENTS = [
     other: 'Hypromellose (vegetable capsule), microcrystalline cellulose, magnesium stearate, silica, stearic acid.',
   },
   {
-    id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 1, signature: 1,
+    id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 2, signature: 1,
     facts: [['Vitamin C (as ascorbic acid)', '1,000 mg', '1111%']],
     other: 'Hypromellose (capsule), magnesium stearate, silica.',
   },
@@ -51,7 +55,7 @@ export const INGREDIENTS = [
     other: 'Hypromellose (natural vegetable capsule), rice (Oryza sativa cera) bran, magnesium stearate, silica.',
   },
   {
-    id: 'culture', name: 'Culture', ingredient: 'Probiotic', dose: '10 strains', blurb: 'Ten strains of live cultures plus inulin, to help support normal digestive health.*', img: 'cap-probiotic', max: 1, signature: 0,
+    id: 'culture', name: 'Culture', ingredient: '10B probiotic', dose: '10 billion cultures', blurb: '10 billion live cultures from 10 strains, plus inulin, to help support normal digestive health.*', img: 'cap-probiotic', max: 1, signature: 0,
     facts: [
       ['Inulin / fructooligosaccharides', '100 mg', '\u2020'],
       ['Proprietary blend: Lactobacillus casei, L. paracasei, L. acidophilus, L. bulgaricus, Bifidobacterium bifidum, L. rhamnosus, L. brevis, L. plantarum, L. salivarius, B. lactis', '39 mg', '\u2020'],

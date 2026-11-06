@@ -42,9 +42,9 @@ const jsonld = {
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
         <p class="tag">One pouch. One night.</p>
-        <p>Stay for the last track, then take one before bed. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
+        <p>Stay for the last track, then take one with a late snack before bed. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
         <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: {signatureSummary}</span><a href="#build">Build your own pouch</a></div>
-        <div class="spec"><b>Suggested use</b><span>Take 1 pouch before bed, with water.</span></div>
+        <div class="spec"><b>Suggested use</b><span>Take 1 pouch a day with food and water, like with supper or a late snack before bed. Do not take more than 1 pouch a day.</span></div>
         <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.</span></div>
         <div class="row" id="buyrow">
           <label class="sel"><span class="pr" data-price>$129.00</span><span class="op"><span data-rolls>1 roll</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></span>
@@ -73,7 +73,7 @@ const jsonld = {
     <div class="w stack" style="gap:30px;align-items:stretch">
       <h2 style="text-align:center;font-size:clamp(34px,8.6vw,60px)">Made for nights like these</h2>
       <div class="track" tabindex="0" aria-label="Situations Blue Hour fits">
-        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-alarm"/></svg><div><h3>Work at nine?</h3><p>Stay for the last track anyway. One pouch before bed, alarm set, done.</p></div></article>
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-alarm"/></svg><div><h3>Work at nine?</h3><p>Stay for the last track anyway. One pouch with a snack, alarm set, done.</p></div></article>
         <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-tent"/></svg><div><h3>Festival trip?</h3><p>Pack a strip of pouches instead of a bag of bottles. One a night, nothing to sort.</p></div></article>
         <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-moon"/></svg><div><h3>Out all weekend?</h3><p>Tear off one for each night and keep the same routine from Friday to Sunday.</p></div></article>
         <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-group"/></svg><div><h3>Going with friends?</h3><p>Thirty pouches go a long way. Tear one off and hand it over.</p></div></article>
@@ -86,7 +86,7 @@ const jsonld = {
     <div class="w">
       <div class="bhead">
         <h2>Build your pouch.</h2>
-        <p>Start with our signature six or swap in what you want. Pick up to {MAX_CAPS} capsules. Every roll is packed to order, and the price stays the same.</p>
+        <p>Start with our signature six or swap in what you want. Pick up to {MAX_CAPS} capsules. Some have a per-pouch limit, so one pouch never stacks up too much of one nutrient. Every roll is packed to order, and the price stays the same.</p>
       </div>
       <div class="tray" aria-live="polite">
         <div class="slots" id="slots">{Array.from({ length: MAX_CAPS }, () => <i></i>)}</div>
@@ -99,6 +99,7 @@ const jsonld = {
             <div class="it">
               <h3>{i.name}{i.signature > 0 && <span class="sig">Signature</span>}</h3>
               <div class="ing">{i.ingredient}{i.dose && ` · ${i.dose}`}</div>
+              <div class="lim">Up to {i.max} per pouch</div>
               <p>{i.blurb}</p>
             </div>
             <div class="step">
@@ -204,12 +205,12 @@ const jsonld = {
     <div class="w">
       <h2 style="color:var(--deep);margin-bottom:18px">FAQs</h2>
       <details><summary>Does Blue Hour contain 5-HTP?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. We left it out, along with caffeine and other stimulants, to keep the formula simple.</p></details>
-      <details><summary>How and when do I take it?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pull one pouch from the dispenser, tear it off along the perforated line, and take the capsules with water before bed. Always follow the directions on the label.</p></details>
+      <details><summary>How and when do I take it?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pull one pouch from the dispenser, tear it off along the perforated line, and take the capsules with food and water, like with supper or a late snack before bed. Take 1 pouch a day, and never more than 1. Always follow the directions on your pamphlet.</p></details>
       <details><summary>Is it a hangover cure?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Blue Hour is a dietary supplement. It isn't intended to prevent, treat or cure hangovers or anything else, and it doesn't make alcohol or any other substance safer.</p></details>
       <details><summary>Why does it cost what it does?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. It works out at $4.30 a night.</p></details>
       <details><summary>Can I change what's in my pouch?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from the signature six or build your own from our menu of 7 capsules, up to 6 per pouch. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
       <details><summary>Is this a subscription?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. You buy a roll when you want one, and nothing renews.</p></details>
-      <details><summary>Is it right for me?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Blue Hour is for adults only. Talk to your doctor first if you're pregnant or nursing, take medication, or have a medical condition.</p></details>
+      <details><summary>Is it right for me?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>For adults only. Keep out of reach of children. If you are pregnant, nursing, taking medication, have a medical condition, or are under medical supervision, talk to your doctor before use. Stop taking it and talk to your doctor if you have any side effects.</p></details>
       <details><summary>Do you ship to my country?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>We ship within the US for now.</p></details>
     </div>
   </section>
