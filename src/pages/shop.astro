@@ -5,6 +5,8 @@ import Promo from '../components/Promo.astro';
 import Marquee from '../components/Marquee.astro';
 import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
+import { INGREDIENTS, MAX_CAPS, SIGNATURE, mixSummary } from '../data/ingredients.js';
+const signatureSummary = mixSummary(SIGNATURE);
 const site = Astro.site!;
 const jsonld = {
   '@context': 'https://schema.org',
@@ -40,7 +42,8 @@ const jsonld = {
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
         <p class="tag">One pouch. One night.</p>
-        <p>Stay for the last track, then take one before bed. Each pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and L-theanine, sealed and ready on one 30-night roll.*</p>
+        <p>Stay for the last track, then take one before bed. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and L-theanine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
+        <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: {signatureSummary}</span><a href="#build">Build your own pouch</a></div>
         <div class="spec"><b>Suggested use</b><span>Take 1 pouch before bed, with water.</span></div>
         <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.</span></div>
         <div class="row" id="buyrow">
@@ -79,18 +82,38 @@ const jsonld = {
     </div>
   </section>
 
-  <section class="sec" id="caps">
-    <div class="w stack" style="gap:40px;align-items:stretch">
-      <h2 class="rv" style="color:var(--deep)">6 capsules in every pouch.</h2>
-      <div class="cgrid">
-        <article class="rv"><div class="pic two"><img src="/images/cap-still.webp" alt="" loading="lazy" width="900" height="340"><img src="/images/cap-still.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Level (x2)</h3><div class="ing">Magnesium</div><p>Helps support normal muscle and nerve function.*</p></article>
-        <article class="rv"><div class="pic"><img src="/images/cap-bright.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Bright</h3><div class="ing">Vitamin C</div><p>An antioxidant that helps support normal immune function.*</p></article>
-        <article class="rv"><div class="pic"><img src="/images/cap-steady.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Spark</h3><div class="ing">Methyl B-complex</div><p>B vitamins that help support normal energy metabolism.*</p></article>
-        <article class="rv"><div class="pic"><img src="/images/cap-guard.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Core</h3><div class="ing">Zinc</div><p>An essential mineral that helps support normal immune function.*</p></article>
-        <article class="rv"><div class="pic"><img src="/images/cap-hush.webp" alt="" loading="lazy" width="900" height="340"></div><h3>Clear</h3><div class="ing">L-theanine</div><p>An amino acid found naturally in green and black tea.</p></article>
-        <article class="none rv"><h3>Nothing else.</h3><p>No 5-HTP. No caffeine. No stimulants.</p></article>
+  <section class="sec build" id="build">
+    <div class="w">
+      <div class="bhead">
+        <h2>Build your pouch.</h2>
+        <p>Start with our signature six or swap in what you want. Pick up to {MAX_CAPS} capsules. Every roll is packed to order, and the price stays the same.</p>
       </div>
-      <p class="fine">Capsules shown are illustrations.</p>
+      <div class="tray" aria-live="polite">
+        <div class="slots" id="slots">{Array.from({ length: MAX_CAPS }, () => <i></i>)}</div>
+        <div class="tally"><b id="tally">{MAX_CAPS} of {MAX_CAPS}</b><button type="button" id="reset">Back to signature</button></div>
+      </div>
+      <div class="ilist">
+        {INGREDIENTS.map((i) => (
+          <article class:list={['icard', { on: i.signature > 0 }]} data-id={i.id} data-max={i.max}>
+            <img src={`/images/${i.img}.webp`} alt="" width="900" height="340" loading="lazy" />
+            <div class="it">
+              <h3>{i.name}{i.signature > 0 && <span class="sig">Signature</span>}</h3>
+              <div class="ing">{i.ingredient}{i.dose && ` · ${i.dose}`}</div>
+              <p>{i.blurb}</p>
+            </div>
+            <div class="step">
+              <button type="button" data-inc aria-label={`Add ${i.name}`}>+</button>
+              <span data-n>{i.signature}</span>
+              <button type="button" data-dec aria-label={`Remove ${i.name}`}>&minus;</button>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="bfoot">
+        <div class="leftout"><b>Not on the menu:</b> 5-HTP, caffeine and stimulants.</div>
+        <button class="btn solid" data-add>Add this pouch, $119</button>
+        <p class="fine">Talk to a doctor or pharmacist before adding anything new if you take medication, have a medical condition, or are pregnant or nursing. Capsules shown are illustrations. Your exact pouch is listed on the Supplement Facts in your pamphlet.</p>
+      </div>
     </div>
   </section>
 
@@ -119,6 +142,7 @@ const jsonld = {
         <tbody>
           <tr><td>5-HTP</td><td class="us">None</td><td>Often included</td></tr>
           <tr><td>Caffeine or stimulants</td><td class="us">None</td><td>Varies</td></tr>
+          <tr><td>Choose your capsules</td><td class="us">Yes, up to 6 from a menu of 10</td><td>One fixed formula</td></tr>
           <tr><td>Format</td><td class="us">One dispenser, 30 sealed pouches</td><td>Bottles or loose packs</td></tr>
           <tr><td>Subscription</td><td class="us">None</td><td>Often the default</td></tr>
           <tr><td>What we promise</td><td class="us">Support, never a cure</td><td>Often big recovery claims</td></tr>
@@ -169,6 +193,7 @@ const jsonld = {
       <details><summary>How and when do I take it?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pull one pouch from the dispenser, tear it off along the perforated line, and take the capsules with water before bed. Always follow the directions on the label.</p></details>
       <details><summary>Is it a hangover cure?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Blue Hour is a dietary supplement. It isn't intended to prevent, treat or cure hangovers or anything else, and it doesn't make alcohol or any other substance safer.</p></details>
       <details><summary>Why does it cost what it does?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. It works out at $3.97 a night.</p></details>
+      <details><summary>Can I change what's in my pouch?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from the signature six or build your own from our menu of 10 capsules, up to 6 per pouch. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
       <details><summary>Is this a subscription?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. You buy a roll when you want one, and nothing renews.</p></details>
       <details><summary>Is it right for me?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Blue Hour is for adults only. Talk to your doctor first if you're pregnant or nursing, take medication, or have a medical condition.</p></details>
       <details><summary>Do you ship to my country?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>We ship within the US for now.</p></details>

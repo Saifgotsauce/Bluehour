@@ -1,7 +1,8 @@
 // Blue Hour site behaviour: cart, menu, carousels, buy bar and the small animations.
 // Every block checks that its elements exist, because each page only has some of them.
 
-const PRICE = 119;
+import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary } from '../data/ingredients.js';
+
 // Set PUBLIC_CHECKOUT_URL in Vercel (Settings > Environment Variables) to your Stripe Payment Link.
 const CHECKOUT_URL = import.meta.env.PUBLIC_CHECKOUT_URL || '';
 
@@ -15,32 +16,115 @@ const store = {
 const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- cart ---------- */
-let cart = parseInt(store.get('bh-cart') || '0', 10) || 0;
+// Each cart line is one pouch recipe and how many rolls of it: { mix: { level: 2, ... }, qty: 1 }.
 let picked = 1;
-const save = () => store.set('bh-cart', String(cart));
+let current = { ...SIGNATURE };
+
+function loadCart() {
+  try {
+    const raw = JSON.parse(store.get('bh-cart2') || 'null');
+    if (Array.isArray(raw)) {
+      return raw
+        .map((l) => ({ mix: cleanMix(l.mix), qty: Math.max(1, Math.min(9, parseInt(l.qty, 10) || 1)) }))
+        .filter((l) => mixTotal(l.mix) > 0);
+    }
+  } catch (e) { /* ignore a broken saved cart */ }
+  const old = parseInt(store.get('bh-cart') || '0', 10) || 0;
+  return old ? [{ mix: { ...SIGNATURE }, qty: Math.min(9, old) }] : [];
+}
+let cart = loadCart();
+const save = () => store.set('bh-cart2', JSON.stringify(cart));
+const cartCount = () => cart.reduce((a, l) => a + l.qty, 0);
+const lineTitle = (mix) => (isSignature(mix) ? 'Signature pouch' : 'Custom pouch');
+
+function addToCart(mix, qty) {
+  const clean = cleanMix(mix);
+  if (!mixTotal(clean)) return;
+  const line = cart.find((l) => mixKey(l.mix) === mixKey(clean));
+  if (line) line.qty = Math.min(9, line.qty + qty);
+  else cart.push({ mix: clean, qty });
+  save(); paint(); openCart();
+}
 
 function paint() {
-  $$('.count').forEach((c) => { c.hidden = !cart; c.textContent = cart; });
+  const n = cartCount();
+  $$('.count').forEach((c) => { c.hidden = !n; c.textContent = n; });
   const title = $('#carttitle');
   if (!title) return;
-  title.textContent = cart ? 'Cart • ' + cart : 'Cart';
-  $('#shipbox').hidden = !cart;
-  $('#cft').hidden = !cart;
-  $('#checkout').textContent = 'Checkout • ' + money(cart * PRICE);
+  title.textContent = n ? 'Cart • ' + n : 'Cart';
+  $('#shipbox').hidden = !n;
+  $('#cft').hidden = !n;
+  $('#checkout').textContent = 'Checkout • ' + money(n * PRICE);
   const box = $('#citems');
-  if (!cart) {
+  if (!n) {
     box.innerHTML = '<div class="empty"><h3>Your cart is empty.</h3><p>Your next 30 nights are one tap away.</p><a class="btn solid" href="/shop">Shop 30 nights</a></div>';
     return;
   }
-  box.innerHTML =
-    '<div class="line"><img src="/images/flat.webp" alt="" width="82" height="102"><div><h3>Blue Hour nightly pouches</h3><div class="mt">1 roll, 30 nights</div><div class="ctl"><div class="qty"><button id="qm" aria-label="Remove one roll">−</button><span>' +
-    cart +
-    '</span><button id="qp" aria-label="Add one roll">+</button></div><div class="price">' +
-    money(cart * PRICE) +
-    '</div></div><button class="trash" id="qx">Remove</button></div></div>';
-  $('#qm').onclick = () => { cart = Math.max(0, cart - 1); save(); paint(); };
-  $('#qp').onclick = () => { cart = Math.min(9, cart + 1); save(); paint(); };
-  $('#qx').onclick = () => { cart = 0; save(); paint(); };
+  box.innerHTML = cart.map((l, i) =>
+    '<div class="line"><img src="/images/flat.webp" alt="" width="82" height="102"><div><h3>' + lineTitle(l.mix) +
+    '</h3><div class="mt">' + mixSummary(l.mix) + '</div><div class="mt">30 nights per roll</div><div class="ctl"><div class="qty"><button data-line="' + i +
+    '" data-d="-1" aria-label="Remove one roll">−</button><span>' + l.qty + '</span><button data-line="' + i +
+    '" data-d="1" aria-label="Add one roll">+</button></div><div class="price">' + money(l.qty * PRICE) +
+    '</div></div><button class="trash" data-rm="' + i + '">Remove</button></div></div>'
+  ).join('');
+}
+
+const citems = $('#citems');
+if (citems) {
+  citems.addEventListener('click', (e) => {
+    const t = e.target;
+    if (!(t instanceof Element)) return;
+    const q = t.closest('[data-line]');
+    const rm = t.closest('[data-rm]');
+    if (q) {
+      const l = cart[+q.getAttribute('data-line')];
+      if (!l) return;
+      l.qty = Math.min(9, l.qty + +q.getAttribute('data-d'));
+      if (l.qty < 1) cart.splice(cart.indexOf(l), 1);
+    } else if (rm) {
+      cart.splice(+rm.getAttribute('data-rm'), 1);
+    } else return;
+    save(); paint();
+  });
+}
+
+/* ---------- build your pouch (shop) ---------- */
+const build = $('#build');
+function paintBuilder() {
+  const t = mixTotal(current);
+  $$('[data-add]').forEach((b) => { b.disabled = t === 0; });
+  const sum = $('#mixsum');
+  if (sum) sum.textContent = t === 0 ? 'Pick at least one capsule.' : (isSignature(current) ? 'Signature six: ' : 'Your custom ' + t + ': ') + mixSummary(current);
+  if (!build) return;
+  $$('.icard', build).forEach((card) => {
+    const id = card.getAttribute('data-id'), max = +card.getAttribute('data-max'), n = current[id] || 0;
+    $('[data-n]', card).textContent = String(n);
+    card.classList.toggle('on', n > 0);
+    $('[data-inc]', card).disabled = n >= max || t >= MAX_CAPS;
+    $('[data-dec]', card).disabled = n <= 0;
+  });
+  const imgs = [];
+  INGREDIENTS.forEach((i) => { for (let k = 0; k < (current[i.id] || 0); k++) imgs.push(i.img); });
+  $$('#slots i').forEach((slot, k) => {
+    slot.classList.toggle('on', k < imgs.length);
+    slot.innerHTML = k < imgs.length ? '<img src="/images/' + imgs[k] + '.webp" alt="">' : '';
+  });
+  const tally = $('#tally');
+  if (tally) tally.textContent = t + ' of ' + MAX_CAPS;
+}
+if (build) {
+  build.addEventListener('click', (e) => {
+    const t = e.target;
+    if (!(t instanceof Element)) return;
+    if (t.closest('#reset')) { current = { ...SIGNATURE }; paintBuilder(); return; }
+    const card = t.closest('.icard');
+    if (!card) return;
+    const id = card.getAttribute('data-id');
+    if (t.closest('[data-inc]')) current = cleanMix({ ...current, [id]: (current[id] || 0) + 1 });
+    else if (t.closest('[data-dec]')) current = cleanMix({ ...current, [id]: (current[id] || 0) - 1 });
+    else return;
+    paintBuilder();
+  });
 }
 
 const lock = (on) => { document.documentElement.style.overflow = on ? 'hidden' : ''; };
@@ -65,7 +149,7 @@ document.addEventListener('click', (e) => {
   if (!(t instanceof Element)) return;
   if (t.closest('[data-cart]')) { openCart(); return; }
   if (t.closest('[data-menu]')) { openMenu(); return; }
-  if (t.closest('[data-add]')) { cart = Math.min(9, cart + picked); save(); paint(); openCart(); return; }
+  if (t.closest('[data-add]')) { addToCart(current, picked); return; }
   if (t.closest('#menu a, #cart a')) { closeAll(); return; }
   const cap = t.closest('.cap');
   if (cap) { cap.classList.remove('pop'); void cap.offsetWidth; cap.classList.add('pop'); }
@@ -184,4 +268,5 @@ let ticking = false;
 window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(float); } }, { passive: true });
 
 paint();
+paintBuilder();
 float();
