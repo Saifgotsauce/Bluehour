@@ -2,14 +2,23 @@
 // Every item is from OK Capsule's formulary. Before launch, have a pharmacist or formulator
 // confirm the menu, the per-capsule doses and the max counts below.
 // max = the most of one capsule allowed in a pouch. signature = how many the default pouch has.
-// facts = Supplement Facts rows per capsule [nutrient, amount, % Daily Value], copied from OK Capsule. other = other ingredients.
+// facts = Supplement Facts rows per capsule [nutrient, amount, % Daily Value], copied from OK Capsule. other = other ingredients. warn = label warnings beyond 'keep out of reach of children'.
+// \u2020 means no Daily Value is established.
 
 export const PRICE = 129;
 export const MAX_CAPS = 6;
 
 export const INGREDIENTS = [
-  { id: 'level', name: 'Level', ingredient: 'Magnesium', dose: '', blurb: 'Helps support normal muscle and nerve function.*', img: 'cap-still', max: 2, signature: 2 },
-  { id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 1, signature: 1 },
+  {
+    id: 'level', name: 'Level', ingredient: 'Magnesium', dose: '133 mg', blurb: 'Magnesium glycinate. Helps support normal muscle and nerve function.*', img: 'cap-still', max: 2, signature: 2,
+    facts: [['Magnesium (as magnesium glycinate, 20% magnesium)', '133 mg', '32%']],
+    other: 'Hypromellose (vegetable capsule), microcrystalline cellulose, magnesium stearate, silica, stearic acid.',
+  },
+  {
+    id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 1, signature: 1,
+    facts: [['Vitamin C (as ascorbic acid)', '1,000 mg', '1111%']],
+    other: 'Hypromellose (capsule), magnesium stearate, silica.',
+  },
   {
     id: 'spark', name: 'Spark', ingredient: 'Methyl B-complex', dose: '8 B vitamins', blurb: 'B vitamins that help support normal energy metabolism.*', img: 'cap-steady', max: 1, signature: 1,
     facts: [
@@ -23,12 +32,33 @@ export const INGREDIENTS = [
       ['Biotin', '300 mcg', '1000%'],
       ['Pantothenic acid (as D-calcium pantothenate)', '50 mg', '1000%'],
     ],
+    warn: 'If you are pregnant or nursing, consult your physician before taking this product.',
     other: 'Microcrystalline cellulose, vegetable capsule (hypromellose), MCT 70% C8/C10 coconut on acacia (GoMCT).',
   },
-  { id: 'core', name: 'Core', ingredient: 'Zinc', dose: '25 mg', blurb: 'An essential mineral that helps support normal immune function.*', img: 'cap-guard', max: 1, signature: 1 },
-  { id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 1, signature: 1 },
-  { id: 'prime', name: 'Prime', ingredient: 'NAC', dose: '600 mg', blurb: 'A form of the amino acid cysteine that your body uses to make the antioxidant glutathione.*', img: 'cap-nac', max: 1, signature: 0 },
-  { id: 'culture', name: 'Culture', ingredient: 'Probiotic', dose: '10 billion CFU', blurb: 'Live cultures that help support normal digestive health.*', img: 'cap-probiotic', max: 1, signature: 0 },
+  {
+    id: 'core', name: 'Core', ingredient: 'Zinc', dose: '25 mg', blurb: 'An essential mineral that helps support normal immune function.*', img: 'cap-guard', max: 1, signature: 1,
+    facts: [['Zinc', '25 mg', '227%']],
+    other: 'Vegetable capsule, rice flour.',
+  },
+  {
+    id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '850 mg', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 1, signature: 1,
+    facts: [['L-glycine', '850 mg', '\u2020']],
+    other: 'Hypromellose (capsule).',
+  },
+  {
+    id: 'prime', name: 'Prime', ingredient: 'NAC', dose: '600 mg', blurb: 'A form of the amino acid cysteine that your body uses to make the antioxidant glutathione.*', img: 'cap-nac', max: 1, signature: 0,
+    facts: [['N-acetyl cysteine', '600 mg', '\u2020']],
+    other: 'Hypromellose (natural vegetable capsule), rice (Oryza sativa cera) bran, magnesium stearate, silica.',
+  },
+  {
+    id: 'culture', name: 'Culture', ingredient: 'Probiotic', dose: '10 strains', blurb: 'Ten strains of live cultures plus inulin, to help support normal digestive health.*', img: 'cap-probiotic', max: 1, signature: 0,
+    facts: [
+      ['Inulin / fructooligosaccharides', '100 mg', '\u2020'],
+      ['Proprietary blend: Lactobacillus casei, L. paracasei, L. acidophilus, L. bulgaricus, Bifidobacterium bifidum, L. rhamnosus, L. brevis, L. plantarum, L. salivarius, B. lactis', '39 mg', '\u2020'],
+    ],
+    warn: 'Discontinue use and consult your physician if any adverse conditions occur. If you are pregnant, nursing, taking medication, have a medical condition, or are under medical supervision, consult your healthcare professional before use.',
+    other: 'Cellulose, dicalcium phosphate, silica, magnesium stearate (vegetable).',
+  },
 ];
 
 export const SIGNATURE = Object.fromEntries(INGREDIENTS.filter((i) => i.signature).map((i) => [i.id, i.signature]));

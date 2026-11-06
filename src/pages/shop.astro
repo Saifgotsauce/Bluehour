@@ -115,7 +115,9 @@ const jsonld = {
                     <tbody>{i.facts.map(([n, a, dv]) => <tr><td>{n}</td><td>{a}</td><td>{dv}</td></tr>)}</tbody>
                   </table>
                 </div>
+                {i.facts.some((f) => f[2] === '\u2020') && <p class="other">\u2020 Daily Value not established.</p>}
                 {i.other && <p class="other">Other ingredients: {i.other}</p>}
+                {i.warn && <p class="other">Warnings: {i.warn}</p>}
               </details>
             )}
           </article>
@@ -180,11 +182,11 @@ const jsonld = {
       <h2 class="rv" style="color:var(--deep)">Ingredients</h2>
       <p class="sub-h rv" style="margin-top:14px">Five things, and we'll tell you why each one is there.</p>
       <div class="ingr">
-        <article><h3>Magnesium</h3><p>A mineral your body uses for normal muscle and nerve function. It takes up two of the six capsules.*</p><img src="/images/powder-still.webp" alt="" loading="lazy" width="1300" height="560"></article>
-        <article><h3>Vitamin C</h3><p>An antioxidant nutrient that helps protect cells and supports normal immune function.*</p><img src="/images/powder-bright.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>Magnesium</h3><p>A mineral your body uses for normal muscle and nerve function. Two capsules of magnesium glycinate give you 266 mg.*</p><img src="/images/powder-still.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>Vitamin C</h3><p>An antioxidant nutrient that helps protect cells and supports normal immune function. Each capsule has 1,000 mg.*</p><img src="/images/powder-bright.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article><h3>Methyl B-complex</h3><p>Eight B vitamins that help your body turn food into energy: B1, B2, B3, B5, B6, biotin, folate as 5-MTHF, and B12 as methylcobalamin.*</p><img src="/images/powder-steady.webp" alt="" loading="lazy" width="1300" height="560"></article>
-        <article><h3>Zinc</h3><p>An essential mineral that helps support normal immune function.*</p><img src="/images/powder-guard.webp" alt="" loading="lazy" width="1300" height="560"></article>
-        <article><h3>Glycine</h3><p>The simplest amino acid. Your body uses it to build proteins, including collagen.*</p><img src="/images/powder-hush.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>Zinc</h3><p>An essential mineral that helps support normal immune function. Each capsule has 25 mg.*</p><img src="/images/powder-guard.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>Glycine</h3><p>The simplest amino acid. Your body uses it to build proteins, including collagen. Each capsule has 850 mg.*</p><img src="/images/powder-hush.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article class="out"><h3>What we left out</h3><p>5-HTP, caffeine and stimulants. Five ingredients is the whole list.</p></article>
       </div>
     </div>
