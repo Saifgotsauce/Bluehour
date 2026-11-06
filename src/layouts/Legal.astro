@@ -1,0 +1,26 @@
+---
+import Base from './Base.astro';
+import Top from '../components/Top.astro';
+import Foot from '../components/Foot.astro';
+
+const { frontmatter } = Astro.props;
+const { title, description, updated, crumb = 'Help' } = frontmatter;
+---
+<Base title={`${title} | Blue Hour`} description={description}>
+  <header class="jhero">
+    <div class="mesh"><i></i><i></i><i></i></div>
+    <div class="grain"></div>
+    <Top />
+    <div class="in">
+      <p class="crumb"><span>Blue Hour</span><span>/</span><span>{crumb}</span></p>
+      <h1>{title}</h1>
+      {updated && <p class="meta">Last updated {updated}</p>}
+    </div>
+  </header>
+  <main class="w sec" style="padding-top:clamp(24px,5vw,50px)">
+    <article class="prose">
+      <slot />
+    </article>
+  </main>
+  <Foot id="em-legal" />
+</Base>

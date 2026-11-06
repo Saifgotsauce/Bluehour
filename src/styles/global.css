@@ -437,3 +437,6 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .why .def span{font-weight:500;font-style:italic;color:var(--soft)}
 .why h2{max-width:17em;font-size:clamp(28px,7.2vw,54px);line-height:1.1;color:var(--ink)}
 .why p:last-child{max-width:34em;font-size:clamp(17px,4.4vw,20px);line-height:1.5;color:var(--soft)}
+.fpol{display:flex;flex-wrap:wrap;gap:8px 20px;padding-top:16px;font-size:14px}
+.fpol a{color:#DCE6FF;text-decoration:underline;text-decoration-color:rgba(255,255,255,.35);text-underline-offset:3px}
+.cft .fine a,.faq details p a{color:inherit;text-underline-offset:3px}
