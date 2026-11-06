@@ -26,8 +26,7 @@ export const INGREDIENTS = [
     other: 'Microcrystalline cellulose, vegetable capsule (hypromellose), MCT 70% C8/C10 coconut on acacia (GoMCT).',
   },
   { id: 'core', name: 'Core', ingredient: 'Zinc', dose: '25 mg', blurb: 'An essential mineral that helps support normal immune function.*', img: 'cap-guard', max: 1, signature: 1 },
-  { id: 'clear', name: 'Clear', ingredient: 'L-theanine', dose: '200 mg', blurb: 'An amino acid found naturally in green and black tea.', img: 'cap-hush', max: 1, signature: 1 },
-  { id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 1, signature: 0 },
+  { id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 1, signature: 1 },
   { id: 'prime', name: 'Prime', ingredient: 'NAC', dose: '600 mg', blurb: 'A form of the amino acid cysteine that your body uses to make the antioxidant glutathione.*', img: 'cap-nac', max: 1, signature: 0 },
   { id: 'culture', name: 'Culture', ingredient: 'Probiotic', dose: '10 billion CFU', blurb: 'Live cultures that help support normal digestive health.*', img: 'cap-probiotic', max: 1, signature: 0 },
 ];

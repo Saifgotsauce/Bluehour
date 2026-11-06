@@ -12,7 +12,7 @@ const jsonld = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: 'Blue Hour nightly pouches',
-  description: 'One sealed pouch of 6 capsules for each night: magnesium, vitamin C, methyl B-complex, zinc and L-theanine. 30 pouches on one roll. No 5-HTP, caffeine or stimulants.',
+  description: 'One sealed pouch of 6 capsules for each night: magnesium, vitamin C, methyl B-complex, zinc and glycine. 30 pouches on one roll. No 5-HTP, caffeine or stimulants.',
   image: ['angle', 'flat', 'exploded', 'pouch'].map((n) => new URL(`/images/${n}.webp`, site).href),
   brand: { '@type': 'Brand', name: 'Blue Hour' },
   offers: { '@type': 'Offer', price: '129.00', priceCurrency: 'USD', url: new URL('/shop', site).href },
@@ -20,7 +20,7 @@ const jsonld = {
 ---
 <Base
   title="Blue Hour Nightly Pouches, 30 Nights | Blue Hour"
-  description="30 sealed nightly pouches on one roll for $129 with free US shipping. Each pouch holds 6 capsules: magnesium, vitamin C, B-complex, zinc and L-theanine. No 5-HTP, caffeine or stimulants."
+  description="30 sealed nightly pouches on one roll for $129 with free US shipping. Each pouch holds 6 capsules: magnesium, vitamin C, B-complex, zinc and glycine. No 5-HTP, caffeine or stimulants."
   jsonld={jsonld}
 >
 
@@ -42,7 +42,7 @@ const jsonld = {
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
         <p class="tag">One pouch. One night.</p>
-        <p>Stay for the last track, then take one before bed. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and L-theanine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
+        <p>Stay for the last track, then take one before bed. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
         <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: {signatureSummary}</span><a href="#build">Build your own pouch</a></div>
         <div class="spec"><b>Suggested use</b><span>Take 1 pouch before bed, with water.</span></div>
         <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.</span></div>
@@ -154,7 +154,7 @@ const jsonld = {
         <tbody>
           <tr><td>5-HTP</td><td class="us">None</td><td>Often included</td></tr>
           <tr><td>Caffeine or stimulants</td><td class="us">None</td><td>Varies</td></tr>
-          <tr><td>Choose your capsules</td><td class="us">Yes, up to 6 from a menu of 8</td><td>One fixed formula</td></tr>
+          <tr><td>Choose your capsules</td><td class="us">Yes, up to 6 from a menu of 7</td><td>One fixed formula</td></tr>
           <tr><td>Format</td><td class="us">One dispenser, 30 sealed pouches</td><td>Bottles or loose packs</td></tr>
           <tr><td>Subscription</td><td class="us">None</td><td>Often the default</td></tr>
           <tr><td>What we promise</td><td class="us">Support, never a cure</td><td>Often big recovery claims</td></tr>
@@ -184,7 +184,7 @@ const jsonld = {
         <article><h3>Vitamin C</h3><p>An antioxidant nutrient that helps protect cells and supports normal immune function.*</p><img src="/images/powder-bright.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article><h3>Methyl B-complex</h3><p>Eight B vitamins that help your body turn food into energy: B1, B2, B3, B5, B6, biotin, folate as 5-MTHF, and B12 as methylcobalamin.*</p><img src="/images/powder-steady.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article><h3>Zinc</h3><p>An essential mineral that helps support normal immune function.*</p><img src="/images/powder-guard.webp" alt="" loading="lazy" width="1300" height="560"></article>
-        <article><h3>L-theanine</h3><p>An amino acid found naturally in green and black tea.</p><img src="/images/powder-hush.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>Glycine</h3><p>The simplest amino acid. Your body uses it to build proteins, including collagen.*</p><img src="/images/powder-hush.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article class="out"><h3>What we left out</h3><p>5-HTP, caffeine and stimulants. Five ingredients is the whole list.</p></article>
       </div>
     </div>
@@ -205,7 +205,7 @@ const jsonld = {
       <details><summary>How and when do I take it?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pull one pouch from the dispenser, tear it off along the perforated line, and take the capsules with water before bed. Always follow the directions on the label.</p></details>
       <details><summary>Is it a hangover cure?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Blue Hour is a dietary supplement. It isn't intended to prevent, treat or cure hangovers or anything else, and it doesn't make alcohol or any other substance safer.</p></details>
       <details><summary>Why does it cost what it does?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. It works out at $4.30 a night.</p></details>
-      <details><summary>Can I change what's in my pouch?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from the signature six or build your own from our menu of 8 capsules, up to 6 per pouch. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
+      <details><summary>Can I change what's in my pouch?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from the signature six or build your own from our menu of 7 capsules, up to 6 per pouch. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
       <details><summary>Is this a subscription?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. You buy a roll when you want one, and nothing renews.</p></details>
       <details><summary>Is it right for me?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Blue Hour is for adults only. Talk to your doctor first if you're pregnant or nursing, take medication, or have a medical condition.</p></details>
       <details><summary>Do you ship to my country?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>We ship within the US for now.</p></details>
