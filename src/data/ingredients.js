@@ -3,7 +3,7 @@
 // confirm the menu, the per-capsule doses and the max counts below.
 // max = the most of one capsule allowed in a pouch. signature = how many the default pouch has.
 
-export const PRICE = 119;
+export const PRICE = 129;
 export const MAX_CAPS = 6;
 
 export const INGREDIENTS = [
