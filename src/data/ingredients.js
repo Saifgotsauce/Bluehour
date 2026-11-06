@@ -2,6 +2,7 @@
 // Every item is from OK Capsule's formulary. Before launch, have a pharmacist or formulator
 // confirm the menu, the per-capsule doses and the max counts below.
 // max = the most of one capsule allowed in a pouch. signature = how many the default pouch has.
+// facts = Supplement Facts rows per capsule [nutrient, amount, % Daily Value], copied from OK Capsule. other = other ingredients.
 
 export const PRICE = 129;
 export const MAX_CAPS = 6;
@@ -9,7 +10,21 @@ export const MAX_CAPS = 6;
 export const INGREDIENTS = [
   { id: 'level', name: 'Level', ingredient: 'Magnesium', dose: '', blurb: 'Helps support normal muscle and nerve function.*', img: 'cap-still', max: 2, signature: 2 },
   { id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 1, signature: 1 },
-  { id: 'spark', name: 'Spark', ingredient: 'Methyl B-complex', dose: '', blurb: 'B vitamins that help support normal energy metabolism.*', img: 'cap-steady', max: 1, signature: 1 },
+  {
+    id: 'spark', name: 'Spark', ingredient: 'Methyl B-complex', dose: '8 B vitamins', blurb: 'B vitamins that help support normal energy metabolism.*', img: 'cap-steady', max: 1, signature: 1,
+    facts: [
+      ['Vitamin B1 (as benfotiamine)', '20 mg', '1667%'],
+      ['Vitamin B2 (riboflavin and riboflavin-5-phosphate)', '17 mg', '1308%'],
+      ['Vitamin B3 (as niacin)', '15 mg', '94%'],
+      ['Vitamin B3 (as niacinamide)', '60 mg', '375%'],
+      ['Vitamin B6 (from pyridoxal-5-phosphate)', '10 mg', '500%'],
+      ['Folate (as calcium L-5-methyltetrahydrofolate)', '400 mcg DFE', '100%'],
+      ['Vitamin B12 (as methylcobalamin)', '500 mcg', '20833%'],
+      ['Biotin', '300 mcg', '1000%'],
+      ['Pantothenic acid (as D-calcium pantothenate)', '50 mg', '1000%'],
+    ],
+    other: 'Microcrystalline cellulose, vegetable capsule (hypromellose), MCT 70% C8/C10 coconut on acacia (GoMCT).',
+  },
   { id: 'core', name: 'Core', ingredient: 'Zinc', dose: '25 mg', blurb: 'An essential mineral that helps support normal immune function.*', img: 'cap-guard', max: 1, signature: 1 },
   { id: 'clear', name: 'Clear', ingredient: 'L-theanine', dose: '200 mg', blurb: 'An amino acid found naturally in green and black tea.', img: 'cap-hush', max: 1, signature: 1 },
   { id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 1, signature: 0 },
