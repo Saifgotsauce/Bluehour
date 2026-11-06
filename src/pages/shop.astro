@@ -12,7 +12,7 @@ const jsonld = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: 'Blue Hour nightly pouches',
-  description: 'One sealed pouch of 6 capsules for each night: magnesium, vitamin C, methyl B-complex, zinc and glycine. 30 pouches on one roll. No 5-HTP, caffeine or stimulants.',
+  description: 'One sealed pouch of 6 capsules a day: magnesium, vitamin C, methyl B-complex, zinc and glycine, or build your own. 30 pouches on one roll. No 5-HTP, caffeine or stimulants.',
   image: ['angle', 'flat', 'exploded', 'pouch'].map((n) => new URL(`/images/${n}.webp`, site).href),
   brand: { '@type': 'Brand', name: 'Blue Hour' },
   offers: { '@type': 'Offer', price: '129.00', priceCurrency: 'USD', url: new URL('/shop', site).href },
@@ -20,7 +20,7 @@ const jsonld = {
 ---
 <Base
   title="Blue Hour Nightly Pouches, 30 Nights | Blue Hour"
-  description="30 sealed nightly pouches on one roll for $129 with free US shipping. Each pouch holds 6 capsules: magnesium, vitamin C, B-complex, zinc and glycine. No 5-HTP, caffeine or stimulants."
+  description="30 sealed pouches on one roll for $129 with free US shipping. Six capsules a day with magnesium, vitamin C, B-complex, zinc and glycine, or build your own. For big nights, long sessions and early starts."
   jsonld={jsonld}
 >
 
@@ -42,7 +42,7 @@ const jsonld = {
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
         <p class="tag">One pouch. One night.</p>
-        <p>Stay for the last track, then take one with a late snack before bed. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
+        <p>For dance floors, festival weekends and long sessions at the gym. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
         <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: {signatureSummary}</span><a href="#build">Build your own pouch</a></div>
         <div class="spec"><b>Suggested use</b><span>Take 1 pouch a day with food and water, like with supper or a late snack before bed. Do not take more than 1 pouch a day.</span></div>
         <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.</span></div>
@@ -71,11 +71,11 @@ const jsonld = {
 
   <section class="sec dark scen slant" data-car data-auto>
     <div class="w stack" style="gap:30px;align-items:stretch">
-      <h2 style="text-align:center;font-size:clamp(34px,8.6vw,60px)">Made for nights like these</h2>
+      <h2 style="text-align:center;font-size:clamp(34px,8.6vw,60px)">Made for big nights and long days</h2>
       <div class="track" tabindex="0" aria-label="Situations Blue Hour fits">
         <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-alarm"/></svg><div><h3>Work at nine?</h3><p>Stay for the last track anyway. One pouch with a snack, alarm set, done.</p></div></article>
-        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-tent"/></svg><div><h3>Festival trip?</h3><p>Pack a strip of pouches instead of a bag of bottles. One a night, nothing to sort.</p></div></article>
-        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-moon"/></svg><div><h3>Out all weekend?</h3><p>Tear off one for each night and keep the same routine from Friday to Sunday.</p></div></article>
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-tent"/></svg><div><h3>Festival weekend?</h3><p>Three days, one tent, no bag of bottles. Tear off a strip of pouches and go.</p></div></article>
+        <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-weights"/></svg><div><h3>Training hard?</h3><p>Long run, leg day or a two-hour class. Same pouch, with your evening meal.</p></div></article>
         <article class="scard"><svg viewBox="0 0 96 96"><use href="#i-group"/></svg><div><h3>Going with friends?</h3><p>Thirty pouches go a long way. Tear one off and hand it over.</p></div></article>
       </div>
       <div class="dots lt"></div>
@@ -151,16 +151,16 @@ const jsonld = {
 
   <section class="sec">
     <div class="w stack" style="gap:30px;align-items:stretch">
-      <h2 class="rv">Not your usual recovery pill.</h2>
+      <h2 class="rv">Not your usual night-out supplement.</h2>
       <div class="tbw rv"><table class="tb">
-        <thead><tr><th></th><th class="us">Blue Hour</th><th>Typical rave supplement</th></tr></thead>
+        <thead><tr><th></th><th class="us">Blue Hour</th><th>Typical night-out supplement</th></tr></thead>
         <tbody>
           <tr><td>5-HTP</td><td class="us">None</td><td>Often included</td></tr>
           <tr><td>Caffeine or stimulants</td><td class="us">None</td><td>Varies</td></tr>
           <tr><td>Choose your capsules</td><td class="us">Yes, up to 6 from a menu of 7</td><td>One fixed formula</td></tr>
           <tr><td>Format</td><td class="us">One dispenser, 30 sealed pouches</td><td>Bottles or loose packs</td></tr>
           <tr><td>Subscription</td><td class="us">None</td><td>Often the default</td></tr>
-          <tr><td>What we promise</td><td class="us">Support, never a cure</td><td>Often big recovery claims</td></tr>
+          <tr><td>What we promise</td><td class="us">Support, never a cure</td><td>Often big claims</td></tr>
         </tbody>
       </table></div>
       <p class="fine">Based on common products in the category. Individual brands differ.</p>
@@ -206,7 +206,8 @@ const jsonld = {
       <h2 style="color:var(--deep);margin-bottom:18px">FAQs</h2>
       <details><summary>Does Blue Hour contain 5-HTP?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. We left it out, along with caffeine and other stimulants, to keep the formula simple.</p></details>
       <details><summary>How and when do I take it?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pull one pouch from the dispenser, tear it off along the perforated line, and take the capsules with food and water, like with supper or a late snack before bed. Take 1 pouch a day, and never more than 1. Always follow the directions on your pamphlet.</p></details>
-      <details><summary>Is it a hangover cure?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Blue Hour is a dietary supplement. It isn't intended to prevent, treat or cure hangovers or anything else, and it doesn't make alcohol or any other substance safer.</p></details>
+      <details><summary>Does it cure anything?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Blue Hour is a dietary supplement. It isn't intended to diagnose, treat, cure or prevent any disease, and it doesn't make alcohol or anything else you take safer. Water, food and sleep still do the heavy lifting.</p></details>
+      <details><summary>Is it only for nights out?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. It's for any day that asks a lot of you: a long set, a festival weekend, a hard training session or a double shift. Take 1 pouch a day with food.</p></details>
       <details><summary>Why does it cost what it does?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. It works out at $4.30 a night.</p></details>
       <details><summary>Can I change what's in my pouch?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from the signature six or build your own from our menu of 7 capsules, up to 6 per pouch. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
       <details><summary>Is this a subscription?<svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. You buy a roll when you want one, and nothing renews.</p></details>

@@ -48,7 +48,7 @@ Plan this before you leave, not at the end of the night when your phone is on 3%
 
 When you arrive, find out where the medical or welfare tent is. If a friend feels unwell, gets very hot or confused, or can't stand up, get the medical team or security straight away and stay with them until help arrives.
 
-If you're making choices about drugs, [DanceSafe](https://dancesafe.org) offers harm reduction information written for people who go out.
+[DanceSafe](https://dancesafe.org) has more safety information written for people who go out.
 
 ## Set up the morning before you leave
 
