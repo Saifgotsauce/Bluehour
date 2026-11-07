@@ -3,8 +3,6 @@
 
 import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary } from '../data/ingredients.js';
 
-// Set PUBLIC_CHECKOUT_URL in Vercel (Settings > Environment Variables) to your Stripe Payment Link.
-const CHECKOUT_URL = import.meta.env.PUBLIC_CHECKOUT_URL || '';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -157,11 +155,34 @@ document.addEventListener('click', (e) => {
 ['#cartx', '#menux', '#scrim'].forEach((s) => { const el = $(s); if (el) el.addEventListener('click', closeAll); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
 const checkout = $('#checkout');
+// Sends the cart to /api/checkout, which opens Stripe's payment page.
 if (checkout) {
-  checkout.addEventListener('click', () => {
-    if (CHECKOUT_URL) location.href = CHECKOUT_URL;
-    else $('#chknote').hidden = false;
+  checkout.addEventListener('click', async () => {
+    if (!cart.length || checkout.disabled) return;
+    const note = $('#chknote');
+    note.hidden = true;
+    checkout.disabled = true;
+    checkout.textContent = 'Opening secure checkout\u2026';
+    try {
+      const r = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lines: cart }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && d.url) { location.href = d.url; return; }
+      note.textContent = d.error === 'not_configured'
+        ? "Checkout isn't switched on yet. Please check back soon."
+        : "Checkout couldn't open. Check your connection and try again.";
+    } catch (e) {
+      note.textContent = "Checkout couldn't open. Check your connection and try again.";
+    }
+    note.hidden = false;
+    checkout.disabled = false;
+    paint();
   });
+  // Coming back from Stripe with the back button: make the button usable again.
+  window.addEventListener('pageshow', () => { checkout.disabled = false; paint(); });
 }
 
 /* ---------- quantity pickers (shop) ---------- */

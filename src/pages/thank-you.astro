@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Top from '../components/Top.astro';
+import Foot from '../components/Foot.astro';
+---
+<Base title="Order received | Blue Hour" description="Thanks for your Blue Hour order." noindex>
+  <script is:inline>
+    try {
+      if (new URLSearchParams(location.search).has('session_id')) {
+        localStorage.removeItem('bh-cart2');
+        localStorage.removeItem('bh-cart');
+      }
+    } catch (e) {}
+  </script>
+  <header class="jhero">
+    <div class="mesh"><i></i><i></i><i></i></div>
+    <div class="grain"></div>
+    <Top />
+    <div class="in">
+      <p class="crumb"><span>Order received</span></p>
+      <h1>You're in. See you at the next one.</h1>
+      <p class="dek">Your receipt is on its way by email. Your roll is packed to order with the capsules you picked, and we'll email tracking when it ships.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <a class="btn" href="/blog">Read the Journal</a>
+        <a class="btn" href="/shop">Back to the shop</a>
+      </div>
+    </div>
+  </header>
+  <main class="w sec" style="padding-top:clamp(24px,5vw,50px)">
+    <div class="prose">
+      <h2>What happens next</h2>
+      <ol>
+        <li>We pack your roll to order.</li>
+        <li>It ships free within the US. Delivery usually takes 3 to 8 business days after it ships.</li>
+        <li>Take 1 pouch a day with food and water. Don't take more than 1 pouch a day.</li>
+      </ol>
+      <p>Something wrong with your order? Email <a href="mailto:hello@bluehournights.com">hello@bluehournights.com</a> within 5 business days of delivery. See <a href="/refunds">Refunds and replacements</a>.</p>
+    </div>
+  </main>
+  <Foot id="em-thanks" />
+</Base>
