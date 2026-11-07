@@ -232,14 +232,50 @@ $$('.form').forEach((f) => {
 });
 
 /* ---------- reveal on scroll ---------- */
-if ('IntersectionObserver' in window && !reduce) {
+// Lists reveal item by item; headings and blocks fade up. Items that come into view together are staggered.
+window.__bhMotion = true;
+const motion = document.documentElement.classList.contains('js-motion');
+if (motion) {
+  const inHero = (el) => el.closest('.hero, .phero, .jhero, .menu, .cart');
+  $$('.glist, .steps, .wgrid, .tgrid, .ingr, .posts, .ilist, .cgrid').forEach((list) => {
+    list.classList.remove('rv');
+    [...list.children].forEach((c) => c.classList.add('rv'));
+  });
+  $$('.sec h2, .lead, .bhead, .chips, .bign, .fullshot img, .faq details, .why .def, .why p, .tbw, .leftout').forEach((el) => {
+    if (inHero(el) || el.closest('.rv') || el.classList.contains('rv')) return;
+    if (getComputedStyle(el).transform !== 'none') return; // keeps tilted headings tilted
+    el.classList.add('rv');
+  });
   const io = new IntersectionObserver((es) => {
-    es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { rootMargin: '0px 0px -6% 0px' });
+    es.filter((e) => e.isIntersecting).forEach((e, i) => {
+      e.target.style.setProperty('--d', Math.min(i * 0.07, 0.35) + 's');
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
   $$('.rv').forEach((el) => io.observe(el));
 } else {
   $$('.rv').forEach((el) => el.classList.add('in'));
 }
+
+// The gradient shimmer on the benefits list only runs while it's on screen.
+if ('IntersectionObserver' in window) {
+  const live = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('live', e.isIntersecting)));
+  $$('.glist').forEach((g) => live.observe(g));
+}
+
+/* ---------- scrolling text speed ---------- */
+// A steady speed in pixels per second, so long and short lines move the same on every screen.
+function setMarquee() {
+  const speed = Math.min(120, Math.max(64, innerWidth * 0.18));
+  $$('.mq div').forEach((d) => {
+    const dur = d.scrollWidth / 2 / speed;
+    const now = parseFloat(d.style.animationDuration) || 0;
+    if (!now || Math.abs(now - dur) / dur > 0.1) d.style.animationDuration = dur.toFixed(1) + 's';
+  });
+}
+setMarquee();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(setMarquee);
 
 /* ---------- 30 nights grid (home) ---------- */
 const grid = $('#ngrid');
@@ -274,16 +310,23 @@ function buybar() { if (stick && buyrow) stick.classList.toggle('on', buyrow.get
 
 /* ---------- floating capsules (home) ---------- */
 const caps = $$('[data-float]');
+let capY = window.scrollY || 0, capRaf = 0;
+function capStep() {
+  const target = window.scrollY || 0;
+  capY += (target - capY) * 0.16;
+  if (Math.abs(target - capY) < 0.4) capY = target;
+  caps.forEach((c) => {
+    const d = parseFloat(c.getAttribute('data-float'));
+    c.style.transform = 'translate3d(0,' + (-capY * d).toFixed(1) + 'px,0) rotate(' + (capY * d * 0.12).toFixed(2) + 'deg)';
+  });
+  capRaf = capY !== target ? requestAnimationFrame(capStep) : 0;
+}
 function float() {
   ticking = false;
   buybar();
   night();
-  if (reduce) return;
-  const y = window.scrollY || 0;
-  caps.forEach((c) => {
-    const d = parseFloat(c.getAttribute('data-float'));
-    c.style.transform = 'translate3d(0,' + -y * d + 'px,0) rotate(' + y * d * 0.12 + 'deg)';
-  });
+  if (reduce || !caps.length) return;
+  if (!capRaf) capRaf = requestAnimationFrame(capStep);
 }
 let ticking = false;
 window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(float); } }, { passive: true });
