@@ -473,11 +473,5 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 @keyframes vt-out{to{opacity:0}}
 @keyframes vt-in{from{opacity:0}}
 
-/* capsule parallax runs on the browser's scroll timeline where supported, so it never lags the scroll */
-@supports (animation-timeline: scroll()) {
-  .cap{animation:capfloat linear both;animation-timeline:scroll(root);animation-range:0px 1000px}
-  @keyframes capfloat{to{transform:translate3d(0,calc(var(--f,.15) * -1000px),0) rotate(calc(var(--f,.15) * 120deg))}}
-}
 /* animations pause while their section is off screen */
 .paused .mesh i,.paused.mq div,.paused .spin svg,.paused .cap span,.paused .burst,.paused .glist b{animation-play-state:paused}
-@media (prefers-reduced-motion:reduce){.cap{animation:none!important}}

@@ -318,18 +318,25 @@ const stick = $('#stick'), buyrow = $('#buyrow');
 function buybar() { if (stick && buyrow) stick.classList.toggle('on', buyrow.getBoundingClientRect().bottom < 0); }
 
 /* ---------- floating capsules (home) ---------- */
-// Browsers with scroll-driven animations handle this in CSS. Others follow the scroll position directly.
-const caps = window.CSS && CSS.supports && CSS.supports('animation-timeline: scroll()') ? [] : $$('[data-float]');
+// The capsules ease toward the scroll position, so they glide instead of snapping with it.
+const caps = $$('[data-float]');
+let capY = window.scrollY || 0, capRaf = 0;
+function capStep() {
+  const target = window.scrollY || 0;
+  capY += (target - capY) * 0.16;
+  if (Math.abs(target - capY) < 0.4) capY = target;
+  caps.forEach((c) => {
+    const d = parseFloat(c.getAttribute('data-float'));
+    c.style.transform = 'translate3d(0,' + (-capY * d).toFixed(1) + 'px,0) rotate(' + (capY * d * 0.12).toFixed(2) + 'deg)';
+  });
+  capRaf = capY !== target ? requestAnimationFrame(capStep) : 0;
+}
 function float() {
   ticking = false;
   buybar();
   night();
   if (reduce || !caps.length) return;
-  const y = window.scrollY || 0;
-  caps.forEach((c) => {
-    const d = parseFloat(c.getAttribute('data-float'));
-    c.style.transform = 'translate3d(0,' + (-y * d).toFixed(1) + 'px,0) rotate(' + (y * d * 0.12).toFixed(2) + 'deg)';
-  });
+  if (!capRaf) capRaf = requestAnimationFrame(capStep);
 }
 let ticking = false;
 window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(float); } }, { passive: true });
