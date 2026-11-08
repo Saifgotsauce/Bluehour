@@ -1,7 +1,7 @@
 // Blue Hour site behaviour: cart, menu, carousels, buy bar and the small animations.
 // Every block checks that its elements exist, because each page only has some of them.
 
-import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary } from '../data/ingredients.js';
+import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary } from '../data/ingredients.js';
 
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -60,7 +60,7 @@ function paint() {
   }
   box.innerHTML = cart.map((l, i) =>
     '<div class="line"><img src="/images/flat.webp" alt="" width="82" height="102"><div><h3>' + lineTitle(l.mix) +
-    '</h3><div class="mt">' + mixSummary(l.mix) + '</div><div class="mt">30 nights per roll</div><div class="ctl"><div class="qty"><button data-line="' + i +
+    '</h3><div class="mt">' + packSummary(l.mix) + '</div><div class="mt">30 nights per roll</div><div class="ctl"><div class="qty"><button data-line="' + i +
     '" data-d="-1" aria-label="Remove one roll">−</button><span>' + l.qty + '</span><button data-line="' + i +
     '" data-d="1" aria-label="Add one roll">+</button></div><div class="price">' + money(l.qty * PRICE) +
     '</div></div><button class="trash" data-rm="' + i + '">Remove</button></div></div>'

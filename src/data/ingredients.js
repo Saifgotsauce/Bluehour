@@ -85,3 +85,7 @@ export const mixKey = (mix) => INGREDIENTS.filter((i) => mix[i.id]).map((i) => i
 export const isSignature = (mix) => mixKey(mix) === mixKey(SIGNATURE);
 export const mixSummary = (mix) =>
   INGREDIENTS.filter((i) => mix[i.id]).map((i) => i.name + (mix[i.id] > 1 ? ' ×' + mix[i.id] : '')).join(', ');
+
+// Ingredient names for the cart, so shoppers see exactly what they're paying for.
+export const packSummary = (mix) =>
+  INGREDIENTS.filter((i) => mix[i.id]).map((i) => i.ingredient + (mix[i.id] > 1 ? ' \u00d7' + mix[i.id] : '')).join(', ');

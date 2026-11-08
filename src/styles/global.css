@@ -486,3 +486,5 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .sky::before,.foot::before{content:"";position:absolute;inset:0;z-index:-1;background:inherit;animation:hue 6s ease-in-out infinite alternate;pointer-events:none}
 .nw{white-space:nowrap}
 .faq summary .q{flex:1;min-width:0}
+.trustrow{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.trustrow li{padding:6px 12px;border-radius:99px;background:var(--mist);color:var(--deep);font-weight:600;font-size:13px;line-height:1.2}

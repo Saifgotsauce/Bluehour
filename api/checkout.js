@@ -29,16 +29,16 @@ export function sessionParams(lines, origin) {
   p.set('success_url', `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`);
   p.set('cancel_url', `${origin}/shop`);
   p.set('shipping_address_collection[allowed_countries][0]', 'US');
-  p.set('phone_number_collection[enabled]', 'true');
   p.set('allow_promotion_codes', 'true');
   p.set('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
   p.set('shipping_options[0][shipping_rate_data][fixed_amount][amount]', '0');
   p.set('shipping_options[0][shipping_rate_data][fixed_amount][currency]', 'usd');
   p.set('shipping_options[0][shipping_rate_data][display_name]', 'Free US shipping');
-  p.set(
-    'custom_text[submit][message]',
-    'Every roll is packed to order. By paying, you agree to the Blue Hour Terms and Refund policy at bluehournights.com.'
-  );
+  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][unit]', 'business_day');
+  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]', '4');
+  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]', 'business_day');
+  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '10');
+  p.set('custom_text[submit][message]', 'Every roll is packed to order and ships free within the US.');
 
   const summary = [];
   lines.forEach((l, i) => {
@@ -47,8 +47,9 @@ export function sessionParams(lines, origin) {
     p.set(`line_items[${i}][quantity]`, String(l.qty));
     p.set(`line_items[${i}][price_data][currency]`, 'usd');
     p.set(`line_items[${i}][price_data][unit_amount]`, String(PRICE * 100));
-    p.set(`line_items[${i}][price_data][product_data][name]`, `Blue Hour ${kind.toLowerCase()}, 30 nights`);
-    p.set(`line_items[${i}][price_data][product_data][description]`, `Each pouch: ${pack}`);
+    p.set(`line_items[${i}][price_data][product_data][name]`, 'Blue Hour, 30-night roll');
+    p.set(`line_items[${i}][price_data][product_data][description]`, `${kind}: ${pack}`);
+    p.set(`line_items[${i}][price_data][product_data][images][0]`, `${origin}/images/checkout-roll.jpg`);
     const line = `${l.qty} roll${l.qty > 1 ? 's' : ''}: ${pack}`.slice(0, 500);
     p.set(`metadata[pouch_${i + 1}]`, line);
     p.set(`payment_intent_data[metadata][pouch_${i + 1}]`, line);
