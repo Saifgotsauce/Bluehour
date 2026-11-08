@@ -521,12 +521,33 @@ function popAllowed() {
   try { if (sessionStorage.getItem('bh-pop')) return false; } catch (e) { /* ignore */ }
   return true;
 }
+// When it shows: on the homepage, shop and other pages, the full sign-up opens after 6 seconds or once
+// someone scrolls about one screen. On Journal pages, where people arrive from Google to read, a slim bar
+// appears instead (after 8 seconds or a quarter of the way down) and opens the full sign-up only when tapped.
+// On desktop, heading for the tab bar to leave opens the full sign-up on any page.
+const IS_JOURNAL = /^\/blog(\/|$)/.test(location.pathname);
 let popArmed = popAllowed();
-function tryPop() {
+function tryPop(full) {
   if (!popArmed) return;
-  if ($('#cart.on, #menu.on')) { setTimeout(tryPop, 6000); return; }
+  if ($('#cart.on, #menu.on, .wpop')) { setTimeout(() => tryPop(full), 6000); return; }
   popArmed = false;
-  fetch('/api/subscribe').then((r) => r.json()).then((d) => { if (d.on) openPop(); }).catch(() => {});
+  fetch('/api/subscribe').then((r) => r.json()).then((d) => {
+    if (d.on) (IS_JOURNAL && !full ? openPopBar : openPop)();
+  }).catch(() => {});
+}
+function openPopBar() {
+  try { sessionStorage.setItem('bh-pop', '1'); } catch (e) { /* ignore */ }
+  const bar = document.createElement('div');
+  bar.className = 'popbar';
+  bar.innerHTML =
+    '<button class="popbar-open" type="button"><span class="popbar-tag">10% off</span><span class="popbar-t">Your first roll. Tap for the code</span>' +
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+    '<button class="popbar-x" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><use href="#i-x"/></svg></button>';
+  document.body.append(bar);
+  const hide = () => { bar.classList.remove('on'); setTimeout(() => bar.remove(), 700); };
+  $('.popbar-x', bar).addEventListener('click', () => { store.set('bh-pop', String(Date.now())); hide(); });
+  $('.popbar-open', bar).addEventListener('click', () => { hide(); openPop(); });
+  requestAnimationFrame(() => requestAnimationFrame(() => bar.classList.add('on')));
 }
 function openPop() {
   try { sessionStorage.setItem('bh-pop', '1'); } catch (e) { /* ignore */ }
@@ -593,13 +614,15 @@ function openPop() {
   requestAnimationFrame(() => requestAnimationFrame(() => { pop.classList.add('on'); scrim.classList.add('on'); pop.focus({ preventScroll: true }); }));
 }
 if (popArmed) {
-  setTimeout(tryPop, 15000);
-  document.addEventListener('mouseout', (e) => { if (!e.relatedTarget && e.clientY <= 0) tryPop(); });
+  setTimeout(() => tryPop(false), IS_JOURNAL ? 8000 : 6000);
+  document.addEventListener('mouseout', (e) => { if (!e.relatedTarget && e.clientY <= 0) tryPop(true); });
 }
 function popScroll() {
   if (!popArmed) return;
-  const h = document.documentElement.scrollHeight - innerHeight;
-  if (h > 400 && scrollY / h > 0.5) tryPop();
+  if (IS_JOURNAL) {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    if (h > 400 && scrollY / h > 0.25) tryPop(false);
+  } else if (scrollY > innerHeight * 0.85) tryPop(false);
 }
 
 /* ---------- reveal on scroll ---------- */
