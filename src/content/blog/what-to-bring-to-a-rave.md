@@ -21,13 +21,13 @@ If you add one thing to your routine, make it this. The World Health Organizatio
 
 Its global standard for venues and events recommends a maximum average sound level of 100 decibels, quiet zones where people can rest their ears, and hearing protection made available to the crowd. Plenty of nights don't follow it, so bring your own.
 
-Foam earplugs work, but they muffle everything. Reusable high-fidelity earplugs, the kind made for musicians, lower the volume more evenly, so the music still sounds like music. Keep a pair on your keyring and they'll come every time.
+Foam earplugs work, but they muffle everything. Reusable high-fidelity earplugs, the kind made for musicians, lower the volume more evenly, so the music still sounds like music. Keep a pair on your keyring and they'll come every time. Our full guide covers [how to protect your hearing at raves, clubs and festivals](/blog/protect-your-hearing-at-raves-and-festivals), including how loud nights really get.
 
 Ringing ears after a night out means the volume was too much for too long. If it doesn't fade after a day or two, get your hearing checked.
 
 ## Water and staying cool
 
-Dancing in a packed room is hard work, and you sweat more than you notice. Sip water regularly through the night instead of drinking a lot at once, and take breaks somewhere cooler. Many venues and festivals let you bring an empty refillable bottle, but check first, because some don't.
+Dancing in a packed room is hard work, and you sweat more than you notice. Sip water regularly through the night instead of drinking a lot at once, and take breaks somewhere cooler. Many venues and festivals let you bring an empty refillable bottle, but check first, because some don't. Here's more on [how to stay hydrated at a festival](/blog/how-to-stay-hydrated-at-a-festival), including why drinking too much water is a risk too.
 
 ## Comfort
 

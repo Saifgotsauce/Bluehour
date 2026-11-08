@@ -38,7 +38,7 @@ Too much magnesium from supplements often causes diarrhea, sometimes with nausea
 
 ## How much is too much
 
-For adults, the NIH's upper limit for magnesium from supplements and medications is **350 mg a day**. That limit doesn't count magnesium from food. Add up everything you take, because magnesium also turns up in multivitamins, antacids and some laxatives.
+For adults, the NIH's upper limit for magnesium from supplements and medications is **350 mg a day**. That limit doesn't count magnesium from food. Add up everything you take, because magnesium also turns up in multivitamins, antacids and some laxatives. Taking it alongside zinc? Here's [whether you can take zinc and magnesium together](/blog/can-you-take-zinc-and-magnesium-together).
 
 ## Check with a doctor or pharmacist first if
 

@@ -23,7 +23,26 @@ const site = Astro.site!;
 const url = new URL(`/blog/${post.id}`, site).href;
 const more = posts.filter((p) => p.id !== post.id).slice(0, 3);
 
-const jsonld = [
+// A post's "## FAQ" section (### question, then the answer) also becomes FAQPage structured data.
+function faqFrom(body = '') {
+  const start = body.search(/^## FAQ[ \t]*$/m);
+  if (start < 0) return [];
+  const rest = body.slice(start).replace(/^## FAQ[ \t]*$/m, '');
+  const end = rest.search(/^## /m);
+  const section = end < 0 ? rest : rest.slice(0, end);
+  return section
+    .split(/^### /m)
+    .slice(1)
+    .map((chunk) => {
+      const [q, ...a] = chunk.split('\n');
+      const text = a.join(' ').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_`]/g, '').replace(/\s+/g, ' ').trim();
+      return { q: q.trim(), a: text };
+    })
+    .filter((f) => f.q && f.a);
+}
+const faq = faqFrom(post.body ?? '');
+
+const jsonld: Record<string, unknown>[] = [
   {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -45,6 +64,13 @@ const jsonld = [
     ],
   },
 ];
+if (faq.length) {
+  jsonld.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  });
+}
 ---
 <Base title={`${title} | Blue Hour`} description={description} image={image} type="article" jsonld={jsonld}>
   <header class="jhero">

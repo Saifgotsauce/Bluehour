@@ -50,6 +50,8 @@ Set a bedtime early enough to get at least 7 to 8 hours of sleep, as the AASM re
 
 If you're still struggling to sleep after a few weeks, or you feel tired even after 7 to 9 hours in bed, talk to a doctor. A sleep specialist can give advice that fits your schedule.
 
+Curious about supplements people take for sleep? Here's [what the research says about glycine](/blog/glycine-for-sleep), including its limits.
+
 ## Sources
 
 - American Academy of Sleep Medicine, [Healthy sleep habits](https://sleepeducation.org/healthy-sleep/healthy-sleep-habits/)
