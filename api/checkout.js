@@ -49,7 +49,7 @@ export function sessionParams(lines, origin) {
     p.set(`line_items[${i}][price_data][unit_amount]`, String(PRICE * 100));
     p.set(`line_items[${i}][price_data][product_data][name]`, 'Blue Hour, 30-night roll');
     p.set(`line_items[${i}][price_data][product_data][description]`, `${kind}: ${pack}`);
-    p.set(`line_items[${i}][price_data][product_data][images][0]`, `${origin}/images/checkout-roll.jpg`);
+    p.set(`line_items[${i}][price_data][product_data][images][0]`, `${origin}/images/checkout-box.jpg`);
     const line = `${l.qty} roll${l.qty > 1 ? 's' : ''}: ${pack}`.slice(0, 500);
     p.set(`metadata[pouch_${i + 1}]`, line);
     p.set(`payment_intent_data[metadata][pouch_${i + 1}]`, line);
