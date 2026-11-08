@@ -3,8 +3,9 @@
 // browser can't change what an order costs or what goes into a pouch.
 // Needs STRIPE_SECRET_KEY in Vercel (Settings > Environment Variables). Use the sk_test_ key first.
 
-import { PRICE, INGREDIENTS, cleanMix, mixTotal, isSignature, eachFor, savingFor, tierFor } from '../src/data/ingredients.js';
-import { findPromo } from './_promo.js';
+import { PRICE, INGREDIENTS, cleanMix, mixTotal, isSignature, eachFor, savingFor, tierFor, totalFor } from '../src/data/ingredients.js';
+import { findPromo, promoValue } from './_promo.js';
+import { readEgg, eggCoupon } from './_eggs.js';
 
 const MAX_LINES = 8;
 const MAX_QTY = 9;
@@ -24,8 +25,9 @@ export function cleanLines(lines) {
     .filter((l) => mixTotal(l.mix) > 0);
 }
 
-// promoId: a Stripe promotion code ID to apply up front. Without one, shoppers can type a code on the Stripe page.
-export function sessionParams(lines, origin, promoId) {
+// disc: { promo: promotion code ID } or { coupon: coupon ID } to apply up front.
+// Without one, shoppers can type a code on the Stripe page.
+export function sessionParams(lines, origin, disc) {
   const rolls = lines.reduce((a, l) => a + l.qty, 0);
   const each = eachFor(rolls);
   const saving = savingFor(rolls);
@@ -36,7 +38,8 @@ export function sessionParams(lines, origin, promoId) {
   p.set('success_url', `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`);
   p.set('cancel_url', `${origin}/shop`);
   p.set('shipping_address_collection[allowed_countries][0]', 'US');
-  if (promoId) p.set('discounts[0][promotion_code]', promoId);
+  if (disc && disc.promo) p.set('discounts[0][promotion_code]', disc.promo);
+  else if (disc && disc.coupon) p.set('discounts[0][coupon]', disc.coupon);
   else p.set('allow_promotion_codes', 'true');
   p.set('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
   p.set('shipping_options[0][shipping_rate_data][fixed_amount][amount]', '0');
@@ -108,11 +111,28 @@ export default async function handler(req, res) {
   const origin = `${proto}://${host}`;
 
   try {
-    // A code from a link or the welcome offer gets applied for the shopper. If it's expired or
-    // doesn't fit this order, they still get to checkout and can type a different code there.
+    // One discount per order: whichever saves the shopper the most out of their code (from a link or the
+    // welcome offer) and the best easter egg they've found. Crew pricing isn't a discount and always applies.
+    // If Stripe turns a discount down (expired, first orders only...), try the next one, then none, so the
+    // shopper still gets to checkout and can type a code there.
+    const rolls = lines.reduce((a, l) => a + l.qty, 0);
+    const subtotal = totalFor(rolls) * 100;
+    const options = [];
     const promo = body.code ? await findPromo(body.code, key).catch(() => null) : null;
-    let out = await createSession(key, sessionParams(lines, origin, promo && promo.id));
-    if (!out.ok && promo) out = await createSession(key, sessionParams(lines, origin, null));
+    if (promo) options.push({ value: promoValue(promo, subtotal), disc: { promo: promo.id } });
+    const egg = readEgg(body.egg);
+    if (egg) {
+      const coupon = await eggCoupon(egg, key).catch(() => null);
+      if (coupon) options.push({ value: Math.min(egg.amount * 100, subtotal), disc: { coupon } });
+    }
+    const tries = options.filter((o) => o.value > 0).sort((a, b) => b.value - a.value);
+    tries.push({ value: 0, disc: null });
+
+    let out;
+    for (const o of tries) {
+      out = await createSession(key, sessionParams(lines, origin, o.disc));
+      if (out.ok) break;
+    }
     if (!out.ok) {
       console.error('Stripe Checkout error:', out.data && out.data.error ? out.data.error.message : out.status);
       return res.status(502).json({ error: 'stripe_error' });

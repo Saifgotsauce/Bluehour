@@ -38,7 +38,22 @@ export async function findPromo(code, key) {
   if (!coupon || coupon.valid === false) return null;
   if (pc.expires_at && pc.expires_at * 1000 < Date.now()) return null;
   if (pc.max_redemptions && pc.times_redeemed >= pc.max_redemptions) return null;
-  return { id: pc.id, code: pc.code, label: describe(coupon, pc.restrictions || {}) };
+  const rs = pc.restrictions || {};
+  return {
+    id: pc.id,
+    code: pc.code,
+    label: describe(coupon, rs),
+    percent: +coupon.percent_off || 0,
+    amount: +coupon.amount_off || 0,
+    minimum: +rs.minimum_amount || 0,
+  };
+}
+
+// What a code would save on an order, in cents (so checkout can pick the shopper's best discount).
+export function promoValue(promo, subtotalCents) {
+  if (!promo || subtotalCents < promo.minimum) return 0;
+  if (promo.percent) return Math.round((subtotalCents * promo.percent) / 100);
+  return Math.min(promo.amount, subtotalCents);
 }
 
 export function queryParam(req, name) {

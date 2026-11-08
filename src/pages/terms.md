@@ -2,7 +2,7 @@
 layout: ../layouts/Legal.astro
 title: Terms of service
 description: The terms for using bluehournights.com and buying Blue Hour, including who can order, what our supplements are and aren't, and how orders work.
-updated: November 6, 2026
+updated: November 8, 2026
 ---
 
 These terms apply when you use bluehournights.com or buy from Blue Hour ("we" or "us"). By placing an order, you agree to them.
@@ -26,6 +26,12 @@ Take 1 pouch a day with food and water. Don't take more than 1 pouch a day. Each
 Prices are in US dollars and include shipping. We may refuse or cancel an order, for example if a price on the site is wrong or we suspect fraud. If we cancel an order you've paid for, we'll refund you in full.
 
 Product photos and capsule illustrations are for display. Your exact pouch is listed in the Supplement Facts in your pamphlet.
+
+## Crew pricing and discounts
+
+Rolls cost less each when you order more than one: 2 rolls are $119 each and 3 or more are $109 each. Every roll in one order counts, whatever pouch is in it.
+
+Only one discount applies to each order. If you have more than one, such as a discount code and a discount you found on our site, we apply the one that saves you the most. Crew pricing isn't a discount, so it applies either way. Discounts you find on our site last 48 hours from when you find them. Discounts have no cash value, can't be swapped for money, and may change or end at any time, but never for an order you've already paid for.
 
 ## Payment
 

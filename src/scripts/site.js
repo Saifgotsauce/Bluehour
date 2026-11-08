@@ -1,6 +1,7 @@
 // Blue Hour site behaviour: cart, menu, carousels, buy bar and the small animations.
 // Every block checks that its elements exist, because each page only has some of them.
 
+import { EGGS, eggById, inBlueHour, COLLECTOR_NEEDS } from '../data/eggs.js';
 import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier } from '../data/ingredients.js';
 
 
@@ -32,8 +33,8 @@ function setCode(c) {
 let promoDefault = null;
 function codeBar() {
   let bar = $('.promo');
-  const c = getCode();
-  if (!bar && !c) return;
+  const c = getCode(), egg = bestEgg();
+  if (!bar && !c && !egg) return;
   if (!bar) {
     bar = document.createElement('div');
     bar.className = 'promo';
@@ -41,7 +42,13 @@ function codeBar() {
     document.body.insertBefore(bar, first && first.tagName.toLowerCase() === 'svg' ? first.nextSibling : first);
   }
   if (promoDefault === null) promoDefault = bar.innerHTML;
-  if (c) { bar.classList.add('coded'); bar.innerHTML = '<b>' + c.code.replace(/[^\w-]/g, '') + '</b> saved: ' + c.label.replace(/[<>&"]/g, '') + ', applied at checkout.'; }
+  if (egg && c) {
+    bar.classList.add('coded');
+    bar.innerHTML = '<b>' + c.code.replace(/[^\w-]/g, '') + '</b> and the <b>' + egg.name + '</b> egg saved. Your best one comes off at checkout.';
+  } else if (egg) {
+    bar.classList.add('coded');
+    bar.innerHTML = '<b>' + egg.name + '</b> egg found: $' + egg.amount + ' off, applied at checkout. ' + eggsFoundCount() + ' of ' + EGGS.length + ' found.';
+  } else if (c) { bar.classList.add('coded'); bar.innerHTML = '<b>' + c.code.replace(/[^\w-]/g, '') + '</b> saved: ' + c.label.replace(/[<>&"]/g, '') + ', applied at checkout.'; }
   else if (promoDefault) { bar.classList.remove('coded'); bar.innerHTML = promoDefault; }
   else bar.remove();
 }
@@ -64,6 +71,80 @@ const checkPromo = (code) =>
     checkPromo(c.code).then((d) => { if (d.valid) setCode({ ...c, label: d.label }); else if (d.valid === false) setCode(null); });
   }
 })();
+
+/* ---------- easter eggs ---------- */
+// Hidden discounts (see src/data/eggs.js). Finding one asks /api/egg for a signed token, kept in this
+// browser for 48 hours and sent with the order. Checkout applies the best single discount the shopper has.
+function eggStore() {
+  try { return JSON.parse(store.get('bh-eggs') || '{}') || {}; } catch (e) { return {}; }
+}
+function liveEggs() {
+  const all = eggStore(), now = Date.now(), out = [];
+  Object.keys(all).forEach((id) => {
+    const e = eggById(id), t = all[id];
+    if (e && t && t.token && t.x > now) out.push({ ...e, token: t.token, amount: t.amount, x: t.x });
+  });
+  return out;
+}
+function bestEgg() { return liveEggs().sort((a, b) => b.amount - a.amount)[0] || null; }
+function eggsFoundCount() {
+  try { return (JSON.parse(store.get('bh-eggs-seen') || '[]') || []).length; } catch (e) { return 0; }
+}
+const asking = new Set();
+async function findEgg(id) {
+  const egg = eggById(id);
+  if (!egg || asking.has(id) || liveEggs().some((e) => e.id === id)) return;
+  asking.add(id);
+  try {
+    const r = await fetch('/api/egg', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ egg: id, offset: -new Date().getTimezoneOffset(), have: liveEggs().map((e) => e.token) }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !d.token) return;
+    const all = eggStore();
+    all[id] = { token: d.token, amount: d.amount, x: d.expires };
+    store.set('bh-eggs', JSON.stringify(all));
+    let seen = [];
+    try { seen = JSON.parse(store.get('bh-eggs-seen') || '[]') || []; } catch (e) { /* ignore */ }
+    if (!seen.includes(id)) { seen.push(id); store.set('bh-eggs-seen', JSON.stringify(seen)); }
+    eggToast(egg, d.amount);
+    codeBar(); paint();
+    if (id !== 'collector' && liveEggs().filter((e) => e.id !== 'collector').length >= COLLECTOR_NEEDS) {
+      setTimeout(() => findEgg('collector'), 2600);
+    }
+  } catch (e) { /* offline: they can find it again */ } finally { asking.delete(id); }
+}
+function eggToast(egg, amount) {
+  $$('.eggtoast').forEach((t) => t.remove());
+  const t = document.createElement('div');
+  t.className = 'eggtoast ' + egg.rarity;
+  t.setAttribute('role', 'status');
+  const caps = { common: 'cap-guard', rare: 'cap-bright', legendary: 'cap-steady' };
+  t.innerHTML = '<img src="/images/' + caps[egg.rarity] + '.webp" alt="" width="900" height="340"><span class="r">' + egg.rarity + ' egg</span><b>' + egg.name +
+    '</b><p>' + egg.found + ' $' + amount + ' off for 48 hours, applied at checkout.</p><small>' + eggsFoundCount() + ' of ' + EGGS.length +
+    ' eggs found. Only your best discount applies.</small>';
+  document.body.append(t);
+  const bye = () => { t.classList.remove('on'); setTimeout(() => t.remove(), 700); };
+  t.addEventListener('click', bye);
+  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('on')));
+  setTimeout(bye, 7000);
+}
+// Egg: collector. Hold 3 other eggs at once (checked again on every page, in case they left mid-find).
+if (liveEggs().filter((e) => e.id !== 'collector').length >= COLLECTOR_NEEDS) setTimeout(() => findEgg('collector'), 2400);
+// Egg: blue hour. Visit between 5 and 7 in the morning, your time.
+if (inBlueHour(new Date().getHours())) setTimeout(() => findEgg('bluehour'), 1800);
+// Egg: PLUR. Type it anywhere on a keyboard, or into an email box on a phone.
+let typed = '';
+document.addEventListener('keydown', (e) => {
+  const tg = e.target;
+  if (tg instanceof Element && tg.closest('input, textarea, select')) return;
+  if (!e.key || e.key.length !== 1) return;
+  typed = (typed + e.key.toLowerCase()).slice(-4);
+  if (typed === 'plur') findEgg('plur');
+});
+const isPlur = (v) => String(v || '').trim().toLowerCase() === 'plur';
 
 /* ---------- cart ---------- */
 // Each cart line is one pouch recipe and how many rolls of it: { mix: { level: 2, ... }, qty: 1 }.
@@ -129,9 +210,12 @@ function paint() {
     (each < PRICE ? '<s>' + money(l.qty * PRICE) + '</s> ' : '') + money(l.qty * each) +
     '</div></div><button class="trash" data-rm="' + i + '">Remove</button></div></div>'
   ).join('');
-  const code = getCode(), cl = $('#codeline');
-  cl.hidden = !code;
-  if (code) cl.innerHTML = '<span><b>' + esc(code.code) + '</b> · ' + esc(code.label) + ', applied at checkout</span><button data-dropcode>Remove</button>';
+  const code = getCode(), egg = bestEgg(), cl = $('#codeline');
+  cl.hidden = !code && !egg;
+  cl.innerHTML =
+    (egg ? '<span><b>' + esc(egg.name) + '</b> egg · $' + egg.amount + ' off</span>' : '') +
+    (code ? '<span><b>' + esc(code.code) + '</b> · ' + esc(code.label) + ' <button data-dropcode>Remove</button></span>' : '') +
+    '<small>' + (code && egg ? 'Only your best discount applies at checkout.' : 'Applied at checkout.') + '</small>';
 }
 
 const citems = $('#citems');
@@ -209,6 +293,8 @@ function closeAll() {
   lock(false);
 }
 
+const tossed = new Set();
+let taps = 0, lastTap = 0;
 document.addEventListener('click', (e) => {
   const t = e.target;
   if (!(t instanceof Element)) return;
@@ -221,7 +307,24 @@ document.addEventListener('click', (e) => {
   if (t.closest('[data-dropcode]')) { setCode(null); return; }
   if (t.closest('#menu a, #cart a')) { closeAll(); return; }
   const cap = t.closest('.cap');
-  if (cap) { cap.classList.remove('pop'); void cap.offsetWidth; cap.classList.add('pop'); }
+  if (cap) {
+    cap.classList.remove('pop'); void cap.offsetWidth; cap.classList.add('pop');
+    // Egg: capsule toss. Flick every floating capsule on the page.
+    tossed.add(cap);
+    if (tossed.size === $$('.cap').length) findEgg('toss');
+    return;
+  }
+  // Egg: read to the end. A stray capsule waits at the bottom of every Journal post.
+  const stray = t.closest('[data-egg="reader"]');
+  if (stray) { stray.classList.add('got'); findEgg('reader'); return; }
+  // Egg: lights up. Tap the big footer logo 5 times in a row.
+  const logo = t.closest('.fbig');
+  if (logo) {
+    const now = Date.now();
+    taps = now - lastTap < 900 ? taps + 1 : 1; lastTap = now;
+    logo.classList.remove('blink'); void logo.offsetWidth; logo.classList.add('blink');
+    if (taps >= 5) { taps = 0; $('.foot').classList.add('lit'); findEgg('lights'); }
+  }
 });
 ['#cartx', '#menux', '#scrim'].forEach((s) => { const el = $(s); if (el) el.addEventListener('click', closeAll); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
@@ -243,7 +346,7 @@ async function goCheckout(btn) {
     const r = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lines: cart, code: code ? code.code : '' }),
+      body: JSON.stringify({ lines: cart, code: code ? code.code : '', egg: (bestEgg() || {}).token || '' }),
     });
     const d = await r.json().catch(() => ({}));
     if (r.ok && d.url) { location.href = d.url; return; }
@@ -363,6 +466,7 @@ $$('.foot .form').forEach((f) => {
     e.preventDefault();
     const note = $('.formnote', f.parentNode), input = $('input', f), btn = $('button', f);
     if (btn.disabled) return;
+    if (isPlur(input.value)) { input.value = ''; findEgg('plur'); return; }
     btn.disabled = true;
     const r = await subscribe(input.value, '', 'footer');
     btn.disabled = false;
@@ -438,6 +542,7 @@ function openPop() {
     e.preventDefault();
     const btn = $('button[type=submit]', form), note = $('.formnote', form);
     if (btn.disabled) return;
+    if (isPlur($('input', form).value)) { $('input', form).value = ''; findEgg('plur'); return; }
     btn.disabled = true; btn.textContent = 'Joining\u2026';
     const r = await subscribe($('input', form).value, when, 'popup');
     if (!r.ok) { btn.disabled = false; btn.textContent = 'Get 10% off'; note.textContent = subError(r.error); return; }
@@ -523,6 +628,8 @@ if (grid) {
     el.style.backgroundColor = 'rgb(' + col.join(',') + ')';
     grid.appendChild(el); tiles.push(el);
   }
+  // Egg: night 30. Tap the last night in the grid.
+  tiles[29].addEventListener('click', () => { tiles[29].classList.add('got'); findEgg('night30'); });
 }
 const ncount = $('#ncount'), nsec = $('#nights');
 let lastNight = -1;
