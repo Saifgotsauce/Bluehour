@@ -9,7 +9,7 @@ A big night is supposed to be loud. The problem is that your ears keep score. Cl
 
 The good news: protecting your hearing doesn't mean giving up the night. A decent pair of earplugs, a bit of distance from the speakers and a few breaks cut the risk a lot, and the music still sounds great.
 
-**The short version:** loud events often hit around 100 decibels or more. At 100 dB, workplace safety limits are used up in about 15 minutes. Wear earplugs for the whole night, stay away from the speaker stacks, and take quiet breaks. If your ears ring, that's a warning sign, not a badge of honour.
+**The short version:** loud events often hit around 100 decibels or more. At 100 dB, the US recommended workplace limit is used up in about 15 minutes. Wear earplugs for the whole night, stay away from the speaker stacks, and take quiet breaks. If your ears ring, that's a warning sign, not a badge of honor.
 
 ## How loud is a rave or a concert?
 
@@ -59,11 +59,11 @@ It can. A 2016 randomized trial published in *JAMA Otolaryngology–Head & Neck 
 
 The researchers concluded that earplugs are effective at preventing temporary hearing loss after loud music.
 
-"Temporary" is doing a lot of work there. In a 2009 study in mice, Sharon Kujawa and Charles Liberman found that noise causing only a temporary drop in hearing still destroyed about half of the connections between the inner ear's hair cells and the hearing nerve, even after the hearing tests came back normal. Researchers call this cochlear synaptopathy, or "hidden hearing loss." Whether the same thing happens the same way in people is still being studied. But it's a good reason not to treat ringing ears as harmless just because they settle down by Monday.
+"Temporary" is doing a lot of work there. In a 2009 study in mice, Sharon Kujawa and Charles Liberman found that noise causing only a temporary drop in hearing still destroyed up to about half of the connections between the inner ear's hair cells and the hearing nerve, even after the hearing tests came back normal. Researchers call this cochlear synaptopathy, or "hidden hearing loss." Whether the same thing happens the same way in people is still being studied. But it's a good reason not to treat ringing ears as harmless just because they settle down by Monday.
 
 ## What do ringing ears after a night out mean?
 
-Ringing, buzzing or muffled hearing after a loud night means your ears took more than they could handle. Audiologist Sarah Sydlowski, writing for the Cleveland Clinic, calls ringing after a concert "a sign you've already damaged your hearing."
+Ringing, buzzing or muffled hearing after a loud night means your ears took more than they could handle. A Cleveland Clinic article on the subject calls ringing after a concert "a sign you've already damaged your hearing."
 
 If ringing or muffled hearing doesn't fade after a day or two, see a doctor or an audiologist.
 
@@ -105,7 +105,7 @@ Earplugs do most of the work, but these help too:
 
 - **Don't stand next to the speakers.** Sound is most intense right in front of the stacks. Moving back, or off to the side, makes a real difference and you'll still hear everything.
 - **Take quiet breaks.** Step outside, head to the bar area or find a chill-out space every hour or so. The WHO's venue standard includes quiet zones for exactly this reason.
-- **Keep the plugs in all night.** Once your ears have taken a hit, the room can start to sound quieter than it really is. Taking your earplugs out for "just this track" adds up.
+- **Keep the plugs in all night.** Once your ears have had a lot, the room can start to sound quieter than it really is. Taking your earplugs out for "just this track" adds up.
 - **Measure it.** NIOSH makes a free Sound Level Meter app for iPhone. In NIOSH's testing it came within about 2 dB of a professional reference meter. It isn't a replacement for professional equipment, but it's a quick reality check.
 - **Watch the ride home.** Turning your headphones up to drown out the train after a loud night adds more dose to ears that have already had plenty.
 - **Give your ears a rest the next day.** Keep the volume low and skip the gym's speaker-side spot.

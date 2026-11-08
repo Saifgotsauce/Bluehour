@@ -9,7 +9,7 @@ A festival day is basically an endurance event with a better soundtrack. You're 
 
 There's a catch most guides skip: drinking *too much* water is also dangerous. The goal isn't to drink as much as possible. It's to drink steadily, eat properly and know the warning signs.
 
-**The short version:** sip regularly instead of chugging, let thirst guide you, and never drink more than about 1.4 liters (48 oz) an hour. Add a sports drink or salty food if you're sweating for hours. Eat real meals. If someone gets confused, stops sweating normally or collapses in the heat, get the medical team right away.
+**The short version:** sip regularly instead of chugging and let thirst guide you. Never drink more than about 1.4 liters (48 oz) in an hour, and treat that as a ceiling, not a target. Add a sports drink or salty food if you're sweating for hours. Eat real meals. If someone gets confused, stops sweating normally or collapses in the heat, get the medical team right away.
 
 ## How much water do you actually need?
 
@@ -26,22 +26,22 @@ A festival day ticks both boxes. You're active for most of the day and often out
 
 There's no single number, because it depends on the heat, how hard you're dancing and how much you sweat. Two expert sources give useful guardrails.
 
-**For hot conditions, NIOSH** (the US workplace safety agency) advises people working in the heat to drink 1 cup (8 oz, about 240 mL) of water every 15 to 20 minutes. That works out to about 24 to 32 oz (roughly 0.7 to 0.95 liters) an hour. It also says to drink before you feel thirsty.
+**For physical work in the heat, NIOSH** (the US workplace safety agency) advises workers to drink 1 cup (8 oz, about 240 mL) of water every 15 to 20 minutes. That works out to about 24 to 32 oz (roughly 0.7 to 0.95 liters) an hour. It also says to drink before you feel thirsty.
 
-**For long exercise, sports medicine experts** take a slightly different view. An international consensus panel on exercise-associated hyponatremia, published in the *Clinical Journal of Sport Medicine* in 2015, recommends drinking when you're thirsty, because forcing fluids is a main cause of dangerously low blood sodium.
+**For long exercise, sports medicine experts** take a different view. An international consensus panel on exercise-associated hyponatremia, published in the *Clinical Journal of Sport Medicine* in 2015, recommends drinking when you're thirsty, because forcing fluids is a main cause of dangerously low blood sodium.
 
-The common ground is clear:
+Those two pieces of advice pull in different directions, because a festival isn't a shift of manual labor or a marathon. Here's the sensible middle:
 
 - **Sip steadily** through the day rather than downing a whole bottle at once.
-- **Use thirst as your main signal**, and drink a bit more on very hot days when you're sweating hard.
-- **Never go over about 48 oz (1.4 liters) an hour.** NIOSH sets that as the maximum, because drinking more can cause a medical emergency.
+- **Use thirst as your main signal**, and drink a bit more when you're sweating heavily in the heat.
+- **Never go over about 48 oz (1.4 liters) an hour.** NIOSH sets that as the maximum, because drinking more can cause a medical emergency. It's a ceiling, not a target. If you're not sweating much, you need far less.
 
 | Situation | What to aim for |
 |---|---|
 | Normal day | Drink when thirsty, plus water with meals |
-| Hot day, dancing for hours | Regular sips, roughly a cup every 15 to 20 minutes when you're sweating hard |
+| Hot day, dancing for hours | Drink to thirst, a bit more when you're sweating heavily |
 | Sweating for several hours | Mix in a sports drink or salty food, not just water |
-| Any situation | No more than about 1.4 liters (48 oz) an hour |
+| Any situation | Never more than about 1.4 liters (48 oz) an hour. That's a ceiling, not a goal |
 
 ## Can you drink too much water?
 
@@ -113,7 +113,7 @@ Heat stroke is a medical emergency. At a festival, the fastest route is usually 
 
 **During the day**
 
-- Sip every time you pass a refill point or take a break.
+- Top up your bottle at refill points and sip when you're thirsty.
 - Eat a proper meal, not just snacks.
 - Take shade breaks, especially in the middle of the afternoon.
 - Add a sports drink or electrolytes if you've been sweating hard for hours.
@@ -132,7 +132,7 @@ Heat stroke is a medical emergency. At a festival, the fastest route is usually 
 
 ### How much water should I drink at a festival?
 
-Enough to stay ahead of thirst, spread out through the day. In heat, NIOSH's guide for people working outdoors is about a cup every 15 to 20 minutes. Never drink more than about 1.4 liters (48 oz) in an hour.
+Drink to thirst, spread out through the day, and a bit more when you're sweating heavily in the heat. NIOSH's guide of a cup every 15 to 20 minutes is for people doing physical work in the heat. About 1.4 liters (48 oz) an hour is an absolute ceiling, not a target.
 
 ### Is it possible to drink too much water at a festival?
 

@@ -7,7 +7,7 @@ category: Ingredients
 
 Zinc and magnesium turn up together everywhere: in multivitamins, in "ZMA" sports supplements and in nighttime blends. So it's fair to ask whether they compete with each other, and whether you should take them at different times.
 
-**The short answer:** yes, you can take zinc and magnesium together. At normal supplement doses, there's no known problem. The NIH's Office of Dietary Supplements notes only one interaction between them: very high doses of zinc, **142 mg a day**, can interfere with magnesium absorption. That's more than three times the upper limit for zinc, so it isn't something a typical supplement gets near.
+**The short answer:** yes, you can take zinc and magnesium together. At normal supplement doses, there's no known problem. The NIH's Office of Dietary Supplements notes only one interaction between them: based on one study, very high doses of zinc, **142 mg a day**, may interfere with magnesium absorption. That's more than three times the upper limit for zinc.
 
 What deserves more attention is the total amount you take across all your supplements, and the medicines that interact with each mineral.
 
@@ -38,20 +38,20 @@ The NIH sets zinc's upper limit at 40 mg because higher intakes over time can lo
 
 ## Does zinc block magnesium absorption?
 
-Only at very high doses. Both the NIH's zinc and magnesium fact sheets say that **142 mg of zinc a day** from supplements can interfere with magnesium absorption and disrupt magnesium balance.
+Only at very high doses. The NIH's zinc and magnesium fact sheets both point to one study in which **142 mg of zinc a day** from supplements interfered with magnesium absorption and disrupted magnesium balance.
 
 For comparison:
 
 - The zinc upper limit is **40 mg a day**, so 142 mg is more than three times that.
 - A Blue Hour pouch can contain at most **one** zinc capsule, at **25 mg**.
 
-At everyday doses, zinc and magnesium can go in the same pouch, the same pill or the same glass of water.
+At everyday doses, zinc and magnesium can go in the same pouch, the same capsule or the same glass of water.
 
 ## What actually interferes with zinc and magnesium
 
 These are the interactions the NIH lists that are worth knowing about.
 
-**Iron supplements and zinc.** Taking a supplement with **25 mg or more of iron** at the same time as zinc can reduce how much zinc you absorb. Iron added to fortified foods doesn't cause the same problem. If you take an iron supplement, take it at a different time of day from your zinc.
+**Iron supplements and zinc.** Taking a supplement with **25 mg or more of iron** at the same time as zinc can reduce how much zinc you absorb. Iron added to fortified foods doesn't cause the same problem. If you take an iron supplement, one simple option is to take it at a different time of day from your zinc.
 
 **Some antibiotics.** Quinolone antibiotics (like ciprofloxacin) and tetracyclines bind to both zinc and magnesium, which reduces how much of the antibiotic and the mineral you absorb. The NIH advises taking the antibiotic **at least 2 hours before or 4 to 6 hours after** a zinc or magnesium supplement.
 
@@ -71,7 +71,7 @@ If you take any prescription medicine, check with a pharmacist before adding a s
 
 ZMA is a branded combination of zinc, magnesium and vitamin B6, sold to athletes as a way to boost strength and hormones. The evidence is weaker than the marketing.
 
-- **The original study (2000)** reported gains in strength and hormone levels. It was funded by SNAC Systems, the company that controlled the ZMA patent, and one of its authors had ownership equity in that company.
+- **The original study (2000)** reported gains in strength and hormone levels. It was funded by SNAC Systems, which owns the ZMA trademark, and one of its authors had a financial interest in the company.
 - **A 2004 study** in the *Journal of the International Society of Sports Nutrition* gave ZMA or a placebo to 42 resistance-trained men during eight weeks of training. It found no significant differences in hormones, body composition or strength, and concluded that ZMA doesn't appear to enhance training adaptations.
 - **A 2009 study** in the *European Journal of Clinical Nutrition* found that ZMA raised zinc levels in 14 men who exercised regularly, but it had no significant effect on testosterone in people already getting enough zinc from their diet.
 
@@ -83,7 +83,7 @@ There's no need to separate zinc and magnesium from each other. Timing matters m
 
 A few practical points:
 
-- **Take them with food if your stomach is sensitive.** The NIH lists nausea and stomach upset among the effects of too much zinc, and high doses of magnesium from supplements often cause diarrhea. Taking supplements with a meal is easier on most stomachs, and it's how Blue Hour's label tells you to take a pouch.
+- **Take them with food if your stomach is sensitive.** The NIH lists nausea and stomach upset among the effects of too much zinc, and high doses of magnesium from supplements often cause diarrhea. Taking supplements with a meal is easier on most stomachs, and it's how our shop page tells you to take a Blue Hour pouch.
 - **Keep the dose steady.** More isn't better, especially with zinc, where long-term excess affects copper.
 - **Count everything.** Multivitamins, cold lozenges and sports blends often contain zinc. Antacids and some laxatives contain magnesium.
 
@@ -95,19 +95,21 @@ The NIH's upper limit for vitamin C is **2,000 mg a day** from food and suppleme
 
 ## How it works in a Blue Hour pouch
 
-Every Blue Hour pouch is built with these limits in mind. Our signature pouch includes:
+Our signature pouch has six capsules:
 
 - **2 magnesium capsules:** 266 mg of magnesium (as magnesium glycinate), under the 350 mg supplement limit
-- **1 zinc capsule:** 25 mg, under the 40 mg limit, leaving room for zinc from food
-- **1 vitamin C capsule:** 1,000 mg, half the upper limit
+- **1 zinc capsule:** 25 mg, under the 40 mg limit, leaving some room for zinc from food
+- **1 vitamin C capsule:** 1,000 mg
+- **1 methyl B-complex capsule**
+- **1 glycine capsule:** 850 mg
 
-When you [build your own pouch](/shop#build), the builder won't let you add more than 2 magnesium capsules or more than 1 zinc capsule. If you take other supplements too, add them up before you build.
+When you [build your own pouch](/shop#build), the builder won't let you add more than 2 magnesium capsules or more than 1 zinc capsule. Every capsule's full Supplement Facts are on the shop page. If you take other supplements too, add up your zinc and magnesium before you build.
 
 ## FAQ
 
 ### Can I take zinc and magnesium at the same time?
 
-Yes. At normal doses there's no known problem. Only very high zinc intakes, around 142 mg a day, have been shown to interfere with magnesium absorption.
+Yes. At normal doses there's no known problem. Based on one study, only very high zinc intakes, around 142 mg a day, may interfere with magnesium absorption.
 
 ### Should I take zinc and magnesium in the morning or at night?
 
@@ -123,7 +125,7 @@ For adults, the upper limit is 350 mg a day from supplements and medicines. Magn
 
 ### Is ZMA worth it?
 
-The study that launched ZMA was funded by the company that controlled its patent. Independent studies since then haven't found that ZMA improves strength, body composition or testosterone in people who already get enough zinc.
+The study that launched ZMA was funded by the company that owns the ZMA trademark. Later studies by other research groups haven't found that ZMA improves strength, body composition or testosterone in people who already get enough zinc.
 
 ## Sources
 

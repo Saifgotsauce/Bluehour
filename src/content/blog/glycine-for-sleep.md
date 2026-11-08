@@ -51,7 +51,7 @@ That fits with what's known about sleep in general: your core temperature natura
 
 Promising, but thin. A few honest caveats:
 
-- **The studies are very small.** The most recent human trial analyzed seven people.
+- **The studies are very small.** The 2012 trial analyzed seven people.
 - **They're short.** They tested a few nights, not months of nightly use.
 - **There's an obvious funding question.** Many of the authors worked for Ajinomoto, which makes glycine, and in one study all of the participants were Ajinomoto employees. That doesn't make the results wrong, but independent replication would carry more weight.
 - **Most participants already had sleep complaints**, or had their sleep cut short on purpose. The results may not apply to someone who already sleeps well.
@@ -64,7 +64,8 @@ The sleep studies all used **3 grams before bed**. A separate safety study by th
 Glycine is generally well tolerated, but research on how it interacts with medicines is incomplete. Talk to your doctor or pharmacist first if you:
 
 - **Take clozapine.** In a small 1999 trial, people with schizophrenia who took high-dose glycine (30 g a day) alongside clozapine didn't improve, while those on clozapine alone did. The authors suggested glycine may interfere with how well clozapine works.
-- **Take medicine for seizures.** WebMD lists carbamazepine, phenobarbital and valproic acid among possible interactions, along with memantine.
+- **Take medicine for seizures.** WebMD lists carbamazepine, phenobarbital and valproic acid among possible interactions.
+- **Take memantine**, a medicine for Alzheimer's disease, which WebMD also lists.
 - **Are pregnant or breastfeeding.** It isn't known how glycine affects pregnancy.
 
 ## Sleep basics still come first
@@ -73,9 +74,7 @@ Even if glycine helps a little, it can't outdo the basics. Light, timing and a s
 
 ## Glycine in Blue Hour
 
-Blue Hour's **Glow** capsule contains 850 mg of glycine. It's in our signature pouch, and you can add up to three per pouch when you [build your own](/shop#build), which comes to 2,550 mg.
-
-That's less than the 3 grams used in the sleep studies above, so we don't make sleep claims for it. We include it as an amino acid your body uses to build proteins, including collagen.
+Blue Hour's **Glow** capsule contains 850 mg of glycine. We include it as an amino acid your body uses to build proteins, including collagen. Blue Hour isn't designed or tested to improve sleep, and we don't make sleep claims for it.
 
 ## FAQ
 
@@ -97,7 +96,7 @@ In the studies, no. The 9-gram safety study found no next-day sleepiness, and th
 
 ### Is glycine the same as magnesium glycinate?
 
-No. Magnesium glycinate is magnesium bound to glycine. It does contain some glycine, but a typical magnesium dose provides less than the 3 g used in the sleep studies. Here's more on [magnesium glycinate vs citrate](/blog/magnesium-glycinate-vs-citrate).
+No. Magnesium glycinate is magnesium bound to glycine, so it does contain some glycine. But it's sold and dosed as a magnesium supplement, and the sleep studies above used plain glycine. Here's more on [magnesium glycinate vs citrate](/blog/magnesium-glycinate-vs-citrate).
 
 ## Sources
 
