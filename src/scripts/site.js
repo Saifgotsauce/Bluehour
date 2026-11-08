@@ -226,26 +226,23 @@ $$('[data-car]').forEach((car) => {
 });
 
 /* ---------- FAQ accordion ---------- */
-// Answers open and close with the site's easing; one answer is open at a time.
-const EASE = 'cubic-bezier(.19,1,.22,1)';
-function closeFaq(d) {
-  const body = $('p', d);
-  if (reduce || !body || !body.animate) { d.open = false; return; }
-  d.dataset.busy = '1';
-  const a = body.animate([{ height: body.offsetHeight + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 450, easing: EASE, fill: 'forwards' });
-  a.onfinish = () => { d.open = false; a.cancel(); delete d.dataset.busy; };
-}
+// Quick, light open and close: only the answer's height and opacity move.
+const FAQ_EASE = 'cubic-bezier(.2,.8,.2,1)';
 $$('.faq details').forEach((d) => {
   const sum = $('summary', d), body = $('p', d);
-  if (!sum || !body) return;
+  if (!sum || !body || reduce || !body.animate) return;
+  let anim = null;
   sum.addEventListener('click', (e) => {
     e.preventDefault();
-    if (d.dataset.busy) return;
-    if (d.open) { closeFaq(d); return; }
-    $$('.faq details[open]').forEach((o) => { if (o !== d) closeFaq(o); });
-    d.open = true;
-    if (reduce || !body.animate) return;
-    body.animate([{ height: '0px', opacity: 0 }, { height: body.scrollHeight + 'px', opacity: 1 }], { duration: 700, easing: EASE });
+    if (anim) anim.cancel();
+    if (!d.open) {
+      d.open = true;
+      anim = body.animate([{ height: '0px', opacity: 0 }, { height: body.scrollHeight + 'px', opacity: 1 }], { duration: 260, easing: FAQ_EASE });
+      anim.onfinish = () => { anim = null; };
+    } else {
+      anim = body.animate([{ height: body.offsetHeight + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 200, easing: FAQ_EASE, fill: 'forwards' });
+      anim.onfinish = () => { d.open = false; anim.cancel(); anim = null; };
+    }
   });
 });
 
@@ -268,7 +265,7 @@ if (motion) {
     list.classList.remove('rv');
     [...list.children].forEach((c) => c.classList.add('rv'));
   });
-  $$('.sec h2, .lead, .bhead, .chips, .bign, .fullshot img, .faq details, .why .def, .why p, .tbw, .leftout').forEach((el) => {
+  $$('.sec h2, .lead, .bhead, .chips, .bign, .fullshot img, .why .def, .why p, .tbw, .leftout').forEach((el) => {
     if (inHero(el) || el.closest('.rv') || el.classList.contains('rv')) return;
     if (getComputedStyle(el).transform !== 'none') return; // keeps tilted headings tilted
     el.classList.add('rv');
