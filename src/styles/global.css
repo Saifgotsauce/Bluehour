@@ -39,7 +39,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .btn.blue{background:var(--cobalt);border-color:var(--cobalt);color:var(--white)}
 .btn.line{border-color:transparent}
 .grain{position:absolute;inset:0;pointer-events:none;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E")}
-.js-motion .rv{opacity:0;transform:translate3d(0,32px,0);transition:opacity .75s var(--ease-out),transform .95s var(--ease-out);transition-delay:var(--d,0s)}
+.js-motion .rv{opacity:0;transform:translate3d(0,20px,0);transition:opacity .6s var(--ease-out),transform .8s var(--ease-out);transition-delay:var(--d,0s)}
 .js-motion .rv.in{opacity:1;transform:none}
 [hidden]{display:none!important}
 
@@ -56,7 +56,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 
 /* moving sky */
 .mesh{position:absolute;inset:0;overflow:hidden;z-index:0}
-.mesh i{position:absolute;border-radius:50%;will-change:transform}
+.mesh i{position:absolute;border-radius:50%}
 .mesh i:nth-child(1){width:90vw;height:90vw;max-width:900px;max-height:900px;left:-34vw;top:-20vw;background:radial-gradient(closest-side,#1436D8 35%,rgba(20,54,216,0));animation:d1 13s ease-in-out infinite alternate}
 .mesh i:nth-child(2){width:80vw;height:80vw;max-width:760px;max-height:760px;right:-30vw;top:6vw;background:radial-gradient(closest-side,#2A74FF 35%,rgba(42,116,255,0));opacity:.9;animation:d2 11s ease-in-out infinite alternate}
 .mesh i:nth-child(3){width:58vw;height:58vw;max-width:520px;max-height:520px;left:18vw;top:30vw;background:radial-gradient(closest-side,#0B1F9E 35%,rgba(11,31,158,0));animation:d3 15s ease-in-out infinite alternate}
@@ -170,7 +170,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .add:hover{transform:translateY(-2px)}
 .add:active{transform:scale(.96)}
 .caps-note{font:600 12.5px/1.3 var(--display);letter-spacing:.04em;text-transform:uppercase;text-align:center;width:100%}
-.stick{position:fixed;z-index:30;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px var(--gut-r) calc(8px + env(safe-area-inset-bottom,0px)) var(--gut-l);transform:translateY(110%);transition:transform .5s var(--ease-out)}
+.stick{position:fixed;z-index:30;left:0;right:0;bottom:0;background:rgba(255,255,255,.985);border-top:1px solid var(--line);padding:10px var(--gut-r) calc(8px + env(safe-area-inset-bottom,0px)) var(--gut-l);transform:translateY(110%);transition:transform .5s var(--ease-out)}
 .stick.on{transform:none}
 .stick .in{max-width:640px;margin-inline:auto;display:flex;flex-direction:column;gap:6px}
 .stick .sel,.stick .add{height:56px}
@@ -472,3 +472,12 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 ::view-transition-new(root){animation:.45s var(--ease-out) both vt-in}
 @keyframes vt-out{to{opacity:0}}
 @keyframes vt-in{from{opacity:0}}
+
+/* capsule parallax runs on the browser's scroll timeline where supported, so it never lags the scroll */
+@supports (animation-timeline: scroll()) {
+  .cap{animation:capfloat linear both;animation-timeline:scroll(root);animation-range:0px 1000px}
+  @keyframes capfloat{to{transform:translate3d(0,calc(var(--f,.15) * -1000px),0) rotate(calc(var(--f,.15) * 120deg))}}
+}
+/* animations pause while their section is off screen */
+.paused .mesh i,.paused.mq div,.paused .spin svg,.paused .cap span,.paused .burst,.paused .glist b{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.cap{animation:none!important}}

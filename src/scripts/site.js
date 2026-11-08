@@ -196,6 +196,8 @@ $$('[data-qty]').forEach((sel) => {
 });
 
 /* ---------- carousels ---------- */
+let lastPageScroll = 0;
+window.addEventListener('scroll', () => { lastPageScroll = performance.now(); }, { passive: true });
 $$('[data-car]').forEach((car) => {
   const tr = $('.track', car), dots = $('.dots', car);
   if (!tr || !dots) return;
@@ -217,7 +219,8 @@ $$('[data-car]').forEach((car) => {
   if (car.hasAttribute('data-auto') && !reduce) {
     setInterval(() => {
       const r = tr.getBoundingClientRect();
-      if (!user && r.top < innerHeight && r.bottom > 0) go((cur + 1) % n);
+      const settled = performance.now() - lastPageScroll > 1500;
+      if (!user && settled && !document.hidden && r.top > 0 && r.bottom < innerHeight) go((cur + 1) % n);
     }, 4200);
   }
 });
@@ -248,11 +251,11 @@ if (motion) {
   });
   const io = new IntersectionObserver((es) => {
     es.filter((e) => e.isIntersecting).forEach((e, i) => {
-      e.target.style.setProperty('--d', Math.min(i * 0.07, 0.35) + 's');
+      e.target.style.setProperty('--d', Math.min(i * 0.06, 0.3) + 's');
       e.target.classList.add('in');
       io.unobserve(e.target);
     });
-  }, { rootMargin: '0px 0px -8% 0px' });
+  }, { rootMargin: '0px 0px -5% 0px' });
   $$('.rv').forEach((el) => io.observe(el));
 } else {
   $$('.rv').forEach((el) => el.classList.add('in'));
@@ -262,6 +265,12 @@ if (motion) {
 if ('IntersectionObserver' in window) {
   const live = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('live', e.isIntersecting)));
   $$('.glist').forEach((g) => live.observe(g));
+}
+
+/* ---------- pause animations that are off screen ---------- */
+if ('IntersectionObserver' in window) {
+  const pause = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('paused', !e.isIntersecting)));
+  $$('.hero, .jhero, .mq, .sky, .dark').forEach((el) => pause.observe(el));
 }
 
 /* ---------- scrolling text speed ---------- */
@@ -309,24 +318,18 @@ const stick = $('#stick'), buyrow = $('#buyrow');
 function buybar() { if (stick && buyrow) stick.classList.toggle('on', buyrow.getBoundingClientRect().bottom < 0); }
 
 /* ---------- floating capsules (home) ---------- */
-const caps = $$('[data-float]');
-let capY = window.scrollY || 0, capRaf = 0;
-function capStep() {
-  const target = window.scrollY || 0;
-  capY += (target - capY) * 0.16;
-  if (Math.abs(target - capY) < 0.4) capY = target;
-  caps.forEach((c) => {
-    const d = parseFloat(c.getAttribute('data-float'));
-    c.style.transform = 'translate3d(0,' + (-capY * d).toFixed(1) + 'px,0) rotate(' + (capY * d * 0.12).toFixed(2) + 'deg)';
-  });
-  capRaf = capY !== target ? requestAnimationFrame(capStep) : 0;
-}
+// Browsers with scroll-driven animations handle this in CSS. Others follow the scroll position directly.
+const caps = window.CSS && CSS.supports && CSS.supports('animation-timeline: scroll()') ? [] : $$('[data-float]');
 function float() {
   ticking = false;
   buybar();
   night();
   if (reduce || !caps.length) return;
-  if (!capRaf) capRaf = requestAnimationFrame(capStep);
+  const y = window.scrollY || 0;
+  caps.forEach((c) => {
+    const d = parseFloat(c.getAttribute('data-float'));
+    c.style.transform = 'translate3d(0,' + (-y * d).toFixed(1) + 'px,0) rotate(' + (y * d * 0.12).toFixed(2) + 'deg)';
+  });
 }
 let ticking = false;
 window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(float); } }, { passive: true });
