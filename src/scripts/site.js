@@ -29,6 +29,7 @@ function setCode(c) {
   if (c && c.code) store.set('bh-code', JSON.stringify({ code: c.code, label: c.label || 'Discount', at: c.at || Date.now(), checked: Date.now() }));
   else store.set('bh-code', '');
   codeBar(); paint();
+  try { window.dispatchEvent(new CustomEvent('bh:code')); } catch (e) { /* ignore */ }
 }
 let promoDefault = null;
 function codeBar() {
@@ -512,7 +513,7 @@ $$('.foot .form').forEach((f) => {
   });
 });
 
-const POP_SKIP = /^\/(thank-you|privacy|terms|refunds|shipping|contact)/;
+const POP_SKIP = /^\/(thank-you|welcome|privacy|terms|refunds|shipping|contact)/;
 const WHENS = [['this-weekend', 'This weekend'], ['this-month', 'This month'], ['later', 'Later this year'], ['every-weekend', 'Every weekend']];
 function popAllowed() {
   if (POP_SKIP.test(location.pathname) || store.get('bh-sub') || getCode()) return false;

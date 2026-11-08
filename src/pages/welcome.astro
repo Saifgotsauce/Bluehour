@@ -1,0 +1,108 @@
+---
+// Where people land after confirming their email. Point Klaviyo's success-page redirect (or the welcome
+// email's main button) at /welcome?code=WELCOME10. The ?code= part is checked with Stripe and saved by
+// site.js, the same way as any link code, so it comes off at checkout automatically.
+import Base from '../layouts/Base.astro';
+import Top from '../components/Top.astro';
+import Foot from '../components/Foot.astro';
+---
+<Base title="You're in | Blue Hour" description="You're on the Blue Hour list." noindex>
+  <script is:inline>
+    try { localStorage.setItem('bh-sub', '1'); } catch (e) {}
+  </script>
+  <header class="jhero welcomehero">
+    <div class="mesh"><i></i><i></i><i></i></div>
+    <div class="grain"></div>
+    <Top />
+    <div class="welcomegrid">
+    <div class="in">
+      <p class="okchip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Email confirmed</p>
+      <h1>You're in.</h1>
+      <p class="dek" id="welcomedek">Welcome to Blue Hour. Here's your wristband for the list: your code is saved on this device and comes off at checkout automatically.</p>
+    </div>
+
+    <div class="welcomewrap">
+      <div class="band" id="band" aria-live="polite">
+        <div class="bandin">
+          <div class="bandhead">
+            <img src="/images/logo-white.webp" alt="blue hour" width="1000" height="247" />
+            <span>All access · Member</span>
+          </div>
+          <div class="bandcode">
+            <small id="bandlabel">10% off your first roll</small>
+            <b id="bandcode">WELCOME10</b>
+          </div>
+          <button class="bandcopy" id="bandcopy" type="button">Copy</button>
+        </div>
+        <i class="snap" aria-hidden="true"></i>
+      </div>
+      <p class="bandnote" id="bandnote">A copy is in your inbox too.</p>
+      <div class="welcomecta">
+        <a class="btn solid" href="/shop">Shop 30 nights</a>
+        <a class="btn" href="/shop#build">Build your pouch</a>
+      </div>
+    </div>
+    </div>
+  </header>
+
+  <main class="w sec" style="padding-top:clamp(24px,5vw,50px)">
+    <h2 class="welcomeh">What lands in your inbox</h2>
+    <ol class="wsteps">
+      <li><h3>Your code</h3><p>A copy of your welcome code, so it's there when you're ready. One discount per order, and we always apply the one that saves you the most.</p></li>
+      <li><h3>A nudge before your big night</h3><p>If you told us when your next big night is, we'll remind you in time to order. Rolls are packed to order and usually arrive 4 to 10 business days later.</p></li>
+      <li><h3>First word, nothing else</h3><p>New pouch options, restocks and the odd Journal post. No daily blasts, and you can unsubscribe in one tap.</p></li>
+    </ol>
+
+    <aside class="eggtease">
+      <img src="/images/cap-bright.webp" alt="" width="900" height="340" loading="lazy" />
+      <div>
+        <p class="r">Psst</p>
+        <h3>There are 7 eggs hidden on this site.</h3>
+        <p>Find them for up to $15 off, depending on how rare they are. Start with the homepage, and read to the end of a Journal post.</p>
+      </div>
+    </aside>
+  </main>
+
+  <script is:inline>
+    (() => {
+      const read = () => {
+        try {
+          const c = JSON.parse(localStorage.getItem('bh-code') || 'null');
+          return c && c.code ? c : null;
+        } catch (e) { return null; }
+      };
+      const hadLinkCode = /[?&](code|promo|discount)=/.test(location.search);
+      const band = document.getElementById('band');
+      const $ = (id) => document.getElementById(id);
+      const show = () => {
+        const c = read();
+        if (c) {
+          $('bandcode').textContent = c.code.replace(/[^\w-]/g, '');
+          $('bandlabel').textContent = c.label ? c.label.charAt(0).toUpperCase() + c.label.slice(1) : 'Your code';
+          $('bandnote').textContent = "A copy is in your inbox too.";
+          $('welcomedek').textContent = "Welcome to Blue Hour. Here's your wristband for the list: your code is saved on this device and comes off at checkout automatically.";
+          band.classList.remove('nocode');
+        } else {
+          band.classList.add('nocode');
+          $('bandcode').textContent = 'Member';
+          $('bandlabel').textContent = 'Your code is in your inbox';
+          $('bandnote').textContent = 'Check your inbox for your welcome code.';
+          $('welcomedek').textContent = "Welcome to Blue Hour. Here's your wristband for the list.";
+        }
+      };
+      show();
+      // A code in the link is checked with Stripe in the background by site.js, then saved.
+      if (hadLinkCode) {
+        window.addEventListener('bh:code', show);
+        setTimeout(show, 2000);
+      }
+      const copy = document.getElementById('bandcopy');
+      copy.addEventListener('click', () => {
+        const c = read();
+        if (!c || !navigator.clipboard) return;
+        navigator.clipboard.writeText(c.code).then(() => { copy.textContent = 'Copied'; setTimeout(() => { copy.textContent = 'Copy'; }, 1800); }).catch(() => {});
+      });
+    })();
+  </script>
+  <Foot id="em-welcome" />
+</Base>

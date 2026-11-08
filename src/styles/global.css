@@ -628,3 +628,48 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .prose td{vertical-align:top;line-height:1.5}
 .prose tbody tr:last-child td{border-bottom:0}
 .prose h3+p{margin-top:.6em}
+
+/* ---------- welcome (after email sign-up) ---------- */
+.welcomehero{padding-bottom:calc(var(--rise) + 64px)}
+.okchip{display:inline-flex;align-items:center;gap:9px;padding:8px 15px 8px 9px;border-radius:99px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);font:700 12.5px/1 var(--display);letter-spacing:.08em;text-transform:uppercase}
+.okchip svg{width:22px;height:22px;padding:3px;border-radius:50%;background:var(--white);color:var(--cobalt)}
+.welcomehero h1{font-size:clamp(64px,18vw,132px);line-height:.9;letter-spacing:-.05em;font-style:italic}
+.welcomewrap{position:relative;z-index:2;max-width:1240px;margin-inline:auto;padding:0 var(--gut-r) 0 var(--gut-l)}
+.band{position:relative;max-width:600px;margin-top:38px;transform:rotate(-3deg);animation:bandon 1.5s var(--ease-out) .45s both}
+@keyframes bandon{from{opacity:0;transform:translate(-36px,18px) rotate(-14deg) scale(1.08)}to{opacity:1;transform:rotate(-3deg)}}
+.bandin{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"head head" "code copy";gap:16px;align-items:end;padding:20px 24px 22px 40px;border-radius:24px;color:var(--white);background:linear-gradient(100deg,#0B1F9E,var(--cobalt) 42%,#2A62F0 72%,var(--dawn));box-shadow:0 26px 54px rgba(7,18,104,.42),inset 0 0 0 1.5px rgba(255,255,255,.32);overflow:hidden;isolation:isolate}
+.bandin::before{content:"";position:absolute;left:18px;top:14px;bottom:14px;border-left:2px dashed rgba(255,255,255,.5)}
+.bandin::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.3) 48%,rgba(215,240,255,.22) 53%,transparent 66%) no-repeat;background-size:250% 100%;animation:eggshine 3.4s var(--ease-io) 1.8s infinite}
+.bandhead{grid-area:head;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.bandhead img{width:min(124px,34vw);height:auto}
+.bandhead span{font:700 11px/1.2 var(--display);letter-spacing:.14em;text-transform:uppercase;opacity:.85;text-align:right}
+.bandcode{grid-area:code;display:flex;flex-direction:column;gap:7px;min-width:0}
+.bandcode small{font:600 14.5px/1.25 var(--display);opacity:.92}
+.bandcode b{font:900 clamp(34px,10.5vw,58px)/.92 var(--display);letter-spacing:.005em;font-style:italic;white-space:nowrap}
+.bandcopy{grid-area:copy;border:0;border-radius:99px;background:var(--white);color:var(--deep);padding:13px 20px;font:700 15px/1 var(--display);cursor:pointer;box-shadow:0 8px 18px rgba(5,20,90,.25)}
+.bandcopy:active{transform:scale(.97)}
+.band.nocode .bandcopy{display:none}
+.band.nocode .bandcode b{font-size:clamp(34px,10vw,52px);letter-spacing:.02em;text-transform:uppercase}
+.band .snap{position:absolute;right:-9px;top:50%;width:30px;height:30px;margin-top:-15px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#C9D7F2 60%,#8FA6D6);box-shadow:0 6px 14px rgba(7,18,104,.35)}
+.bandnote{display:inline-block;margin-top:26px;padding:9px 16px;border-radius:99px;background:rgba(255,255,255,.92);font-size:15px;font-weight:500;line-height:1.35;color:var(--ink)}
+.welcomecta{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.welcomeh{font-size:clamp(30px,8vw,52px);margin-bottom:26px;color:var(--deep)}
+.wsteps{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:w}
+.wsteps li{counter-increment:w;position:relative;padding:22px 22px 24px 78px;border-radius:26px;background:var(--mist)}
+.wsteps li::before{content:counter(w);position:absolute;left:24px;top:18px;font:900 44px/1 var(--display);font-style:italic;color:var(--cobalt);letter-spacing:-.05em}
+.wsteps h3{font-size:20px;line-height:1.2;margin-bottom:6px;color:var(--deep)}
+.wsteps p{font-size:16px;line-height:1.5;color:var(--soft)}
+.eggtease{margin-top:30px;display:grid;grid-template-columns:84px minmax(0,1fr);gap:18px;align-items:center;padding:22px 24px;border-radius:26px;border:2px dashed var(--cobalt)}
+.eggtease img{width:84px;height:auto;transform:rotate(-28deg)}
+.eggtease .r{font:700 12px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--cobalt)}
+.eggtease h3{font-size:clamp(20px,5.2vw,26px);line-height:1.2;margin:6px 0;color:var(--deep)}
+.eggtease p{font-size:16px;color:var(--soft)}
+@media (min-width:900px){.wsteps{grid-template-columns:repeat(3,1fr)}.wsteps li{padding:72px 24px 26px}.wsteps li::before{top:22px}}
+@media (prefers-reduced-motion:reduce){.band{animation:none}}
+@media (max-width:559px){.bandin{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "code" "copy";padding:18px 20px 20px 36px}.bandcopy{justify-self:start}.bandhead span{max-width:9em}}
+@media (min-width:1000px){
+  .welcomegrid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:end;column-gap:56px;max-width:1240px;margin-inline:auto;padding:0 var(--gut-r) 0 var(--gut-l)}
+  .welcomegrid .in,.welcomegrid .welcomewrap{max-width:none;margin:0;padding-left:0;padding-right:0}
+  .welcomegrid .band{margin-top:0;transform:rotate(-4deg)}
+  @keyframes bandon{from{opacity:0;transform:translate(-36px,18px) rotate(-14deg) scale(1.08)}to{opacity:1;transform:rotate(-4deg)}}
+}
