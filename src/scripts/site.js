@@ -508,16 +508,18 @@ $$('.foot .form').forEach((f) => {
     btn.disabled = true;
     const r = await subscribe(input.value, '', 'footer');
     btn.disabled = false;
-    if (r.ok) { input.value = ''; note.textContent = r.code ? 'You\'re in. Code ' + r.code + ' is saved and comes off at checkout.' : 'You\'re in. See you in your inbox.'; }
+    if (r.ok) { input.value = ''; note.textContent = 'You\'re in. See you in your inbox.'; }
     else note.textContent = subError(r.error);
   });
 });
 
+const OFFER_LOCK = 864e5; // 24 hours
 const POP_SKIP = /^\/(thank-you|welcome|privacy|terms|refunds|shipping|contact)/;
 const WHENS = [['this-weekend', 'This weekend'], ['this-month', 'This month'], ['later', 'Later this year'], ['every-weekend', 'Every weekend']];
 function popAllowed() {
   if (POP_SKIP.test(location.pathname) || store.get('bh-sub') || getCode()) return false;
-  if (Date.now() - (+store.get('bh-pop') || 0) < 14 * 864e5) return false;
+  // Once the offer has been shown (or the Journal bar closed), it stays away on this browser for 24 hours.
+  if (Date.now() - (+store.get('bh-pop') || 0) < OFFER_LOCK) return false;
   try { if (sessionStorage.getItem('bh-pop')) return false; } catch (e) { /* ignore */ }
   return true;
 }
@@ -551,6 +553,8 @@ function openPopBar() {
 }
 function openPop() {
   try { sessionStorage.setItem('bh-pop', '1'); } catch (e) { /* ignore */ }
+  // The offer only lasts while this is open: the 24-hour lock starts now, unless they sign up.
+  store.set('bh-pop', String(Date.now()));
   const onShop = location.pathname.startsWith('/shop');
   const scrim = document.createElement('div');
   scrim.className = 'popscrim';
@@ -562,7 +566,7 @@ function openPop() {
   pop.tabIndex = -1;
   pop.innerHTML =
     '<div class="pophd"><div class="grain"></div><button class="popx" aria-label="Close"><svg viewBox="0 0 24 24"><use href="#i-x"/></svg></button>' +
-    '<p class="eyebrow">Welcome offer</p><h2 id="poph">10% off your first roll.</h2></div>' +
+    '<p class="eyebrow">Welcome offer</p><h2 id="poph">10% off your first roll.</h2><p class="popurgent"><span></span>Only while this is open. Close it and this offer won\'t come back on this browser for 24 hours.</p></div>' +
     '<form class="popbody" novalidate><p class="popq">When\'s your next big night?</p>' +
     '<div class="popchips" role="radiogroup" aria-label="When\'s your next big night?">' +
     WHENS.map(([v, t]) => '<button type="button" role="radio" aria-checked="false" data-when="' + v + '">' + t + '</button>').join('') +
@@ -573,7 +577,6 @@ function openPop() {
   document.body.append(scrim, pop);
   let when = '';
   const close = (done) => {
-    if (!done) store.set('bh-pop', String(Date.now()));
     pop.classList.remove('on'); scrim.classList.remove('on');
     document.removeEventListener('keydown', onKey);
     setTimeout(() => { pop.remove(); scrim.remove(); }, 700);

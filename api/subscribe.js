@@ -86,7 +86,7 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: 'email_unreachable' });
   }
 
-  // Only hand out the welcome code if it's actually live in Stripe.
-  const promo = await findPromo(process.env.WELCOME_CODE || 'WELC10', process.env.STRIPE_SECRET_KEY).catch(() => null);
+  // The welcome code only comes with the pop-up offer (not the footer sign-up), and only if it's live in Stripe.
+  const promo = source !== 'popup' ? null : await findPromo(process.env.WELCOME_CODE || 'WELC10', process.env.STRIPE_SECRET_KEY).catch(() => null);
   return res.status(200).json(promo ? { ok: true, code: promo.code, label: promo.label } : { ok: true });
 }
