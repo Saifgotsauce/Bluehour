@@ -225,6 +225,30 @@ $$('[data-car]').forEach((car) => {
   }
 });
 
+/* ---------- FAQ accordion ---------- */
+// Answers open and close with the site's easing; one answer is open at a time.
+const EASE = 'cubic-bezier(.19,1,.22,1)';
+function closeFaq(d) {
+  const body = $('p', d);
+  if (reduce || !body || !body.animate) { d.open = false; return; }
+  d.dataset.busy = '1';
+  const a = body.animate([{ height: body.offsetHeight + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 450, easing: EASE, fill: 'forwards' });
+  a.onfinish = () => { d.open = false; a.cancel(); delete d.dataset.busy; };
+}
+$$('.faq details').forEach((d) => {
+  const sum = $('summary', d), body = $('p', d);
+  if (!sum || !body) return;
+  sum.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (d.dataset.busy) return;
+    if (d.open) { closeFaq(d); return; }
+    $$('.faq details[open]').forEach((o) => { if (o !== d) closeFaq(o); });
+    d.open = true;
+    if (reduce || !body.animate) return;
+    body.animate([{ height: '0px', opacity: 0 }, { height: body.scrollHeight + 'px', opacity: 1 }], { duration: 700, easing: EASE });
+  });
+});
+
 /* ---------- email sign-up ---------- */
 $$('.form').forEach((f) => {
   f.addEventListener('submit', (e) => {
