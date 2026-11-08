@@ -1,9 +1,15 @@
 <div class="scrim" id="scrim"></div>
 <aside class="cart" id="cart" aria-label="Cart" inert>
   <div class="chd"><h2 id="carttitle">Cart</h2><button class="x" id="cartx" aria-label="Close cart"><svg viewBox="0 0 24 24"><use href="#i-x"/></svg></button></div>
-  <div class="ship" id="shipbox"><ul class="trustrow"><li>Free US shipping</li><li>Packed to order</li><li>No subscription</li></ul></div>
+  <div class="ship" id="shipbox">
+    <p class="crew" id="crewmsg"></p>
+    <div class="bar" aria-hidden="true"><i id="crewbar"></i></div>
+    <button class="upsell" id="upsell" hidden>+ Add a signature roll for a friend</button>
+    <ul class="trustrow"><li>Free US shipping</li><li>Packed to order</li><li>No subscription</li></ul>
+  </div>
   <div class="citems" id="citems"></div>
   <div class="cft" id="cft">
+    <p class="codeline" id="codeline" hidden></p>
     <button class="btn blue" id="checkout">Checkout</button>
     <p class="fine">Secure payment by Stripe. By checking out, you agree to our <a href="/terms">Terms</a> and <a href="/refunds">Refund policy</a>.</p>
     <p class="fine" id="chknote" hidden>Checkout isn't connected yet. It goes live once payments are set up.</p>

@@ -1,7 +1,7 @@
 // Blue Hour site behaviour: cart, menu, carousels, buy bar and the small animations.
 // Every block checks that its elements exist, because each page only has some of them.
 
-import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary } from '../data/ingredients.js';
+import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier } from '../data/ingredients.js';
 
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -12,6 +12,58 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage blocked */ } },
 };
 const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- discount codes ---------- */
+// A code arrives in a link (bluehournights.com/?code=RAVE15) or from the welcome offer. It's checked with
+// Stripe through /api/promo, saved for 14 days, shown at the top of the page and applied at checkout.
+const CODE_DAYS = 14;
+function getCode() {
+  try {
+    const c = JSON.parse(store.get('bh-code') || 'null');
+    if (c && c.code && Date.now() - c.at < CODE_DAYS * 864e5) return c;
+  } catch (e) { /* ignore */ }
+  return null;
+}
+function setCode(c) {
+  if (c && c.code) store.set('bh-code', JSON.stringify({ code: c.code, label: c.label || 'Discount', at: c.at || Date.now(), checked: Date.now() }));
+  else store.set('bh-code', '');
+  codeBar(); paint();
+}
+let promoDefault = null;
+function codeBar() {
+  let bar = $('.promo');
+  const c = getCode();
+  if (!bar && !c) return;
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.className = 'promo';
+    const first = document.body.firstElementChild;
+    document.body.insertBefore(bar, first && first.tagName.toLowerCase() === 'svg' ? first.nextSibling : first);
+  }
+  if (promoDefault === null) promoDefault = bar.innerHTML;
+  if (c) { bar.classList.add('coded'); bar.innerHTML = '<b>' + c.code.replace(/[^\w-]/g, '') + '</b> saved: ' + c.label.replace(/[<>&"]/g, '') + ', applied at checkout.'; }
+  else if (promoDefault) { bar.classList.remove('coded'); bar.innerHTML = promoDefault; }
+  else bar.remove();
+}
+const checkPromo = (code) =>
+  fetch('/api/promo?code=' + encodeURIComponent(code)).then((r) => r.json()).catch(() => ({}));
+(function readCodeFromLink() {
+  let url;
+  try { url = new URL(location.href); } catch (e) { return; }
+  const key = ['code', 'promo', 'discount'].find((k) => url.searchParams.get(k));
+  if (key) {
+    const code = url.searchParams.get(key).trim();
+    url.searchParams.delete(key);
+    try { history.replaceState(history.state, '', url.pathname + url.search + url.hash); } catch (e) { /* ignore */ }
+    checkPromo(code).then((d) => { if (d.valid) setCode({ code: d.code, label: d.label }); });
+    return;
+  }
+  // Re-check a saved code now and then, in case it was switched off in Stripe.
+  const c = getCode();
+  if (c && Date.now() - (c.checked || 0) > 6 * 36e5) {
+    checkPromo(c.code).then((d) => { if (d.valid) setCode({ ...c, label: d.label }); else if (d.valid === false) setCode(null); });
+  }
+})();
 
 /* ---------- cart ---------- */
 // Each cart line is one pouch recipe and how many rolls of it: { mix: { level: 2, ... }, qty: 1 }.
@@ -35,14 +87,17 @@ const save = () => store.set('bh-cart2', JSON.stringify(cart));
 const cartCount = () => cart.reduce((a, l) => a + l.qty, 0);
 const lineTitle = (mix) => (isSignature(mix) ? 'Signature pouch' : 'Custom pouch');
 
-function addToCart(mix, qty) {
+function addToCart(mix, qty, quiet) {
   const clean = cleanMix(mix);
   if (!mixTotal(clean)) return;
   const line = cart.find((l) => mixKey(l.mix) === mixKey(clean));
   if (line) line.qty = Math.min(9, line.qty + qty);
   else cart.push({ mix: clean, qty });
-  save(); paint(); openCart();
+  save(); paint();
+  if (!quiet) openCart();
 }
+
+const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
 function paint() {
   const n = cartCount();
@@ -52,19 +107,31 @@ function paint() {
   title.textContent = n ? 'Cart • ' + n : 'Cart';
   $('#shipbox').hidden = !n;
   $('#cft').hidden = !n;
-  $('#checkout').textContent = 'Checkout • ' + money(n * PRICE);
+  $('#checkout').textContent = 'Checkout • ' + money(totalFor(n));
   const box = $('#citems');
   if (!n) {
     box.innerHTML = '<div class="empty"><h3>Your cart is empty.</h3><p>Your next 30 nights are one tap away.</p><a class="btn solid" href="/shop">Shop 30 nights</a></div>';
     return;
   }
+  // Crew pricing progress: the more rolls in the order, the less each one costs.
+  const each = eachFor(n), next = nextTier(n), saving = savingFor(n);
+  $('#crewmsg').innerHTML = next
+    ? (saving ? 'You\'re paying $' + each + ' a roll. ' : '') + 'Add ' + (next.rolls - n) + ' more roll' + (next.rolls - n > 1 ? 's' : '') +
+      ' and every roll drops to <b>$' + next.each + '</b>.'
+    : 'Crew price unlocked: <b>$' + each + ' a roll</b>, saving you $' + saving + '.';
+  $('#crewbar').style.width = Math.min(100, (n / 3) * 100) + '%';
+  $('#upsell').hidden = !next;
   box.innerHTML = cart.map((l, i) =>
     '<div class="line"><img src="/images/flat.webp" alt="" width="82" height="102"><div><h3>' + lineTitle(l.mix) +
     '</h3><div class="mt">' + packSummary(l.mix) + '</div><div class="mt">30 nights per roll</div><div class="ctl"><div class="qty"><button data-line="' + i +
     '" data-d="-1" aria-label="Remove one roll">−</button><span>' + l.qty + '</span><button data-line="' + i +
-    '" data-d="1" aria-label="Add one roll">+</button></div><div class="price">' + money(l.qty * PRICE) +
+    '" data-d="1" aria-label="Add one roll">+</button></div><div class="price">' +
+    (each < PRICE ? '<s>' + money(l.qty * PRICE) + '</s> ' : '') + money(l.qty * each) +
     '</div></div><button class="trash" data-rm="' + i + '">Remove</button></div></div>'
   ).join('');
+  const code = getCode(), cl = $('#codeline');
+  cl.hidden = !code;
+  if (code) cl.innerHTML = '<span><b>' + esc(code.code) + '</b> · ' + esc(code.label) + ', applied at checkout</span><button data-dropcode>Remove</button>';
 }
 
 const citems = $('#citems');
@@ -90,7 +157,7 @@ if (citems) {
 const build = $('#build');
 function paintBuilder() {
   const t = mixTotal(current);
-  $$('[data-add]').forEach((b) => { b.disabled = t === 0; });
+  $$('[data-add], [data-buy]').forEach((b) => { b.disabled = t === 0; });
   const sum = $('#mixsum');
   if (sum) sum.textContent = t === 0 ? 'Pick at least one capsule.' : (isSignature(current) ? 'Signature six: ' : 'Your custom ' + t + ': ') + mixSummary(current);
   if (!build) return;
@@ -147,53 +214,72 @@ document.addEventListener('click', (e) => {
   if (!(t instanceof Element)) return;
   if (t.closest('[data-cart]')) { openCart(); return; }
   if (t.closest('[data-menu]')) { openMenu(); return; }
+  const buy = t.closest('[data-buy]');
+  if (buy) { if (!buy.disabled) { addToCart(current, picked, true); goCheckout(buy); } return; }
   if (t.closest('[data-add]')) { addToCart(current, picked); return; }
+  if (t.closest('#upsell')) { addToCart(SIGNATURE, 1, true); return; }
+  if (t.closest('[data-dropcode]')) { setCode(null); return; }
   if (t.closest('#menu a, #cart a')) { closeAll(); return; }
   const cap = t.closest('.cap');
   if (cap) { cap.classList.remove('pop'); void cap.offsetWidth; cap.classList.add('pop'); }
 });
 ['#cartx', '#menux', '#scrim'].forEach((s) => { const el = $(s); if (el) el.addEventListener('click', closeAll); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+// Sends the cart (and any saved discount code) to /api/checkout, which opens Stripe's payment page.
 const checkout = $('#checkout');
-// Sends the cart to /api/checkout, which opens Stripe's payment page.
-if (checkout) {
-  checkout.addEventListener('click', async () => {
-    if (!cart.length || checkout.disabled) return;
-    const note = $('#chknote');
-    note.hidden = true;
-    checkout.disabled = true;
-    checkout.textContent = 'Opening secure checkout\u2026';
-    try {
-      const r = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lines: cart }),
-      });
-      const d = await r.json().catch(() => ({}));
-      if (r.ok && d.url) { location.href = d.url; return; }
-      note.textContent = d.error === 'not_configured'
-        ? "Checkout isn't switched on yet. Please check back soon."
-        : "Checkout couldn't open. Check your connection and try again.";
-    } catch (e) {
-      note.textContent = "Checkout couldn't open. Check your connection and try again.";
-    }
-    note.hidden = false;
-    checkout.disabled = false;
-    paint();
-  });
-  // Coming back from Stripe with the back button: make the button usable again.
-  window.addEventListener('pageshow', () => { checkout.disabled = false; paint(); });
+let leaving = false;
+async function goCheckout(btn) {
+  if (!cart.length || leaving) return;
+  leaving = true;
+  const label = btn.innerHTML;
+  const note = $('#chknote');
+  if (note) note.hidden = true;
+  btn.dataset.label = label;
+  btn.disabled = true;
+  btn.textContent = 'Opening secure checkout\u2026';
+  let msg = "Checkout couldn't open. Check your connection and try again.";
+  try {
+    const code = getCode();
+    const r = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lines: cart, code: code ? code.code : '' }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (r.ok && d.url) { location.href = d.url; return; }
+    if (d.error === 'not_configured') msg = "Checkout isn't switched on yet. Please check back soon.";
+  } catch (e) { /* message below */ }
+  leaving = false;
+  btn.disabled = false;
+  btn.innerHTML = label;
+  if (btn !== checkout) openCart();
+  if (note) { note.textContent = msg; note.hidden = false; }
+  paint();
 }
+if (checkout) checkout.addEventListener('click', () => { if (!checkout.disabled) goCheckout(checkout); });
+// Coming back from Stripe with the back button: make the buttons usable again.
+window.addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;
+  leaving = false;
+  cart = loadCart();
+  $$('[data-buy]').forEach((b) => { b.disabled = false; if (b.dataset.label) b.innerHTML = b.dataset.label; });
+  if (checkout) checkout.disabled = false;
+  paint();
+});
 
 /* ---------- quantity pickers (shop) ---------- */
-$$('[data-qty]').forEach((sel) => {
-  sel.addEventListener('change', () => {
-    picked = parseInt(sel.value, 10) || 1;
-    $$('[data-qty]').forEach((o) => { o.value = String(picked); });
-    $$('[data-price]').forEach((p) => { p.textContent = money(picked * PRICE); });
-    $$('[data-rolls]').forEach((p) => { p.textContent = picked + (picked > 1 ? ' rolls' : ' roll'); });
+// The roll cards in the buy box and the dropdown in the sticky bar stay in sync.
+function setPicked(n) {
+  picked = Math.max(1, Math.min(9, n || 1));
+  $$('[data-qty]').forEach((o) => {
+    if (o.type === 'radio') o.checked = +o.value === picked;
+    else o.value = String(picked);
   });
-});
+  $$('[data-price]').forEach((p) => { p.textContent = money(totalFor(picked)); });
+  $$('[data-price-short]').forEach((p) => { p.textContent = '$' + totalFor(picked); });
+  $$('[data-rolls]').forEach((p) => { p.textContent = picked + (picked > 1 ? ' rolls' : ' roll'); });
+}
+$$('[data-qty]').forEach((el) => el.addEventListener('change', () => setPicked(parseInt(el.value, 10))));
 
 /* ---------- carousels ---------- */
 let lastPageScroll = 0;
@@ -248,14 +334,130 @@ $$('.faq details').forEach((d) => {
   });
 });
 
-/* ---------- email sign-up ---------- */
-$$('.form').forEach((f) => {
-  f.addEventListener('submit', (e) => {
+/* ---------- email sign-up and the welcome offer ---------- */
+// Both the footer form and the popup post to /api/subscribe, which adds the email to Klaviyo and returns
+// the welcome code. The code is saved like a link code, so it comes off at checkout without typing it.
+async function subscribe(email, when, source) {
+  try {
+    const r = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, when, source }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (r.ok && d.ok) {
+      store.set('bh-sub', '1');
+      if (d.code) setCode({ code: d.code, label: d.label });
+      return { ok: true, code: d.code };
+    }
+    return { ok: false, error: d.error || 'failed' };
+  } catch (e) { return { ok: false, error: 'offline' }; }
+}
+const subError = (e) =>
+  e === 'bad_email' ? 'That email doesn\'t look right. Check it and try again.'
+  : e === 'not_configured' ? 'Sign-ups go live very soon.'
+  : 'That didn\'t go through. Try again in a moment.';
+
+$$('.foot .form').forEach((f) => {
+  f.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const note = $('.formnote', f.parentNode);
-    if (note) note.textContent = "Sign-ups aren't connected yet. They go live with the store.";
+    const note = $('.formnote', f.parentNode), input = $('input', f), btn = $('button', f);
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const r = await subscribe(input.value, '', 'footer');
+    btn.disabled = false;
+    if (r.ok) { input.value = ''; note.textContent = r.code ? 'You\'re in. Code ' + r.code + ' is saved and comes off at checkout.' : 'You\'re in. See you in your inbox.'; }
+    else note.textContent = subError(r.error);
   });
 });
+
+const POP_SKIP = /^\/(thank-you|privacy|terms|refunds|shipping|contact)/;
+const WHENS = [['this-weekend', 'This weekend'], ['this-month', 'This month'], ['later', 'Later this year'], ['every-weekend', 'Every weekend']];
+function popAllowed() {
+  if (POP_SKIP.test(location.pathname) || store.get('bh-sub') || getCode()) return false;
+  if (Date.now() - (+store.get('bh-pop') || 0) < 14 * 864e5) return false;
+  try { if (sessionStorage.getItem('bh-pop')) return false; } catch (e) { /* ignore */ }
+  return true;
+}
+let popArmed = popAllowed();
+function tryPop() {
+  if (!popArmed) return;
+  if ($('#cart.on, #menu.on')) { setTimeout(tryPop, 6000); return; }
+  popArmed = false;
+  fetch('/api/subscribe').then((r) => r.json()).then((d) => { if (d.on) openPop(); }).catch(() => {});
+}
+function openPop() {
+  try { sessionStorage.setItem('bh-pop', '1'); } catch (e) { /* ignore */ }
+  const onShop = location.pathname.startsWith('/shop');
+  const scrim = document.createElement('div');
+  scrim.className = 'popscrim';
+  const pop = document.createElement('div');
+  pop.className = 'pop';
+  pop.setAttribute('role', 'dialog');
+  pop.setAttribute('aria-modal', 'true');
+  pop.setAttribute('aria-labelledby', 'poph');
+  pop.tabIndex = -1;
+  pop.innerHTML =
+    '<div class="pophd"><div class="grain"></div><button class="popx" aria-label="Close"><svg viewBox="0 0 24 24"><use href="#i-x"/></svg></button>' +
+    '<p class="eyebrow">Welcome offer</p><h2 id="poph">10% off your first roll.</h2></div>' +
+    '<form class="popbody" novalidate><p class="popq">When\'s your next big night?</p>' +
+    '<div class="popchips" role="radiogroup" aria-label="When\'s your next big night?">' +
+    WHENS.map(([v, t]) => '<button type="button" role="radio" aria-checked="false" data-when="' + v + '">' + t + '</button>').join('') +
+    '</div><p class="pophint" hidden>Heads up: rolls are packed to order and usually arrive 4 to 10 business days after you order.</p>' +
+    '<div class="form"><label for="popem" class="sr">Email address</label><input id="popem" type="email" placeholder="Email address" autocomplete="email"><button type="submit">Get 10% off</button></div>' +
+    '<p class="fine">We\'ll nudge you to order in time for it. By joining you agree to get marketing emails from Blue Hour. Unsubscribe anytime. <a href="/privacy">Privacy</a></p>' +
+    '<p class="formnote" role="status"></p></form>';
+  document.body.append(scrim, pop);
+  let when = '';
+  const close = (done) => {
+    if (!done) store.set('bh-pop', String(Date.now()));
+    pop.classList.remove('on'); scrim.classList.remove('on');
+    document.removeEventListener('keydown', onKey);
+    setTimeout(() => { pop.remove(); scrim.remove(); }, 700);
+  };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  scrim.addEventListener('click', () => close());
+  pop.addEventListener('click', (e) => {
+    const t = e.target;
+    if (!(t instanceof Element)) return;
+    if (t.closest('.popx')) { close(!!pop.querySelector('.popdone')); return; }
+    if (t.closest('[data-keep]')) { close(true); return; }
+    const chip = t.closest('[data-when]');
+    if (chip) {
+      when = chip.getAttribute('aria-checked') === 'true' ? '' : chip.getAttribute('data-when');
+      $$('[data-when]', pop).forEach((c) => c.setAttribute('aria-checked', String(c.getAttribute('data-when') === when)));
+      $('.pophint', pop).hidden = when !== 'this-weekend';
+      return;
+    }
+    const copy = t.closest('[data-copy]');
+    if (copy && navigator.clipboard) navigator.clipboard.writeText(copy.getAttribute('data-copy')).then(() => { copy.textContent = 'Copied'; }).catch(() => {});
+  });
+  const form = $('form', pop);
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('button[type=submit]', form), note = $('.formnote', form);
+    if (btn.disabled) return;
+    btn.disabled = true; btn.textContent = 'Joining\u2026';
+    const r = await subscribe($('input', form).value, when, 'popup');
+    if (!r.ok) { btn.disabled = false; btn.textContent = 'Get 10% off'; note.textContent = subError(r.error); return; }
+    const cta = onShop ? '<button class="btn blue" data-keep>Keep shopping</button>' : '<a class="btn blue" href="/shop">Shop 30 nights</a>';
+    form.outerHTML = r.code
+      ? '<div class="popbody popdone"><p class="popq">You\'re in. Here\'s your code:</p><div class="codebox"><b>' + r.code.replace(/[^\w-]/g, '') +
+        '</b><button data-copy="' + r.code.replace(/[^\w-]/g, '') + '">Copy</button></div><p class="fine">It\'s saved on this device and comes off at checkout automatically.</p>' + cta + '</div>'
+      : '<div class="popbody popdone"><p class="popq">You\'re in. Check your inbox.</p>' + cta + '</div>';
+  });
+  requestAnimationFrame(() => requestAnimationFrame(() => { pop.classList.add('on'); scrim.classList.add('on'); pop.focus({ preventScroll: true }); }));
+}
+if (popArmed) {
+  setTimeout(tryPop, 15000);
+  document.addEventListener('mouseout', (e) => { if (!e.relatedTarget && e.clientY <= 0) tryPop(); });
+}
+function popScroll() {
+  if (!popArmed) return;
+  const h = document.documentElement.scrollHeight - innerHeight;
+  if (h > 400 && scrollY / h > 0.5) tryPop();
+}
 
 /* ---------- reveal on scroll ---------- */
 // Lists reveal item by item; headings and blocks fade up. Items that come into view together are staggered.
@@ -358,12 +560,14 @@ function float() {
   ticking = false;
   buybar();
   night();
+  popScroll();
   if (reduce || !caps.length) return;
   if (!capRaf) capRaf = requestAnimationFrame(capStep);
 }
 let ticking = false;
 window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(float); } }, { passive: true });
 
+codeBar();
 paint();
 paintBuilder();
 float();

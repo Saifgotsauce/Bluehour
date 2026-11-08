@@ -2,7 +2,7 @@
 layout: ../layouts/Legal.astro
 title: Privacy policy
 description: What information Blue Hour collects, why we collect it, who we share it with, and how to ask us to see or delete it.
-updated: November 6, 2026
+updated: November 8, 2026
 ---
 
 This policy explains what information Blue Hour ("we" or "us") collects when you visit bluehournights.com or buy from us, how we use it and who we share it with.
@@ -11,7 +11,8 @@ This policy explains what information Blue Hour ("we" or "us") collects when you
 
 - **Order details:** your name, email address, shipping address, the capsules you picked for your pouch and what you bought.
 - **Payment details:** payments are processed by Stripe. We don't see or store your full card number.
-- **Email sign-ups:** your email address, if you sign up for news and restocks.
+- **Email sign-ups:** your email address and, if you tell us, when your next big night is, if you join our email list.
+- **On your device:** your browser stores your cart and any discount code you used, so they're still there when you come back. This stays on your device.
 - **Messages:** anything you send us when you contact us.
 - **Technical data:** like most websites, our hosting provider records basic technical information such as your IP address, browser and the pages you visit, to run and secure the site.
 - **Your cart:** your cart is saved in your own browser so it's still there when you come back. It isn't sent to us until you check out.
@@ -33,6 +34,7 @@ We share information only with the companies that help us run the store, and onl
 - **Stripe** processes payments.
 - **OK Capsule**, our fulfillment partner, makes, packs and ships your order. It handles your name, address, email and capsule picks on our behalf and doesn't sell that information or use it for its own marketing.
 - **Shipping carriers** deliver your order.
+- **Klaviyo** sends our marketing emails to people who join our list.
 - **Vercel** hosts this website.
 - **Google Fonts** delivers the fonts on this site, which means your browser connects to Google.
 

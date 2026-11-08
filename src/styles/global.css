@@ -488,3 +488,74 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .faq summary .q{flex:1;min-width:0}
 .trustrow{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .trustrow li{padding:6px 12px;border-radius:99px;background:var(--mist);color:var(--deep);font-weight:600;font-size:13px;line-height:1.2}
+
+/* ---------- offers: roll tiers, crew pricing, codes, welcome popup ---------- */
+:root{--sale:#E0243C}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.tiers{display:flex;flex-direction:column;gap:12px;border:0;padding:0;margin:0;min-width:0}
+.tiers legend{padding:0;margin-bottom:10px;font:700 15px/1.2 var(--display);letter-spacing:-.01em}
+.tier{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;padding:16px 18px;border:2px solid #C9D3EA;border-radius:20px;background:var(--white);cursor:pointer;transition:border-color .25s var(--ease-out),box-shadow .25s var(--ease-out),transform .25s var(--ease-out)}
+.tier:active{transform:scale(.99)}
+.tier input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;margin:0;border-radius:50%;border:2px solid var(--ink);background:var(--white);cursor:pointer}
+.tier input:checked{border-color:var(--cobalt);background:radial-gradient(circle,var(--cobalt) 0 5px,var(--white) 6px)}
+.tier input:focus-visible{outline:3px solid var(--bright);outline-offset:2px}
+.tier:has(input:checked){border-color:var(--cobalt);box-shadow:0 0 0 1px var(--cobalt),0 12px 28px rgba(20,54,216,.16)}
+.tier .tn{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tier .tn b{font:700 17px/1.2 var(--display);letter-spacing:-.01em}
+.tier .tn em{font:700 11px/1 var(--display);font-style:normal;letter-spacing:.07em;text-transform:uppercase;color:var(--cobalt);background:var(--mist);padding:4px 8px;border-radius:99px;margin-left:8px;vertical-align:2px}
+.tier .tn small{font-size:14px;color:var(--soft)}
+.tier .tp{display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-variant-numeric:tabular-nums}
+.tier .tp b{font:700 19px/1 var(--display);letter-spacing:-.01em}
+.tier .tp s{font-size:14px;color:var(--soft)}
+.tier .save{position:absolute;top:-11px;right:16px;padding:5px 10px;border-radius:99px;background:var(--sale);color:var(--white);font:700 11.5px/1 var(--display);letter-spacing:.05em;text-transform:uppercase}
+.crewnote{font-size:14.5px;line-height:1.4;color:var(--soft)}
+#buyrow .add{flex:1;padding-inline:14px}
+.add.ghost{background:var(--white);color:var(--ink)}
+.add:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.paynote{display:flex;align-items:center;justify-content:center;gap:7px;font-size:13.5px;color:var(--soft);text-align:center}
+.paynote svg{flex:0 0 15px;width:15px;height:15px}
+.ship .crew{font-size:15px;line-height:1.35;text-align:center;color:var(--ink)}
+.ship .crew b{font:inherit;font-weight:700;color:var(--cobalt)}
+.bar i{transition:width .6s var(--ease-out)}
+.upsell{align-self:center;border:2px solid var(--cobalt);background:var(--white);color:var(--cobalt);border-radius:99px;padding:10px 18px;font:700 14.5px/1 var(--display);cursor:pointer}
+.upsell:hover{background:var(--mist)}
+.price s{font-weight:500;font-size:14px;color:var(--soft);margin-right:4px}
+.codeline{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-radius:14px;background:var(--white);border:1px dashed var(--cobalt);font-size:14px;color:var(--ink)}
+.codeline[hidden]{display:none}
+.codeline b{color:var(--cobalt)}
+.codeline button{flex:none;background:none;border:0;color:var(--soft);text-decoration:underline;cursor:pointer;font-size:13px;padding:4px 0}
+.promo.coded{background:var(--sale)}
+.promo.coded b{letter-spacing:.03em}
+
+.popscrim{position:fixed;inset:0;z-index:60;background:rgba(9,14,48,.42);opacity:0;transition:opacity .6s var(--ease-out)}
+.popscrim.on{opacity:1}
+.pop{position:fixed;z-index:61;left:0;right:0;bottom:0;max-height:90vh;overflow:auto;overscroll-behavior:contain;background:var(--white);color:var(--ink);border-radius:26px 26px 0 0;box-shadow:0 -18px 60px rgba(11,31,158,.3);transform:translateY(105%);transition:transform .8s var(--ease-out);outline:0;padding-bottom:env(safe-area-inset-bottom,0px)}
+.pop.on{transform:none}
+.pophd{position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(155deg,var(--deep),var(--cobalt) 50%,var(--bright));color:var(--white);padding:28px 70px 26px 24px}
+.pophd .eyebrow{font:700 12px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;opacity:.85;margin:0 0 10px}
+.pophd h2{font-size:clamp(30px,8.6vw,40px);line-height:1.02}
+.popx{position:absolute;z-index:2;top:14px;right:14px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:var(--white);display:grid;place-items:center;cursor:pointer}
+.popx svg{width:20px;height:20px}
+.popbody{padding:22px 24px 26px;display:flex;flex-direction:column;gap:14px}
+.popq{font:700 18px/1.25 var(--display);letter-spacing:-.015em;color:var(--deep);margin:0}
+.popchips{display:flex;flex-wrap:wrap;gap:8px}
+.popchips button{border:2px solid #C9D3EA;background:var(--white);color:var(--ink);border-radius:99px;padding:10px 14px;font:600 14.5px/1 var(--display);cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.popchips button[aria-checked="true"]{background:var(--deep);border-color:var(--deep);color:var(--white)}
+.pophint{font-size:14px;line-height:1.4;color:var(--soft);background:var(--mist);border-radius:14px;padding:10px 12px;margin:0}
+.pophint[hidden]{display:none}
+.pop .form{max-width:none;box-shadow:none}
+.pop .form button{white-space:nowrap}
+.pop .fine{margin:0}
+.pop .fine a{color:inherit}
+.pop .formnote{margin:0;min-height:0;font-size:14px}
+.pop .formnote:empty{display:none}
+.popdone .btn{width:100%}
+.codebox{display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px dashed var(--cobalt);border-radius:16px;padding:10px 10px 10px 18px}
+.codebox b{font:800 24px/1 var(--display);letter-spacing:.03em;color:var(--deep)}
+.codebox button{border:0;border-radius:99px;background:var(--mist);color:var(--deep);padding:12px 16px;font:700 14px/1 var(--display);cursor:pointer}
+@media (min-width:700px){
+  .pop{left:auto;right:24px;bottom:24px;width:410px;border-radius:26px;box-shadow:0 24px 70px rgba(11,31,158,.35)}
+  .popscrim{background:rgba(9,14,48,.18)}
+}
+@media (max-width:370px){.tier{padding:14px;gap:10px}.tier .tn b{font-size:16px}.tier .tn em{margin-left:5px}}
+.crewline{font:600 clamp(17px,4.4vw,21px)/1.35 var(--display);letter-spacing:-.01em;color:var(--cobalt);margin-top:-8px}

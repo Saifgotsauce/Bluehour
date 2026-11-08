@@ -14,6 +14,20 @@
 export const PRICE = 129;
 export const MAX_CAPS = 6;
 
+// Crew pricing: the more rolls in one order, the less each roll costs. Every roll in the cart counts,
+// even when the rolls have different pouches, so friends can order together.
+export const TIERS = [
+  { rolls: 1, each: 129, name: '' },
+  { rolls: 2, each: 119, name: 'Duo' },
+  { rolls: 3, each: 109, name: 'Crew' },
+];
+export const tierFor = (rolls) => TIERS.filter((t) => rolls >= t.rolls).pop() || TIERS[0];
+export const eachFor = (rolls) => tierFor(rolls).each;
+export const totalFor = (rolls) => rolls * eachFor(rolls);
+export const savingFor = (rolls) => rolls * PRICE - totalFor(rolls);
+export const nextTier = (rolls) => TIERS.find((t) => t.rolls > rolls) || null;
+export const perNight = (each) => '$' + (each / 30).toFixed(2);
+
 export const INGREDIENTS = [
   {
     id: 'level', name: 'Level', ingredient: 'Magnesium', dose: '133 mg', blurb: 'Magnesium glycinate. Helps support normal muscle and nerve function.*', img: 'cap-still', max: 2, signature: 2,
