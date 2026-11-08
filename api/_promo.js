@@ -1,5 +1,5 @@
 // Shared by /api/checkout, /api/promo and /api/subscribe. The underscore keeps Vercel from serving it as a page.
-// Looks up a Stripe promotion code (the code a customer types, like WELCOME10) and describes its discount.
+// Looks up a Stripe promotion code (the code a customer types, like WELC10) and describes its discount.
 
 // Pinned so the reply always has the same shape. Newer Stripe versions keep the coupon under promotion.coupon.
 const STRIPE_VERSION = '2025-09-30.clover';

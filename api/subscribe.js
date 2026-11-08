@@ -2,7 +2,7 @@
 // GET  -> { on: true } once email sign-ups are connected, so the site only shows the welcome offer when it works.
 // POST { email, when, source } -> adds the email to the Klaviyo list with marketing consent, saves when their
 //      next big night is, and returns the welcome code.
-// Needs in Vercel: KLAVIYO_PRIVATE_KEY, KLAVIYO_LIST_ID. Optional: WELCOME_CODE (default WELCOME10).
+// Needs in Vercel: KLAVIYO_PRIVATE_KEY, KLAVIYO_LIST_ID. Optional: WELCOME_CODE (default WELC10).
 
 import { findPromo } from './_promo.js';
 
@@ -87,6 +87,6 @@ export default async function handler(req, res) {
   }
 
   // Only hand out the welcome code if it's actually live in Stripe.
-  const promo = await findPromo(process.env.WELCOME_CODE || 'WELCOME10', process.env.STRIPE_SECRET_KEY).catch(() => null);
+  const promo = await findPromo(process.env.WELCOME_CODE || 'WELC10', process.env.STRIPE_SECRET_KEY).catch(() => null);
   return res.status(200).json(promo ? { ok: true, code: promo.code, label: promo.label } : { ok: true });
 }
