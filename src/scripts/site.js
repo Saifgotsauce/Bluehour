@@ -251,11 +251,11 @@ if (motion) {
   });
   const io = new IntersectionObserver((es) => {
     es.filter((e) => e.isIntersecting).forEach((e, i) => {
-      e.target.style.setProperty('--d', Math.min(i * 0.06, 0.3) + 's');
+      e.target.style.setProperty('--d', Math.min(i * 0.08, 0.4) + 's');
       e.target.classList.add('in');
       io.unobserve(e.target);
     });
-  }, { rootMargin: '0px 0px -5% 0px' });
+  }, { rootMargin: '0px 0px -10% 0px' });
   $$('.rv').forEach((el) => io.observe(el));
 } else {
   $$('.rv').forEach((el) => el.classList.add('in'));
@@ -270,7 +270,7 @@ if ('IntersectionObserver' in window) {
 /* ---------- pause animations that are off screen ---------- */
 if ('IntersectionObserver' in window) {
   const pause = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('paused', !e.isIntersecting)));
-  $$('.hero, .jhero, .mq, .sky, .dark').forEach((el) => pause.observe(el));
+  $$('.hero, .jhero, .mq, .sky, .dark, .phero, .foot').forEach((el) => pause.observe(el));
 }
 
 /* ---------- scrolling text speed ---------- */
