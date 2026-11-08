@@ -117,19 +117,52 @@ async function findEgg(id) {
   } catch (e) { /* offline: they can find it again */ } finally { asking.delete(id); }
 }
 function eggToast(egg, amount) {
-  $$('.eggtoast').forEach((t) => t.remove());
+  $$('.egg').forEach((t) => t.remove());
+  const seen = (() => { try { return JSON.parse(store.get('bh-eggs-seen') || '[]') || []; } catch (e) { return []; } })();
+  const ring = (egg.rarity + ' egg \u2022 ').toUpperCase().repeat(2);
   const t = document.createElement('div');
-  t.className = 'eggtoast ' + egg.rarity;
+  t.className = 'egg ' + egg.rarity;
   t.setAttribute('role', 'status');
-  const caps = { common: 'cap-guard', rare: 'cap-bright', legendary: 'cap-steady' };
-  t.innerHTML = '<img src="/images/' + caps[egg.rarity] + '.webp" alt="" width="900" height="340"><span class="r">' + egg.rarity + ' egg</span><b>' + egg.name +
-    '</b><p>' + egg.found + ' $' + amount + ' off for 48 hours, applied at checkout.</p><small>' + eggsFoundCount() + ' of ' + EGGS.length +
-    ' eggs found. Only your best discount applies.</small>';
+  t.innerHTML =
+    '<div class="eggbadge"><svg viewBox="0 0 120 120" aria-hidden="true"><path id="eggring" d="M60 60m-45 0a45 45 0 1 1 90 0a45 45 0 1 1-90 0" fill="none"/>' +
+    '<text><textPath href="#eggring" textLength="280" lengthAdjust="spacing">' + ring + '</textPath></text></svg><b>$' + amount + '</b><i>off</i></div>' +
+    '<div class="eggtxt"><span class="r">' + egg.rarity + ' egg found</span><b>' + egg.name + '</b><p>' + egg.found +
+    ' Yours for 48 hours, taken off at checkout.</p><div class="eggdots" aria-label="' + seen.length + ' of ' + EGGS.length + ' eggs found">' +
+    EGGS.map((e) => '<i class="' + (seen.includes(e.id) ? 'f' : '') + (e.id === egg.id ? ' now' : '') + '"></i>').join('') +
+    '<small>' + seen.length + ' of ' + EGGS.length + ' found</small></div></div>' +
+    '<button class="eggx" aria-label="Close"><svg viewBox="0 0 24 24"><use href="#i-x"/></svg></button>';
   document.body.append(t);
-  const bye = () => { t.classList.remove('on'); setTimeout(() => t.remove(), 700); };
+  let gone = false;
+  const bye = () => { if (gone) return; gone = true; t.classList.remove('on'); t.classList.add('off'); setTimeout(() => t.remove(), 800); };
   t.addEventListener('click', bye);
-  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('on')));
-  setTimeout(bye, 7000);
+  requestAnimationFrame(() => requestAnimationFrame(() => { t.classList.add('on'); setTimeout(() => burst(t.querySelector('.eggbadge'), egg.rarity), 380); }));
+  setTimeout(bye, 8000);
+}
+// A handful of capsules burst out of the badge and fall away.
+function burst(from, rarity) {
+  if (reduce || !from || !from.animate) return;
+  const r = from.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  const imgs = ['cap-still', 'cap-bright', 'cap-steady', 'cap-guard', 'cap-glycine', 'cap-nac', 'cap-probiotic'];
+  const n = rarity === 'legendary' ? 22 : rarity === 'rare' ? 16 : 11;
+  const layer = document.createElement('div');
+  layer.className = 'eggburst';
+  document.body.append(layer);
+  for (let k = 0; k < n; k++) {
+    const im = document.createElement('img');
+    im.src = '/images/' + imgs[k % imgs.length] + '.webp'; im.alt = '';
+    im.style.left = cx + 'px'; im.style.top = cy + 'px';
+    layer.append(im);
+    const a = (-90 + (Math.random() * 150 - 75)) * Math.PI / 180;
+    const d = 110 + Math.random() * (rarity === 'legendary' ? 230 : 170);
+    const x = Math.cos(a) * d, y = Math.sin(a) * d, spin = (Math.random() < 0.5 ? -1 : 1) * (240 + Math.random() * 420);
+    const s = 0.55 + Math.random() * 0.5, dur = 1300 + Math.random() * 700;
+    im.animate([
+      { transform: 'translate(-50%,-50%) translate(0,0) rotate(0deg) scale(.2)', opacity: 0 },
+      { transform: `translate(-50%,-50%) translate(${x * 0.9}px,${y * 0.9}px) rotate(${spin * 0.6}deg) scale(${s})`, opacity: 1, offset: 0.45 },
+      { transform: `translate(-50%,-50%) translate(${x * 1.15}px,${y * 0.7 + 160}px) rotate(${spin}deg) scale(${s * 0.9})`, opacity: 0 },
+    ], { duration: dur, easing: 'cubic-bezier(.19,1,.22,1)', delay: k * 14, fill: 'forwards' });
+  }
+  setTimeout(() => layer.remove(), 2400);
 }
 // Egg: collector. Hold 3 other eggs at once (checked again on every page, in case they left mid-find).
 if (liveEggs().filter((e) => e.id !== 'collector').length >= COLLECTOR_NEEDS) setTimeout(() => findEgg('collector'), 2400);
@@ -308,10 +341,14 @@ document.addEventListener('click', (e) => {
   if (t.closest('#menu a, #cart a')) { closeAll(); return; }
   const cap = t.closest('.cap');
   if (cap) {
-    cap.classList.remove('pop'); void cap.offsetWidth; cap.classList.add('pop');
+    cap.classList.remove('flick'); void cap.offsetWidth; cap.classList.add('flick');
     // Egg: capsule toss. Flick every floating capsule on the page.
-    tossed.add(cap);
-    if (tossed.size === $$('.cap').length) findEgg('toss');
+    // Each flicked capsule stays lit, so you can tell how many are left.
+    tossed.add(cap); cap.classList.add('got');
+    if (tossed.size === $$('.cap').length) {
+      setTimeout(() => $$('.cap').forEach((c) => { c.classList.remove('flick'); void c.offsetWidth; c.classList.add('flick'); }), 350);
+      findEgg('toss');
+    }
     return;
   }
   // Egg: read to the end. A stray capsule waits at the bottom of every Journal post.
@@ -496,7 +533,7 @@ function openPop() {
   const scrim = document.createElement('div');
   scrim.className = 'popscrim';
   const pop = document.createElement('div');
-  pop.className = 'pop';
+  pop.className = 'wpop';
   pop.setAttribute('role', 'dialog');
   pop.setAttribute('aria-modal', 'true');
   pop.setAttribute('aria-labelledby', 'poph');
