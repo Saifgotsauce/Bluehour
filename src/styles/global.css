@@ -257,6 +257,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary svg{flex:0 0 22px;width:22px;height:22px;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 .faq details[open] summary svg{transform:rotate(180deg)}
+.faq details.closing summary svg{transform:none}
 .faq details p{padding-bottom:24px;color:var(--soft);overflow:hidden}
 
 /* drawers */

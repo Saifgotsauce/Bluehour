@@ -237,11 +237,13 @@ $$('.faq details').forEach((d) => {
     if (anim) anim.cancel();
     if (!d.open) {
       d.open = true;
-      anim = body.animate([{ height: '0px', opacity: 0 }, { height: body.scrollHeight + 'px', opacity: 1 }], { duration: 260, easing: FAQ_EASE });
+      d.classList.remove('closing');
+      anim = body.animate([{ height: '0px', paddingBottom: '0px', opacity: 0 }, { height: body.scrollHeight + 'px', paddingBottom: '24px', opacity: 1 }], { duration: 260, easing: FAQ_EASE });
       anim.onfinish = () => { anim = null; };
     } else {
-      anim = body.animate([{ height: body.offsetHeight + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 200, easing: FAQ_EASE, fill: 'forwards' });
-      anim.onfinish = () => { d.open = false; anim.cancel(); anim = null; };
+      d.classList.add('closing');
+      anim = body.animate([{ height: body.offsetHeight + 'px', paddingBottom: '24px', opacity: 1 }, { height: '0px', paddingBottom: '0px', opacity: 0 }], { duration: 200, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
+      anim.onfinish = () => { d.open = false; d.classList.remove('closing'); anim.cancel(); anim = null; };
     }
   });
 });
