@@ -1,3 +1,6 @@
+---
+import { PREORDER, SHIP_BY } from '../data/preorder.js';
+---
 <div class="scrim" id="scrim"></div>
 <aside class="cart" id="cart" aria-label="Cart" inert>
   <div class="chd"><h2 id="carttitle">Cart</h2><button class="x" id="cartx" aria-label="Close cart"><svg viewBox="0 0 24 24"><use href="#i-x"/></svg></button></div>
@@ -11,6 +14,7 @@
   <div class="cft" id="cft">
     <p class="codeline" id="codeline" hidden></p>
     <button class="btn blue" id="checkout">Checkout</button>
+    {PREORDER && <p class="fine"><b>Pre-order:</b> we charge you today and your order ships by {SHIP_BY}. Full refund any time before it ships.</p>}
     <p class="fine">Secure payment by Stripe. By checking out, you agree to our <a href="/terms">Terms</a> and <a href="/refunds">Refund policy</a>.</p>
     <p class="fine" id="chknote" hidden>Checkout isn't connected yet. It goes live once payments are set up.</p>
   </div>

@@ -5,6 +5,7 @@
 
 import { eggById, eggAmount, inBlueHour, COLLECTOR_NEEDS } from '../src/data/eggs.js';
 import { signEgg, readEgg } from './_eggs.js';
+import { PREORDER } from '../src/data/preorder.js';
 
 function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -26,6 +27,8 @@ export default async function handler(req, res) {
   }
   if (!process.env.STRIPE_SECRET_KEY) return res.status(503).json({ error: 'not_configured' });
   const body = readBody(req);
+  // Eggs are switched off during pre-order (see src/data/preorder.js).
+  if (PREORDER) return res.status(403).json({ error: 'eggs_off' });
   const egg = eggById(String(body.egg || ''));
   if (!egg) return res.status(400).json({ error: 'unknown_egg' });
 

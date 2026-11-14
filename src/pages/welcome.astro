@@ -5,6 +5,8 @@
 import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
+import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { TIERS } from '../data/ingredients.js';
 ---
 <Base title="You're in | Blue Hour" description="You're on the Blue Hour list." noindex>
   <script is:inline>
@@ -18,11 +20,13 @@ import Foot from '../components/Foot.astro';
     <div class="in">
       <p class="okchip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Email confirmed</p>
       <h1>You're in.</h1>
-      <p class="dek" id="welcomedek">Welcome to Blue Hour. Here's your wristband for the list: your code is saved on this device and comes off at checkout automatically.</p>
+      {PREORDER
+        ? <p class="dek">Welcome to Blue Hour. We're taking pre-orders right now at a ${TIERS[0].each} founding price, shipping by {SHIP_BY}. Codes are paused until launch, because the founding price is our best deal.</p>
+        : <p class="dek" id="welcomedek">Welcome to Blue Hour. Here's your wristband for the list: your code is saved on this device and comes off at checkout automatically.</p>}
     </div>
 
     <div class="welcomewrap">
-      <div class="band" id="band" aria-live="polite">
+      <div class="band" id="band" aria-live="polite" hidden={PREORDER}>
         <div class="bandin">
           <div class="bandhead">
             <img src="/images/logo-white.webp" alt="blue hour" width="1000" height="247" />
@@ -36,9 +40,9 @@ import Foot from '../components/Foot.astro';
         </div>
         <i class="snap" aria-hidden="true"></i>
       </div>
-      <p class="bandnote" id="bandnote">A copy is in your inbox too.</p>
+      <p class="bandnote" id="bandnote" hidden={PREORDER}>A copy is in your inbox too.</p>
       <div class="welcomecta">
-        <a class="btn solid" href="/shop">Shop 30 nights</a>
+        <a class="btn solid" href="/shop">{PREORDER ? 'Pre-order 30 nights' : 'Shop 30 nights'}</a>
         <a class="btn" href="/shop#build">Build your pouch</a>
       </div>
     </div>
@@ -48,12 +52,12 @@ import Foot from '../components/Foot.astro';
   <main class="w sec" style="padding-top:clamp(24px,5vw,50px)">
     <h2 class="welcomeh">What lands in your inbox</h2>
     <ol class="wsteps">
-      <li><h3>Your code</h3><p>A copy of your welcome code, so it's there when you're ready. One discount per order, and we always apply the one that saves you the most.</p></li>
+      <li hidden={PREORDER}><h3>Your code</h3><p>A copy of your welcome code, so it's there when you're ready. One discount per order, and we always apply the one that saves you the most.</p></li>
       <li><h3>A nudge before your big night</h3><p>If you told us when your next big night is, we'll remind you in time to order. Rolls are packed to order and usually arrive 4 to 10 business days later.</p></li>
       <li><h3>First word, nothing else</h3><p>New pouch options, restocks and the odd Journal post. No daily blasts, and you can unsubscribe in one tap.</p></li>
     </ol>
 
-    <aside class="eggtease">
+    <aside class="eggtease" hidden={PREORDER}>
       <img src="/images/cap-bright.webp" alt="" width="900" height="340" loading="lazy" />
       <div>
         <p class="r">Psst</p>
@@ -73,6 +77,7 @@ import Foot from '../components/Foot.astro';
       };
       const hadLinkCode = /[?&](code|promo|discount)=/.test(location.search);
       const band = document.getElementById('band');
+      if (!band || band.hidden) return; // pre-order: no codes to show
       const $ = (id) => document.getElementById(id);
       const show = () => {
         const c = read();

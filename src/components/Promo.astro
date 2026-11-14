@@ -1,5 +1,11 @@
 ---
+import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { TIERS, PRICE } from '../data/ingredients.js';
 interface Props { text: string; link?: string; href?: string }
-const { text, link, href } = Astro.props;
+// During pre-order every page shows the same banner, so the offer and ship date are always in view.
+const p = PREORDER
+  ? { text: `Pre-order: $${TIERS[0].each} founding price (launch $${PRICE}). Ships by ${SHIP_BY}.`, link: '', href: '' }
+  : Astro.props;
+const { text, link, href } = p;
 ---
 <div class="promo">{text} {link && href && <a href={href}>{link}</a>}</div>

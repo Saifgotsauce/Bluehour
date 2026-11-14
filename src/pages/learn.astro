@@ -1,0 +1,356 @@
+---
+// Educational advertorial for paid traffic: teaches first, sells second.
+// Every number in the article is sourced at the bottom of the page. Keep it that way when editing.
+// Rules: no drug references, no hangover or disease claims, structure/function claims only, with an asterisk.
+import Base from '../layouts/Base.astro';
+import Top from '../components/Top.astro';
+import Promo from '../components/Promo.astro';
+import Foot from '../components/Foot.astro';
+import { reviews } from '../data/reviews';
+import { TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
+import { PREORDER, SHIP_BY } from '../data/preorder.js';
+const FIRST = TIERS[0].each;
+const BUY = PREORDER ? 'Pre-order' : 'Buy now';
+
+const pouch = [
+  { img: 'cap-still', two: true, name: 'Level ×2', what: 'Magnesium glycinate · 266 mg', why: 'Helps support normal muscle and nerve function.*' },
+  { img: 'cap-bright', name: 'Bright', what: 'Vitamin C · 1,000 mg', why: 'An antioxidant that helps support normal immune function.*' },
+  { img: 'cap-steady', name: 'Spark', what: 'Methyl B-complex · 8 B vitamins', why: 'B vitamins that help support normal energy metabolism.*' },
+  { img: 'cap-guard', name: 'Core', what: 'Zinc · 25 mg', why: 'An essential mineral that helps support normal immune function.*' },
+  { img: 'cap-glycine', name: 'Glow', what: 'Glycine · 850 mg', why: 'An amino acid your body uses to build proteins, including collagen.*' },
+];
+
+const preFaqs = PREORDER ? [
+  ['When will my roll ship?', `Pre-orders ship by ${SHIP_BY}, free within the US. Delivery usually takes 3 to 8 business days after that, and we'll email you tracking.`],
+  ['When am I charged?', `Today, at the founding price. That price is only for pre-orders. At launch, one roll goes back to $${PRICE}.`],
+  ['Can I cancel?', `Yes. Any time before your roll ships, email hello@bluehournights.com with your order number and we'll refund you in full, no questions. If we ever can't ship by ${SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.`],
+] : [];
+const faqs = [
+  ...preFaqs,
+  ['Does it cure anything?', 'No. Blue Hour is a dietary supplement. It isn\'t intended to diagnose, treat, cure or prevent any disease, and it doesn\'t make alcohol or anything else you take safer. Water, food and sleep still do the heavy lifting.'],
+  ['How and when do I take it?', 'Pull one pouch from the dispenser, tear it off along the perforated line, and take the capsules with food and water, like with supper or a late snack before bed. Take 1 pouch a day, and never more than 1.'],
+  ['Is it only for nights out?', 'No. It\'s for any day that asks a lot of you: a long set, a festival weekend, a hard training session or a double shift.'],
+  ['What do you mean by a roll?', 'A roll is how our pouches come: 30 sealed pouches on one perforated strip, wound up inside the dispenser. Every roll holds only the dietary supplements listed on your label and pamphlet, and nothing else.'],
+  ['Is this a subscription?', 'No. You buy a roll when you want one, and nothing renews.'],
+  ['What if something\'s wrong with my order?', 'Tell us within 5 business days of delivery and we\'ll send a replacement or a refund.'],
+  ['Is it right for me?', 'For adults only. If you are pregnant, nursing, taking medication, have a medical condition, or are under medical supervision, talk to your doctor before use.'],
+];
+---
+<Base
+  title="A festival day is a 15,000-step workout | Blue Hour Journal"
+  description="What a big night actually asks of your body, what most of us do about it, and the 30-second habit people who dance till close are adding before bed."
+  image="/images/hand.webp"
+  type="article"
+>
+  <Promo text="Free US shipping on every roll. No subscription." />
+  <div class="ahead"><Top /></div>
+
+  <article class="adv">
+    <header class="w col intro">
+      <p class="kick"><span>Advertorial</span> The Blue Hour Journal</p>
+      <h1>A festival day is a 15,000-step workout. So why do we treat it like a night off?</h1>
+      <p class="dek">What a big night actually asks of your body, what most of us do about it, and the 30-second habit people who dance till close are adding before bed.</p>
+      <p class="by">By the Blue Hour team · 4 min read · Sources at the end</p>
+    </header>
+
+    <figure class="w col heroimg">
+      <img src="/images/hand.webp" alt="A hand holding one frosted Blue Hour pouch against a blue sky" width="1122" height="1402" fetchpriority="high">
+      <figcaption>One pouch, one night. That's the whole routine.</figcaption>
+    </figure>
+
+    <div class="w col body">
+      <p class="big">It's 4:40am. The lights come up, someone yells for one more, and you walk out into that deep blue sky right before sunrise. Your feet are done. Your shirt is done. Your alarm is set for 8:30.</p>
+      <p>Nobody calls that a workout. You call it a good night. But put a tracker on it and the numbers look a lot like training.</p>
+
+      <h2><i>1</i>You put in the miles</h2>
+      <p>When researchers at the University of Sunderland put activity monitors on 22 regular Glastonbury goers, they averaged about 15,700 steps and 11 km a day, with roughly eleven and a half hours on the move. Across the festival, they logged about six times the weekly activity the UK recommends.<sup>1</sup></p>
+    </div>
+
+    <div class="w stats">
+      <div><b>15,661</b><span>steps a day</span></div>
+      <div><b>11 km</b><span>walked and danced a day</span></div>
+      <div><b>6×</b><span>the weekly activity guideline</span></div>
+    </div>
+
+    <div class="w col body">
+      <p>A club night isn't a five-day festival, but the shape is the same: hours on your feet, a hot room, and almost no sitting down.</p>
+
+      <h2><i>2</i>You sweated out more than water</h2>
+      <p>Sweat is mostly water and salt, but it also carries small amounts of minerals like magnesium and zinc. In one study of athletes cycling in the heat, whole-body sweat held about 10 mg of magnesium per liter.<sup>2</sup></p>
+      <p>That's not much on its own, and a good meal covers a lot of it. The catch is that plenty of people start low. US dietary surveys find that about half of Americans already get less magnesium from food and drink than they need.<sup>3</sup> And at 5am, nobody's eating leafy greens.</p>
+      {PREORDER && (
+        <a class="nudge" href="#offer">
+          <img src="/images/pouch.webp" alt="" width="1122" height="1402" loading="lazy">
+          <span><b>Blue Hour is on pre-order.</b> ${FIRST} for 30 nights instead of ${PRICE}, shipping by {SHIP_BY}. <u>See the founding offer</u></span>
+        </a>
+      )}
+
+      <h2><i>3</i>Your night got shorter. Your day didn't.</h2>
+      <p>Adults need at least 7 hours of sleep. About 3 in 10 US adults already get less than that on an ordinary night.<sup>4</sup> After a big one, you might get four. Monday shows up on time anyway.</p>
+
+      <blockquote>Your body put in a shift. Most of us hand it a triple espresso and hope for the best.</blockquote>
+
+      <h2>What most of us do instead</h2>
+    </div>
+
+    <div class="w habits">
+      <article><b>The espresso plan</b><p>Caffeine gets you to lunch. It doesn't put a single nutrient back.</p></article>
+      <article><b>The bottle cabinet</b><p>Magnesium, C, zinc, B's. Five tubs, five lids. Nobody is sorting capsules at 4am.</p></article>
+      <article><b>"I'll eat better tomorrow"</b><p>Good plan. Tomorrow is also the day you're running on four hours.</p></article>
+    </div>
+
+    <div class="w col body">
+      <h2>The boring answer still wins</h2>
+      <p>Water through the day. Real food. Sleep when you can. None of that is optional, and nothing in a capsule replaces it.</p>
+      <p>But you can close the gap with one small habit before bed: the nutrients a long night leans on, sealed in one pouch, with nothing that keeps you up.</p>
+      <a class="btn blue inl" href="#pouch">See what's in the pouch</a>
+    </div>
+
+    <section class="sky meet" id="pouch">
+      <img class="burst" src="/images/burst.webp" alt="" loading="lazy" width="1100" height="820">
+      <div class="grain"></div>
+      <div class="w col">
+        <p class="kick lt">Meet Blue Hour</p>
+        <h2>Six capsules. One pouch. Zero thinking.</h2>
+        <p class="lede">One sealed pouch a night. Five ingredients, every dose on the label. Pull one off the roll, tear it open, take it with a snack and water, and go to sleep.</p>
+        <ul class="caps">
+          {pouch.map((c) => (
+            <li>
+              <div class={'pic' + (c.two ? ' two' : '')}><img src={`/images/${c.img}.webp`} alt="" width="900" height="340" loading="lazy">{c.two && <img src={`/images/${c.img}.webp`} alt="" width="900" height="340" loading="lazy">}</div>
+              <div><b>{c.name}</b><span class="what">{c.what}</span><p>{c.why}</p></div>
+            </li>
+          ))}
+        </ul>
+        <div class="chips"><span>No&nbsp;5-HTP</span><span>No caffeine</span><span>No stimulants</span></div>
+      </div>
+    </section>
+
+    <div class="w col body">
+      <h2>Why a pouch beats a shelf of bottles</h2>
+      <div class="tbw">
+        <table class="tb">
+          <thead><tr><th></th><th class="us">Blue Hour</th><th>Bottles at home</th></tr></thead>
+          <tbody>
+            <tr><td>Ready in one tear</td><td class="us">Yes</td><td>Open 5 lids, count out 6</td></tr>
+            <tr><td>Fits in a pocket or festival bag</td><td class="us">Yes</td><td>Not really</td></tr>
+            <tr><td>Your own mix, packed to order</td><td class="us">Yes</td><td>Only if you sort it</td></tr>
+            <tr><td>No caffeine or stimulants</td><td class="us">Yes</td><td>Check every label</td></tr>
+            <tr><td>Every dose listed</td><td class="us">Yes, on your pamphlet</td><td>Yes, across 5 labels</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Make it yours</h2>
+      <p>Start from the signature six, or build your own pouch from our menu of 7 capsules. Double up on vitamin C, add Prime (NAC, 600 mg) or Culture (10 billion live cultures), up to 6 capsules a pouch. Each capsule has a limit that keeps every nutrient at or under its daily upper limit for adults.*</p>
+      <a class="txt" href="/shop#build">Build your pouch →</a>
+    </div>
+
+    <section class="nights howto">
+      <div class="w two">
+        <img src="/images/exploded.webp" alt="The Blue Hour dispenser, tray and roll of pouches floating apart on a blue background" width="1122" height="1402" loading="lazy">
+        <div class="stack" style="gap:28px">
+          <h2>Pull. Tear.<br>Sleep.</h2>
+          <ol class="steps">
+            <li>Pull one pouch from the dispenser.</li>
+            <li>Tear it off along the perforated line.</li>
+            <li>Take it with a late snack and a big glass of water, then lights out.</li>
+          </ol>
+          <p class="fine lt">30 pouches on one roll. Tear off a strip for a festival weekend and leave the rest at home.</p>
+        </div>
+      </div>
+    </section>
+
+    {PREORDER && (
+      <section class="w col"><div class="fnote">
+        <p class="kick">Why pre-order?</p>
+        <p>Every Blue Hour roll is packed to order, and before we launch we want to know who's in. So our first run comes with a founding price: ${FIRST} a roll instead of ${PRICE}.</p>
+        <p>We charge you today and your roll ships by {SHIP_BY}. If you change your mind any time before it ships, email us and you get every cent back. No forms, no questions.</p>
+        <p class="fsig">Saif, founder of Blue Hour</p>
+      </div></section>
+    )}
+
+    <section class="offer" id="offer">
+      <div class="w col">
+        <div class="bign">{perNight(FIRST)}</div>
+        <h2>a night{PREORDER && ' at the founding price'}. Less than a bottle of water at the club.</h2>
+        <div class="obox">
+          {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for pre-orders only. ${PRICE} a roll at launch.</span></div>}
+          <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: magnesium ×2, vitamin C, B-complex, zinc, glycine</span><a href="/shop#build">Build your own instead</a></div>
+          <fieldset class="tiers">
+            <legend>How many rolls?</legend>
+            {TIERS.map((t, i) => (
+              <label class="tier">
+                <input type="radio" name="rolls" value={t.rolls} checked={i === 0} data-qty />
+                <span class="tn"><b>{t.rolls} roll{t.rolls > 1 ? 's' : ''}{t.name && <em>{t.name}</em>}</b><small>{t.rolls * 30} nights · {perNight(t.each)} a night</small></span>
+                <span class="tp"><b>${t.rolls * t.each}</b>{t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
+              </label>
+            ))}
+          </fieldset>
+          <p class="crew">Ordering with friends? Every roll in your cart counts, so 3 rolls are ${TIERS[2].each} each.</p>
+          <div class="row" id="buyrow">
+            <button class="add ghost" data-add>Add to cart</button>
+            <button class="add" data-buy>{BUY}</button>
+          </div>
+          <ul class="ticks">
+            {PREORDER && <li>Full refund any time before it ships</li>}
+            <li>{PREORDER ? `Ships free by ${SHIP_BY}` : 'Free US shipping'}</li>
+            <li>One-time purchase, no subscription</li>
+            <li>30 sealed pouches and the dispenser</li>
+            <li>Packed to order, every dose on your pamphlet</li>
+          </ul>
+          <p class="fine">Something wrong with your order? Tell us within 5 business days of delivery and we'll replace or refund it.</p>
+        </div>
+      </div>
+    </section>
+
+    {reviews.length > 0 && (
+      <section class="sec">
+        <div class="w col bubbles">
+          {reviews.map((r) => (
+            <div class="bub"><i>{r.name.charAt(0)}</i><div><b>{r.name}</b>{r.text}</div></div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="sec faq" style="background:#FAFBFF">
+      <div class="w col">
+        <h2 style="font-size:clamp(30px,8vw,52px);margin-bottom:10px">Quick questions</h2>
+        {faqs.map(([q, a]) => (
+          <details><summary><span class="q">{q}</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>{a}</p></details>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec tagband last">
+      <div class="w">
+        <h2>Out late.<br>Up early.<br>Show up anyway.</h2>
+        <a class="btn solid" href="#offer">{PREORDER ? 'Pre-order 30 nights' : 'Get 30 nights'}</a>
+      </div>
+    </section>
+
+    <section class="w col sources">
+      <h3>Sources</h3>
+      <ol>
+        <li>Bradley E, Close L, Whyte I. Putting the Boom, Boom, Boom into Physical Activity and Health: Music Festivals as a Positive Health Alternative to Couch Fandom. <em>Int J Environ Res Public Health</em>, 2019. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6616469/" rel="noopener" target="_blank">Read the study</a></li>
+        <li>Baker LB, Stofan JR, Lukaski HC, Horswill CA. Exercise-induced trace mineral element concentration in regional versus whole-body wash-down sweat. <em>Int J Sport Nutr Exerc Metab</em>, 2011. <a href="https://www.gssiweb.org/en/research/Article/exercise-induced-trace-mineral-element-concentration-in-regional-versus-whole-body-wash-down-sweat" rel="noopener" target="_blank">Read the abstract</a></li>
+        <li>NIH Office of Dietary Supplements. Magnesium fact sheet for health professionals (NHANES 2013–2016: 48% of Americans get less magnesium from food and drink than the estimated average requirement). <a href="https://ods.od.nih.gov/factsheets/Magnesium-HealthProfessional/" rel="noopener" target="_blank">Read the fact sheet</a></li>
+        <li>CDC National Center for Health Statistics data brief, 2026: 30.5% of US adults surveyed in 2024 slept less than 7 hours a night. Recommendation of at least 7 hours from the American Academy of Sleep Medicine. <a href="https://www.hppr.org/npr-news/2026-05-02/americans-arent-sleeping-enough-heres-what-could-help" rel="noopener" target="_blank">Read the NPR report</a></li>
+      </ol>
+    </section>
+  </article>
+
+  <Foot id="em-learn" />
+
+  <div class="astick" id="astick" aria-hidden="true">
+    {PREORDER
+      ? <div><b>Pre-order · ${FIRST} <s>${PRICE}</s></b><span>Ships by {SHIP_BY} · Full refund before it ships</span></div>
+      : <div><b>30 nights · ${PRICE}</b><span>Free US shipping · No subscription</span></div>}
+    <a class="add" href="#offer" tabindex="-1">{PREORDER ? 'Pre-order' : 'Get yours'}</a>
+  </div>
+</Base>
+
+<script>
+  // Sticky bar: shows once the reader is past the intro, hides while the offer box is on screen.
+  const bar = document.getElementById('astick');
+  const offer = document.getElementById('offer');
+  const intro = document.querySelector('.heroimg');
+  let offerOn = false;
+  if (bar && offer && intro && 'IntersectionObserver' in window) {
+    new IntersectionObserver((es) => { offerOn = es[0].isIntersecting; tick(); }).observe(offer);
+    const tick = () => {
+      const show = intro.getBoundingClientRect().bottom < 0 && !offerOn;
+      bar.classList.toggle('on', show);
+      bar.setAttribute('aria-hidden', String(!show));
+      bar.querySelector('a')?.setAttribute('tabindex', show ? '0' : '-1');
+    };
+    addEventListener('scroll', tick, { passive: true });
+    tick();
+  }
+</script>
+
+<style>
+  .ahead{position:relative;height:84px;background:var(--deep)}
+  .col{max-width:720px}
+  .adv h2{font-size:clamp(28px,7.4vw,44px)}
+  .kick{display:flex;align-items:center;gap:10px;font:700 13px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--cobalt)}
+  .kick span{padding:6px 10px;border-radius:99px;background:var(--mist);border:1.5px solid var(--line);color:var(--soft);letter-spacing:.06em}
+  .kick.lt{color:var(--first)}
+  .intro{display:flex;flex-direction:column;gap:18px;padding-top:clamp(34px,8vw,64px)}
+  .intro h1{font-size:clamp(34px,9vw,62px);line-height:1.04;color:var(--ink)}
+  .dek{font-size:clamp(18px,4.8vw,22px);line-height:1.4;font-weight:500;color:var(--soft)}
+  .by{font-size:14px;font-weight:600;color:var(--soft);padding-top:12px;border-top:1px solid var(--line)}
+  .heroimg{margin-block:26px 10px}
+  .heroimg img{width:100%;aspect-ratio:4/3.4;object-fit:cover;object-position:50% 42%;border-radius:22px}
+  .heroimg figcaption{font-size:14px;color:var(--soft);padding-top:10px}
+  .body{display:flex;flex-direction:column;align-items:flex-start;gap:20px;padding-block:22px}
+  .body p{font-size:clamp(17px,4.5vw,19px);line-height:1.62}
+  .body p.big{font-size:clamp(19px,5vw,22px);line-height:1.5;font-weight:500}
+  .body h2{margin-top:26px;display:flex;align-items:baseline;gap:14px;color:var(--deep)}
+  .body h2 i{flex:none;font:800 clamp(16px,4vw,18px)/1 var(--display);font-style:normal;width:clamp(36px,9vw,44px);height:clamp(36px,9vw,44px);border-radius:50%;display:grid;place-items:center;background:var(--cobalt);color:var(--white);transform:translateY(-4px)}
+  sup{font-size:.6em;font-weight:700;color:var(--cobalt);padding-left:2px}
+  .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:880px;padding-block:10px}
+  .stats div{background:linear-gradient(160deg,var(--deep),var(--cobalt) 55%,var(--bright));color:var(--white);border-radius:20px;padding:20px 14px;display:flex;flex-direction:column;gap:6px}
+  .stats b{font:800 clamp(24px,7.4vw,46px)/1 var(--display);letter-spacing:-.04em}
+  .stats span{font-size:clamp(12.5px,3.4vw,15px);line-height:1.3;font-weight:500;opacity:.92}
+  blockquote{margin:24px 0 0;padding:4px 0 4px 20px;border-left:5px solid var(--dawn);font:italic 800 clamp(24px,6.4vw,34px)/1.2 var(--display);letter-spacing:-.025em;color:var(--cobalt)}
+  .habits{display:grid;gap:12px;max-width:880px}
+  .habits article{border:2px solid var(--ink);border-radius:20px;padding:18px 20px;display:flex;flex-direction:column;gap:6px;background:var(--white)}
+  .habits b{font:800 20px/1.2 var(--display);letter-spacing:-.02em}
+  .habits p{font-size:16px;color:var(--soft)}
+  .inl{margin-top:4px}
+  .txt{font-weight:700;color:var(--cobalt);text-underline-offset:4px}
+  .meet{padding-block:clamp(64px,13vw,110px);margin-top:30px}
+  .meet .col{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:22px}
+  .meet .lede{font-size:clamp(18px,4.8vw,21px);line-height:1.45;font-weight:600}
+  .caps{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;width:100%}
+  .caps li{display:grid;grid-template-columns:clamp(96px,26vw,130px) minmax(0,1fr);gap:16px;align-items:center;background:rgba(255,255,255,.95);color:var(--ink);border-radius:20px;padding:14px 18px 14px 12px;box-shadow:0 14px 34px rgba(5,20,90,.18)}
+  .caps .pic{display:flex;flex-direction:column;justify-content:center}
+  .caps .pic img{width:100%;filter:drop-shadow(-4px 7px 5px rgba(20,26,60,.25))}
+  .caps .pic.two img+img{margin-top:-27%}
+  .caps b{display:block;font:800 21px/1.15 var(--display);letter-spacing:-.02em;color:var(--deep)}
+  .caps .what{display:block;font-size:14.5px;font-weight:600;color:var(--cobalt);margin:2px 0 4px}
+  .caps p{font-size:15px;line-height:1.4;color:var(--soft)}
+  .tbw{margin-top:4px}
+  .howto{padding-block:clamp(56px,11vw,100px);margin-top:30px}
+  .howto img{width:100%;border-radius:22px}
+  .lt{color:#C7D2F5}
+  .offer{padding-block:clamp(56px,12vw,110px)}
+  .offer .col{display:flex;flex-direction:column;gap:16px}
+  .offer h2{max-width:13em;color:var(--ink)}
+  .obox{display:flex;flex-direction:column;gap:18px;margin-top:14px;padding:22px 18px;border-radius:26px;background:var(--mist);border:2px solid var(--line)}
+  .crew{font-size:15px;color:var(--soft)}
+  .ticks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .ticks li{position:relative;padding-left:30px;font-weight:600;font-size:15.5px}
+  .ticks li::before{content:"";position:absolute;left:0;top:3px;width:20px;height:20px;border-radius:50%;background:var(--cobalt) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+  .add.ghost{flex:1;background:var(--white);color:var(--ink)}
+  .row .add:not(.ghost){flex:1}
+  .bubbles{display:flex;flex-direction:column;gap:14px}
+  .last{background:var(--white)}
+  .last .w{display:flex;flex-direction:column;align-items:center;gap:30px;text-align:center}
+  .last h2{font-size:clamp(40px,11.6vw,96px);font-style:italic;transform:rotate(-3.4deg);color:var(--deep)}
+  .sources{padding-block:10px 60px}
+  .sources h3{font-size:18px;margin-bottom:10px}
+  .sources ol{margin:0;padding-left:20px;display:grid;gap:10px;font-size:13.5px;line-height:1.45;color:var(--soft)}
+  .sources a{color:var(--cobalt);font-weight:600;text-underline-offset:3px}
+  .astick{position:fixed;z-index:30;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:14px;background:rgba(255,255,255,.985);border-top:1px solid var(--line);padding:10px var(--gut-r) calc(10px + env(safe-area-inset-bottom,0px)) var(--gut-l);transform:translateY(110%);transition:transform .5s var(--ease-out)}
+  .astick.on{transform:none}
+  .astick div{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .astick b{font:800 17px/1.2 var(--display);letter-spacing:-.015em}
+  .astick span{font-size:13px;color:var(--soft)}
+  .astick s{font-weight:500;color:var(--soft);font-size:14px}
+  .nudge{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;align-items:center;width:100%;margin-top:8px;padding:14px 16px;border-radius:20px;background:var(--mist);border:2px solid var(--cobalt);text-decoration:none;color:var(--ink);font-size:16px;line-height:1.4}
+  .nudge img{width:64px;height:64px;object-fit:cover;object-position:50% 60%;border-radius:12px}
+  .nudge u{color:var(--cobalt);font-weight:700;text-underline-offset:3px}
+  .fnote{display:flex;flex-direction:column;gap:14px;margin-top:clamp(44px,9vw,80px);padding:24px 22px;border-radius:24px;background:var(--mist);border:2px solid var(--line)}
+  .fnote p{font-size:clamp(17px,4.5vw,19px);line-height:1.55}
+  .fnote .fsig{font:italic 700 18px/1.2 var(--display);color:var(--deep)}
+  .astick .add{height:52px;display:inline-flex;align-items:center;text-decoration:none;padding:0 26px}
+  @media (min-width:900px){
+    .ahead{height:96px}
+    .habits{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .stats div{padding:28px 24px}
+    .obox{padding:34px}
+    .astick{justify-content:center;gap:40px}
+  }
+</style>

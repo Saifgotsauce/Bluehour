@@ -5,7 +5,10 @@ import Promo from '../components/Promo.astro';
 import Marquee from '../components/Marquee.astro';
 import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
-import { INGREDIENTS, MAX_CAPS, SIGNATURE, mixSummary, TIERS, PRICE, perNight } from '../data/ingredients.js';
+import { INGREDIENTS, MAX_CAPS, SIGNATURE, mixSummary, TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
+import { PREORDER, SHIP_BY } from '../data/preorder.js';
+const FIRST = TIERS[0].each;
+const BUY = PREORDER ? 'Pre-order now' : 'Buy now';
 const signatureSummary = mixSummary(SIGNATURE);
 const site = Astro.site!;
 const jsonld = {
@@ -15,12 +18,12 @@ const jsonld = {
   description: 'One sealed pouch of 6 capsules a day: magnesium, vitamin C, methyl B-complex, zinc and glycine, or build your own. 30 pouches on one roll. No 5-HTP, caffeine or stimulants.',
   image: ['angle', 'flat', 'exploded', 'pouch'].map((n) => new URL(`/images/${n}.webp`, site).href),
   brand: { '@type': 'Brand', name: 'Blue Hour' },
-  offers: { '@type': 'Offer', price: '129.00', priceCurrency: 'USD', url: new URL('/shop', site).href },
+  offers: { '@type': 'Offer', price: FIRST.toFixed(2), priceCurrency: 'USD', url: new URL('/shop', site).href },
 };
 ---
 <Base
   title="Blue Hour Nightly Pouches, 30 Nights | Blue Hour"
-  description="30 sealed pouches on one roll for $129 with free US shipping. Six capsules a day with magnesium, vitamin C, B-complex, zinc and glycine, or build your own. For big nights, long sessions and early starts."
+  description={`${PREORDER ? `Pre-order now: 30 sealed pouches on one roll for a $${FIRST} founding price (launch price $${PRICE}), shipping by ${SHIP_BY}.` : `30 sealed pouches on one roll for $${PRICE} with free US shipping.`} Six capsules a day with magnesium, vitamin C, B-complex, zinc and glycine, or build your own. For big nights, long sessions and early starts.`}
   jsonld={jsonld}
 >
 
@@ -41,6 +44,7 @@ const jsonld = {
       </div>
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
+        {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price on our first run. We charge you today, and if you change your mind any time before your roll ships, you get a full refund.</span></div>}
         <p class="tag">One pouch. One night.</p>
         <p>For people who dance till close, train hard and still show up. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
         <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: {signatureSummary}</span><a href="#build">Build your own pouch</a></div>
@@ -50,8 +54,8 @@ const jsonld = {
             <label class="tier">
               <input type="radio" name="rolls" value={t.rolls} checked={i === 0} data-qty />
               <span class="tn"><b>{t.rolls} roll{t.rolls > 1 ? 's' : ''}{t.name && <em>{t.name}</em>}</b><small>{t.rolls * 30} nights · {perNight(t.each)} a night</small></span>
-              <span class="tp"><b>${t.rolls * t.each}</b>{t.each < PRICE && <s>${t.rolls * PRICE}</s>}</span>
-              {t.each < PRICE && <span class="save">Save ${t.rolls * (PRICE - t.each)}</span>}
+              <span class="tp"><b>${t.rolls * t.each}</b>{t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
+              {t.each < refEachFor(t.rolls) && <span class="save">Save ${t.rolls * (refEachFor(t.rolls) - t.each)}</span>}
             </label>
           ))}
         </fieldset>
@@ -59,11 +63,11 @@ const jsonld = {
         <p class="crewnote">Ordering with friends? Every roll in your cart counts toward the price, even with different pouches. 3 or more rolls are ${TIERS[2].each} each.</p>
         <div class="row" id="buyrow">
           <button class="add ghost" data-add>Add to cart</button>
-          <button class="add" data-buy>Buy now</button>
+          <button class="add" data-buy>{BUY}</button>
         </div>
         <p class="paynote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M5.5 10h13a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5v-8A1.5 1.5 0 0 1 5.5 10Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Secure Stripe checkout · Apple Pay · Google Pay</p>
         <div class="spec"><b>Suggested use</b><span>Take 1 pouch a day with food and water, like with supper or a late snack before bed. Do not take more than 1 pouch a day.</span></div>
-        <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.</span></div>
+        <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.{PREORDER && ` Pre-orders ship by ${SHIP_BY}.`}</span></div>
       </div>
     </div>
   </section>
@@ -138,7 +142,7 @@ const jsonld = {
       </div>
       <div class="bfoot">
         <div class="leftout"><b>Not on the menu:</b> <span class="nw">5-HTP</span>, caffeine and stimulants.</div>
-        <button class="btn solid" data-add>Add this pouch, <span data-price-short>${PRICE}</span></button>
+        <button class="btn solid" data-add>Add this pouch, <span data-price-short>${FIRST}</span></button>
         <p class="fine">Talk to a doctor or pharmacist before adding anything new if you take medication, have a medical condition, or are pregnant or nursing. Capsules shown are illustrations. Your exact pouch is listed on the Supplement Facts in your pamphlet.</p>
       </div>
     </div>
@@ -150,7 +154,7 @@ const jsonld = {
     <div class="w stack" style="gap:42px;align-items:stretch">
       <h2 class="rv" style="max-width:12em">The cheapest part of your night out.</h2>
       <div class="wgrid">
-        <article class="us"><div class="ic"><img src="/images/pouch.webp" alt="" loading="lazy" width="1122" height="1402"></div><b>$4.30</b><span>One night of Blue Hour</span></article>
+        <article class="us"><div class="ic"><img src="/images/pouch.webp" alt="" loading="lazy" width="1122" height="1402"></div><b>{perNight(FIRST)}</b><span>One night of Blue Hour</span></article>
         <article><div class="ic"><svg viewBox="0 0 96 96"><use href="#i-cocktail"/></svg></div><b>$16</b><span>One cocktail</span></article>
         <article><div class="ic"><svg viewBox="0 0 96 96"><use href="#i-car"/></svg></div><b>$28</b><span>Ride home</span></article>
         <article><div class="ic"><svg viewBox="0 0 96 96"><use href="#i-slice"/></svg></div><b>$14</b><span>Late-night food</span></article>
@@ -209,22 +213,31 @@ const jsonld = {
     <div class="grain"></div>
     <div class="w">
       <h2>Dance till close.<br>Show up anyway.</h2>
-      <button class="btn" data-buy>Buy now, <span data-price-short>${PRICE}</span></button>
+      <button class="btn" data-buy>{BUY}, <span data-price-short>${FIRST}</span></button>
     </div>
   </section>
 
   <section class="sec faq" id="faq" style="background:#FAFBFF">
     <div class="w">
       <h2 style="color:var(--deep);margin-bottom:18px">FAQs</h2>
+      {PREORDER && <>
+        <details><summary><span class="q">When will my roll ship?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pre-orders ship by {SHIP_BY}, free within the US. Delivery usually takes 3 to 8 business days after that, and we'll email you tracking when it ships.</p></details>
+        <details><summary><span class="q">When am I charged?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Today, at the founding price. That price is only for pre-orders. At launch, one roll goes back to ${PRICE}.</p></details>
+        <details><summary><span class="q">Can I cancel my pre-order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Any time before your roll ships, email <a href="mailto:hello@bluehournights.com">hello@bluehournights.com</a> with your order number and we'll refund you in full, with no questions. If we ever can't ship by {SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.</p></details>
+      </>}
       <details><summary><span class="q">What do you mean by a roll?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>A roll is how our pouches come: 30 sealed pouches on one perforated strip, wound up inside the dispenser. When we say a roll, a crew roll or 3 rolls, that's all we mean. Every roll holds only the dietary supplements listed on your label and pamphlet, and nothing else.</p></details>
       <details><summary><span class="q">Does Blue Hour contain <span class="nw">5-HTP</span>?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. We left it out, along with caffeine and other stimulants, to keep the formula simple.</p></details>
       <details><summary><span class="q">How and when do I take it?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pull one pouch from the dispenser, tear it off along the perforated line, and take the capsules with food and water, like with supper or a late snack before bed. Take 1 pouch a day, and never more than 1. Always follow the directions on your pamphlet.</p></details>
       <details><summary><span class="q">Does it cure anything?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Blue Hour is a dietary supplement. It isn't intended to diagnose, treat, cure or prevent any disease, and it doesn't make alcohol or anything else you take safer. Water, food and sleep still do the heavy lifting.</p></details>
       <details><summary><span class="q">Is it only for nights out?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. It's for any day that asks a lot of you: a long set, a festival weekend, a hard training session or a double shift. Take 1 pouch a day with food.</p></details>
-      <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. One roll works out at $4.30 a night. Order 2 rolls and each is $119. Order 3 or more and each is $109, which is $3.63 a night. Rolls with different pouches count together, so you can order with friends.</p></details>
+      {PREORDER
+        ? <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. At the founding price, one roll is ${TIERS[0].each}, or {perNight(TIERS[0].each)} a night. Order 2 rolls and each is ${TIERS[1].each}. Order 3 or more and each is ${TIERS[2].each}, which is {perNight(TIERS[2].each)} a night. At launch, one roll will be ${PRICE}.</p></details>
+        : <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. One roll works out at $4.30 a night. Order 2 rolls and each is $119. Order 3 or more and each is $109, which is $3.63 a night. Rolls with different pouches count together, so you can order with friends.</p></details>}
       <details><summary><span class="q">Can I change what's in my pouch?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from the signature six or build your own from our menu of 7 capsules, up to 6 per pouch. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
       <details><summary><span class="q">What if something's wrong with my order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Tell us within 5 business days of delivery and we'll send a replacement or a refund. Rolls are packed to order, so we can't take returns for change of mind. See <a href="/refunds">Refunds and replacements</a>.</p></details>
-      <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>New visitors can get 10% off their first roll through the welcome pop-up. The offer only lasts while the pop-up is open, and once it's closed it won't come back on that browser for 24 hours. If you came from a link with a code, it's saved and comes off at checkout automatically. You can also type a code on the payment page. And a few discounts are hidden around this site, if you look closely. Only one discount applies per order, and we always use the one that saves you the most.</p></details>
+      {PREORDER
+        ? <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not during pre-order. The founding price is already our best deal, so codes and hidden discounts are paused until launch. Crew pricing still applies when you order more than one roll.</p></details>
+        : <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>New visitors can get 10% off their first roll through the welcome pop-up. The offer only lasts while the pop-up is open, and once it's closed it won't come back on that browser for 24 hours. If you came from a link with a code, it's saved and comes off at checkout automatically. You can also type a code on the payment page. And a few discounts are hidden around this site, if you look closely. Only one discount applies per order, and we always use the one that saves you the most.</p></details>}
       <details><summary><span class="q">Is this a subscription?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. You buy a roll when you want one, and nothing renews.</p></details>
       <details><summary><span class="q">Is it right for me?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>For adults only. Keep out of reach of children. If you are pregnant, nursing, taking medication, have a medical condition, or are under medical supervision, talk to your doctor before use. Stop taking it and talk to your doctor if you have any side effects.</p></details>
       <details><summary><span class="q">Do you ship to my country?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>We ship within the US for now.</p></details>
@@ -234,9 +247,9 @@ const jsonld = {
   <div class="stick" id="stick">
     <div class="in">
       <div class="row">
-        <label class="sel"><span class="pr" data-price>${PRICE}.00</span><span class="op"><span data-rolls>1 roll</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></span>
-          <select id="sel-stick" data-qty aria-label="How many rolls">{TIERS.map((t) => <option value={t.rolls}>{t.rolls} roll{t.rolls > 1 ? 's' : ''}, ${t.rolls * t.each}{t.each < PRICE ? `, save $${t.rolls * (PRICE - t.each)}` : ''}</option>)}</select></label>
-        <button class="add" data-buy>Buy now</button>
+        <label class="sel"><span class="pr" data-price>${FIRST}.00</span><span class="op"><span data-rolls>1 roll</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></span>
+          <select id="sel-stick" data-qty aria-label="How many rolls">{TIERS.map((t) => <option value={t.rolls}>{t.rolls} roll{t.rolls > 1 ? 's' : ''}, ${t.rolls * t.each}{t.each < refEachFor(t.rolls) ? `, save $${t.rolls * (refEachFor(t.rolls) - t.each)}` : ''}</option>)}</select></label>
+        <button class="add" data-buy>{BUY}</button>
       </div>
       <p class="caps-note">Free US shipping. 3+ rolls ${TIERS[2].each} each.</p>
     </div>

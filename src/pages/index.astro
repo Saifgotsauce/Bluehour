@@ -4,6 +4,9 @@ import Top from '../components/Top.astro';
 import Promo from '../components/Promo.astro';
 import Marquee from '../components/Marquee.astro';
 import Foot from '../components/Foot.astro';
+import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { TIERS, PRICE, perNight } from '../data/ingredients.js';
+const FIRST = TIERS[0].each;
 const site = Astro.site!;
 const jsonld = {
   '@context': 'https://schema.org',
@@ -26,14 +29,14 @@ const jsonld = {
     <div class="copy">
       <h1><span class="ln"><span>Out late.</span></span><span class="ln"><span style="--d:.09s">Up early.</span></span></h1>
       <p class="sub">Monday doesn't care what time you got home. Blue Hour is one pouch a night for people who dance till close, train hard and still show up.</p>
-      <a class="btn" href="/shop">Buy now</a>
-      <p class="note">30 nights. $129. Free US shipping.</p>
+      <a class="btn" href="/shop">{PREORDER ? 'Pre-order now' : 'Buy now'}</a>
+      <p class="note">{PREORDER ? `30 nights. $${FIRST} founding price (launch $${PRICE}). Ships by ${SHIP_BY}.` : `30 nights. $${PRICE}. Free US shipping.`}</p>
     </div>
     <div class="shot">
       <img class="ph" src="/images/angle.webp" alt="White Blue Hour dispenser with clear pouches of capsules rising from the top" width="1122" height="1402" fetchpriority="high">
       <div class="spin" aria-hidden="true">
-        <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ" textLength="284" lengthAdjust="spacing">30 NIGHTS * ONE ROLL * </textPath></text></svg>
-        <b>$129</b>
+        <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ" textLength="284" lengthAdjust="spacing">{PREORDER ? 'PRE-ORDER * 30 NIGHTS * ' : '30 NIGHTS * ONE ROLL * '}</textPath></text></svg>
+        <b>${FIRST}</b>
       </div>
       <button class="cap" data-float=".14" style="--tt:1.7s;--f:.14;--x:3%;--y:22%;--w:27%;--r:-38deg;--t:5.200s" aria-label="Spin capsule"><span><img src="/images/cap-steady.webp" alt="" width="900" height="340"></span></button>
       <button class="cap" data-float=".22" style="--tt:2.1s;--f:.22;--x:72%;--y:50%;--w:25%;--r:18deg;--t:4.300s" aria-label="Spin capsule"><span><img src="/images/cap-still.webp" alt="" width="900" height="340"></span></button>
@@ -111,10 +114,10 @@ const jsonld = {
 
   <section class="sec pricey">
     <div class="w stack rv">
-      <div class="bign">$4.30</div>
+      <div class="bign">{perNight(FIRST)}</div>
       <h2 style="max-width:13em">a night. Less than a bottle of water at the club.</h2>
-      <p class="crewline">Or $3.63 a night when you order 3 rolls with your crew.</p>
-      <a class="btn solid" href="/shop">Buy 30 nights</a>
+      <p class="crewline">Or {perNight(TIERS[2].each)} a night when you order 3 rolls with your crew.{PREORDER && ` Founding prices, for pre-orders shipping by ${SHIP_BY}.`}</p>
+      <a class="btn solid" href="/shop">{PREORDER ? 'Pre-order 30 nights' : 'Buy 30 nights'}</a>
     </div>
   </section>
   <Foot id="em-home" />

@@ -6,6 +6,7 @@
 import { PRICE, INGREDIENTS, cleanMix, mixTotal, isSignature, eachFor, savingFor, tierFor, totalFor } from '../src/data/ingredients.js';
 import { findPromo, promoValue } from './_promo.js';
 import { readEgg, eggCoupon } from './_eggs.js';
+import { PREORDER, SHIP_BY } from '../src/data/preorder.js';
 
 const MAX_LINES = 8;
 const MAX_QTY = 9;
@@ -38,9 +39,10 @@ export function sessionParams(lines, origin, disc) {
   p.set('success_url', `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`);
   p.set('cancel_url', `${origin}/shop`);
   p.set('shipping_address_collection[allowed_countries][0]', 'US');
+  // Pre-orders are already at the founding price, so no codes: the Stripe page shows no code box at all.
   if (disc && disc.promo) p.set('discounts[0][promotion_code]', disc.promo);
   else if (disc && disc.coupon) p.set('discounts[0][coupon]', disc.coupon);
-  else p.set('allow_promotion_codes', 'true');
+  else if (!PREORDER) p.set('allow_promotion_codes', 'true');
   p.set('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
   p.set('shipping_options[0][shipping_rate_data][fixed_amount][amount]', '0');
   p.set('shipping_options[0][shipping_rate_data][fixed_amount][currency]', 'usd');
@@ -51,8 +53,12 @@ export function sessionParams(lines, origin, disc) {
   p.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '10');
   p.set(
     'custom_text[submit][message]',
-    (saving > 0 ? `${tier.name} price: $${each} a roll, so you save $${saving}. ` : '') +
-      'Every roll is packed to order and ships free within the US.'
+    PREORDER
+      ? `Pre-order at the founding price: $${each} a roll${saving > 0 ? `, so you save $${saving} on the launch price` : ''}. ` +
+          `We charge you today and your order ships free by ${SHIP_BY}. Change your mind any time before it ships ` +
+          'and email hello@bluehournights.com for a full refund.'
+      : (saving > 0 ? `${tier.name} price: $${each} a roll, so you save $${saving}. ` : '') +
+          'Every roll is packed to order and ships free within the US.'
   );
 
   const summary = [];
@@ -62,7 +68,7 @@ export function sessionParams(lines, origin, disc) {
     p.set(`line_items[${i}][quantity]`, String(l.qty));
     p.set(`line_items[${i}][price_data][currency]`, 'usd');
     p.set(`line_items[${i}][price_data][unit_amount]`, String(each * 100));
-    p.set(`line_items[${i}][price_data][product_data][name]`, 'Blue Hour, 30-night roll');
+    p.set(`line_items[${i}][price_data][product_data][name]`, PREORDER ? `Blue Hour, 30-night roll (pre-order, ships by ${SHIP_BY})` : 'Blue Hour, 30-night roll');
     p.set(`line_items[${i}][price_data][product_data][description]`, `${kind}: ${pack}`);
     p.set(`line_items[${i}][price_data][product_data][images][0]`, `${origin}/images/checkout-box.jpg`);
     const line = `${l.qty} roll${l.qty > 1 ? 's' : ''}: ${pack}`.slice(0, 500);
@@ -72,7 +78,13 @@ export function sessionParams(lines, origin, disc) {
   });
   p.set('metadata[rolls]', String(rolls));
   p.set('metadata[price_each]', String(each));
-  p.set('payment_intent_data[description]', `Blue Hour: ${summary.join(', ')}`);
+  if (PREORDER) {
+    p.set('metadata[preorder]', 'yes');
+    p.set('metadata[ship_by]', SHIP_BY);
+    p.set('payment_intent_data[metadata][preorder]', 'yes');
+    p.set('payment_intent_data[metadata][ship_by]', SHIP_BY);
+  }
+  p.set('payment_intent_data[description]', `Blue Hour${PREORDER ? ' pre-order' : ''}: ${summary.join(', ')}`);
   return p;
 }
 
@@ -118,9 +130,10 @@ export default async function handler(req, res) {
     const rolls = lines.reduce((a, l) => a + l.qty, 0);
     const subtotal = totalFor(rolls) * 100;
     const options = [];
-    const promo = body.code ? await findPromo(body.code, key).catch(() => null) : null;
+    // During pre-order no code or egg applies: the founding price is the deal.
+    const promo = !PREORDER && body.code ? await findPromo(body.code, key).catch(() => null) : null;
     if (promo) options.push({ value: promoValue(promo, subtotal), disc: { promo: promo.id } });
-    const egg = readEgg(body.egg);
+    const egg = PREORDER ? null : readEgg(body.egg);
     if (egg) {
       const coupon = await eggCoupon(egg, key).catch(() => null);
       if (coupon) options.push({ value: Math.min(egg.amount * 100, subtotal), disc: { coupon } });

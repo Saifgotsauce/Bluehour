@@ -2,7 +2,8 @@
 // Every block checks that its elements exist, because each page only has some of them.
 
 import { EGGS, eggById, inBlueHour, COLLECTOR_NEEDS } from '../data/eggs.js';
-import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier } from '../data/ingredients.js';
+import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier, refEachFor } from '../data/ingredients.js';
 
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -19,6 +20,7 @@ const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)
 // Stripe through /api/promo, saved for 14 days, shown at the top of the page and applied at checkout.
 const CODE_DAYS = 14;
 function getCode() {
+  if (PREORDER) return null; // no codes during pre-order
   try {
     const c = JSON.parse(store.get('bh-code') || 'null');
     if (c && c.code && Date.now() - c.at < CODE_DAYS * 864e5) return c;
@@ -56,6 +58,7 @@ function codeBar() {
 const checkPromo = (code) =>
   fetch('/api/promo?code=' + encodeURIComponent(code)).then((r) => r.json()).catch(() => ({}));
 (function readCodeFromLink() {
+  if (PREORDER) return;
   let url;
   try { url = new URL(location.href); } catch (e) { return; }
   const key = ['code', 'promo', 'discount'].find((k) => url.searchParams.get(k));
@@ -80,6 +83,7 @@ function eggStore() {
   try { return JSON.parse(store.get('bh-eggs') || '{}') || {}; } catch (e) { return {}; }
 }
 function liveEggs() {
+  if (PREORDER) return []; // eggs are off during pre-order
   const all = eggStore(), now = Date.now(), out = [];
   Object.keys(all).forEach((id) => {
     const e = eggById(id), t = all[id];
@@ -93,6 +97,7 @@ function eggsFoundCount() {
 }
 const asking = new Set();
 async function findEgg(id) {
+  if (PREORDER) return;
   const egg = eggById(id);
   if (!egg || asking.has(id) || liveEggs().some((e) => e.id === id)) return;
   asking.add(id);
@@ -222,10 +227,10 @@ function paint() {
   title.textContent = n ? 'Cart • ' + n : 'Cart';
   $('#shipbox').hidden = !n;
   $('#cft').hidden = !n;
-  $('#checkout').textContent = 'Checkout • ' + money(totalFor(n));
+  $('#checkout').textContent = (PREORDER ? 'Pre-order • ' : 'Checkout • ') + money(totalFor(n));
   const box = $('#citems');
   if (!n) {
-    box.innerHTML = '<div class="empty"><h3>Your cart is empty.</h3><p>Your next 30 nights are one tap away.</p><a class="btn solid" href="/shop">Shop 30 nights</a></div>';
+    box.innerHTML = '<div class="empty"><h3>Your cart is empty.</h3><p>' + (PREORDER ? 'Founding price on pre-orders, shipping by ' + SHIP_BY + '.' : 'Your next 30 nights are one tap away.') + '</p><a class="btn solid" href="/shop">' + (PREORDER ? 'Pre-order 30 nights' : 'Shop 30 nights') + '</a></div>';
     return;
   }
   // Crew pricing progress: the more rolls in the order, the less each one costs.
@@ -241,7 +246,7 @@ function paint() {
     '</h3><div class="mt">' + packSummary(l.mix) + '</div><div class="mt">30 nights per roll</div><div class="ctl"><div class="qty"><button data-line="' + i +
     '" data-d="-1" aria-label="Remove one roll">−</button><span>' + l.qty + '</span><button data-line="' + i +
     '" data-d="1" aria-label="Add one roll">+</button></div><div class="price">' +
-    (each < PRICE ? '<s>' + money(l.qty * PRICE) + '</s> ' : '') + money(l.qty * each) +
+    (each < refEachFor(n) ? '<s>' + money(l.qty * refEachFor(n)) + '</s> ' : '') + money(l.qty * each) +
     '</div></div><button class="trash" data-rm="' + i + '">Remove</button></div></div>'
   ).join('');
   const code = getCode(), egg = bestEgg(), cl = $('#codeline');
@@ -528,7 +533,8 @@ function popAllowed() {
 // appears instead (after 8 seconds or a quarter of the way down) and opens the full sign-up only when tapped.
 // On desktop, heading for the tab bar to leave opens the full sign-up on any page.
 const IS_JOURNAL = /^\/blog(\/|$)/.test(location.pathname);
-let popArmed = popAllowed();
+// The welcome offer is off during pre-order: codes don't apply, and the founding price is the deal.
+let popArmed = !PREORDER && popAllowed();
 function tryPop(full) {
   if (!popArmed) return;
   if ($('#cart.on, #menu.on, .wpop')) { setTimeout(() => tryPop(full), 6000); return; }

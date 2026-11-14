@@ -1,5 +1,7 @@
 ---
 import { render } from 'astro:content';
+import { PREORDER, SHIP_BY } from '../../data/preorder.js';
+import { TIERS, PRICE } from '../../data/ingredients.js';
 import type { CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Top from '../../components/Top.astro';
@@ -97,8 +99,8 @@ if (faq.length) {
     <aside class="pitch" aria-label="About Blue Hour">
       <img src="/images/pouch.webp" alt="One frosted Blue Hour pouch" width="1122" height="1402" loading="lazy" />
       <h2>One pouch. One night.</h2>
-      <p>Blue Hour is one sealed pouch a day with your late-night snack: magnesium, vitamin C, B-complex, zinc and glycine. No <span class="nw">5-HTP</span>, caffeine or stimulants. 30 nights for $129.</p>
-      <a class="btn" href="/shop">See Blue Hour</a>
+      <p>Blue Hour is one sealed pouch a day with your late-night snack: magnesium, vitamin C, B-complex, zinc and glycine. No <span class="nw">5-HTP</span>, caffeine or stimulants. {PREORDER ? `Pre-order 30 nights for $${TIERS[0].each}, shipping by ${SHIP_BY}.` : `30 nights for $${PRICE}.`}</p>
+      <a class="btn" href="/shop">{PREORDER ? 'Pre-order Blue Hour' : 'See Blue Hour'}</a>
     </aside>
 
     <p class="disclaimer">This article is general information, not medical advice. Talk to a doctor or pharmacist before starting a supplement, especially if you take medication, have a medical condition, or are pregnant or nursing. We make Blue Hour, so we're not neutral, but we only link to sources we think are solid.</p>

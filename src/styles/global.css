@@ -687,3 +687,8 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .popurgent{display:flex;align-items:flex-start;gap:9px;margin:12px 0 0;font:600 13.5px/1.35 var(--display);opacity:.95}
 .popurgent span{flex:none;width:9px;height:9px;margin-top:4px;border-radius:50%;background:var(--sale);box-shadow:0 0 0 0 rgba(224,36,60,.7);animation:urgent 1.6s var(--ease-out) infinite}
 @keyframes urgent{70%{box-shadow:0 0 0 8px rgba(224,36,60,0)}100%{box-shadow:0 0 0 0 rgba(224,36,60,0)}}
+
+/* pre-order notice in the buy box */
+.pre{display:flex;flex-direction:column;gap:4px;padding:14px 16px;border-radius:18px;background:var(--white);border:2px solid var(--cobalt);box-shadow:0 10px 24px rgba(20,54,216,.14)}
+.pre b{font:800 16px/1.2 var(--display);letter-spacing:-.01em;color:var(--cobalt)}
+.pre span{font-size:14.5px;line-height:1.4}
