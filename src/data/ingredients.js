@@ -73,6 +73,7 @@ export const INGREDIENTS = [
     id: 'core', name: 'Core', ingredient: 'Zinc', dose: '25 mg', blurb: 'An essential mineral that helps support normal immune function.*', img: 'cap-guard', max: 1, signature: 1,
     facts: [['Zinc', '25 mg', '227%']],
     other: 'Vegetable capsule, rice flour.',
+    coa: { file: '/coa/zinc-25mg-intertek-041725-1156.pdf', lab: 'Intertek', date: 'Apr 2025', lot: 'M250067', found: '25.9 mg of zinc per capsule (label: 25 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold all under 10 per gram.' },
   },
   {
     id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '850 mg', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 3, signature: 1,
