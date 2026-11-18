@@ -700,3 +700,10 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .pre{display:flex;flex-direction:column;gap:4px;padding:14px 16px;border-radius:18px;background:var(--white);border:2px solid var(--cobalt);box-shadow:0 10px 24px rgba(20,54,216,.14)}
 .pre b{font:800 16px/1.2 var(--display);letter-spacing:-.01em;color:var(--cobalt)}
 .pre span{font-size:14.5px;line-height:1.4}
+
+/* the launch price, crossed out next to the founding price during pre-order */
+.promo s{opacity:.75;font-weight:600;text-decoration-thickness:2px}
+.hero .note s{opacity:.8;text-decoration-thickness:2px}
+.spin:has(.was) b{margin-top:-12px}
+.spin .was{position:absolute;bottom:25%;font:700 clamp(12px,3.2vw,15px)/1 var(--display);opacity:.7;text-decoration-thickness:2px}
+.bign .was{display:inline-block;margin-left:.18em;font-size:.36em;vertical-align:.95em;color:var(--soft);font-weight:700;letter-spacing:-.02em;text-decoration-thickness:.08em}

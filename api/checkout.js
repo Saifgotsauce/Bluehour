@@ -72,7 +72,7 @@ export function sessionParams(lines, origin, disc) {
     p.set(`line_items[${i}][price_data][currency]`, 'usd');
     p.set(`line_items[${i}][price_data][unit_amount]`, String(each * 100));
     p.set(`line_items[${i}][price_data][product_data][name]`, PREORDER ? `Blue Hour, 30-night roll (pre-order, ships by ${SHIP_BY})` : 'Blue Hour, 30-night roll');
-    p.set(`line_items[${i}][price_data][product_data][description]`, `${kind}: ${pack}`);
+    p.set(`line_items[${i}][price_data][product_data][description]`, (PREORDER ? `Founding price. Launch price $${PRICE} a roll. ` : '') + `${kind}: ${pack}`);
     p.set(`line_items[${i}][price_data][product_data][images][0]`, `${origin}/images/checkout-box.jpg`);
     const line = `${l.qty} roll${l.qty > 1 ? 's' : ''}: ${pack}`.slice(0, 500);
     p.set(`metadata[pouch_${i + 1}]`, line);
