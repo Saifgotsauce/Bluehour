@@ -1,6 +1,7 @@
 // POST /api/crew
 // A Founding Crew application. Saves the applicant in Klaviyo so you can review them:
-// - their profile gets crew_status "applied" plus their handles, city, how often they go out and their code idea
+// - their profile gets crew_status "applied" plus their handles, city, how often they go out, how many people go
+//   with them, their biggest following and their code idea
 // - an "Applied to Founding Crew" event lands on their profile (use it to trigger an email to yourself)
 // - if they ticked the box, they join the email list with marketing consent
 // - if KLAVIYO_CREW_LIST_ID is set, they're also added to that list (make a list called "Founding Crew applicants")
@@ -11,6 +12,9 @@ import { cleanCrewCode } from '../src/data/crew.js';
 
 const KLAVIYO_REVISION = '2024-10-15';
 const OFTEN = { weekly: 'Every weekend', monthly: 'A few times a month', festivals: 'Mostly festivals' };
+const CREW = { '1-3': '1 to 3', '4-8': '4 to 8', '9-15': '9 to 15', '15+': 'More than 15' };
+const REACH = { u500: 'Under 500', '500-2k': '500 to 2k', '2k-10k': '2k to 10k', '10k+': '10k+' };
+const has = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
 
 const clip = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, n);
 export const cleanHandle = (h) => {
@@ -51,12 +55,14 @@ export function readApplication(body) {
   if (body.tiktok && !tiktok) return { error: 'tiktok' };
   const city = clip(body.city, 80);
   if (!city) return { error: 'city' };
-  if (!Object.prototype.hasOwnProperty.call(OFTEN, body.often)) return { error: 'often' };
+  if (!has(OFTEN, body.often)) return { error: 'often' };
+  if (!has(CREW, body.crew)) return { error: 'crew' };
+  if (!has(REACH, body.reach)) return { error: 'reach' };
   const code = cleanCrewCode(body.code);
   if (!code) return { error: 'code' };
   if (body.adult !== true) return { error: 'adult' };
   return {
-    app: { name, email, instagram, tiktok, city, often: OFTEN[body.often], code, why: clip(body.why, 400), news: body.news === true },
+    app: { name, email, instagram, tiktok, city, often: OFTEN[body.often], crew: CREW[body.crew], reach: REACH[body.reach], code, why: clip(body.why, 400), news: body.news === true },
   };
 }
 
@@ -74,6 +80,8 @@ export function crewProfile(a) {
           crew_tiktok: a.tiktok ? '@' + a.tiktok : '',
           crew_city: a.city,
           crew_goes_out: a.often,
+          crew_group_size: a.crew,
+          crew_following: a.reach,
           crew_code_request: a.code,
           crew_why: a.why,
         },
@@ -92,6 +100,8 @@ export function crewEvent(a) {
           tiktok: a.tiktok ? 'https://tiktok.com/@' + a.tiktok : '',
           city: a.city,
           goes_out: a.often,
+          group_size: a.crew,
+          following: a.reach,
           code_request: a.code,
           why: a.why,
         },

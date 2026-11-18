@@ -4,7 +4,13 @@
 import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
+import Seal from '../components/Seal.astro';
 import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } from '../data/crew.js';
+import { PRICE, PREORDER_TIERS } from '../data/ingredients.js';
+import { SHIP_BY } from '../data/preorder.js';
+const FOUNDING = PREORDER_TIERS[0].each;
+const WITH_CODE = FOUNDING - CREW_OFF;
+const NIGHT = (WITH_CODE / 30).toFixed(2);
 ---
 <Base
   title="Founding Crew | Blue Hour"
@@ -23,6 +29,53 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
       </div>
     </div>
   </header>
+
+  <section class="w sec whatis" aria-labelledby="whath">
+    <div class="whatgrid">
+      <img class="whatimg" src="/images/hand.webp" alt="A Blue Hour pouch held in one hand, torn open to show six capsules" width="1122" height="1402" loading="lazy" />
+      <div class="whattext">
+        <h2 id="whath">What you'd be bringing them.</h2>
+        <p class="whatbig">Blue Hour is a roll of 30 pouches for people who go out late and still have to show up the next day. One pouch when you get home, six capsules, done.</p>
+        <ul class="whatlist">
+          <li>Six capsules a pouch, picked from seven: magnesium, vitamin C, B vitamins, zinc, glycine, NAC and a probiotic.</li>
+          <li>No caffeine, no 5-HTP, no stimulants. Nothing that keeps you up.</li>
+          <li>Pick your own six or take ours. Most brands sell one fixed formula.</li>
+        </ul>
+        <a class="btn" href="/shop">See the roll</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sellband" aria-labelledby="sellh">
+    <div class="w">
+      <h2 id="sellh">Easy for your friends to say yes to.</h2>
+      <ul class="stats">
+        <li><b>${WITH_CODE}</b><span>a roll with your code. Founding price ${FOUNDING}, and <s>${PRICE}</s> after launch.</span></li>
+        <li><b>${NIGHT}</b><span>a night. Less than a bottle of water at the club.</span></li>
+        <li><b>$0</b><span>risk. Full refund any time before their roll ships.</span></li>
+      </ul>
+      <div class="crewtrust">
+        <ul class="badges crewseals" aria-label="Quality">
+          <li><Seal id="c-gmp" word="cGMP" ring="CERTIFIED FACILITY ✦ CERTIFIED FACILITY ✦ " /><span>Made in a <span class="nw">cGMP-certified</span> facility</span></li>
+          <li><a href="/shop#tested"><Seal id="c-lab" word="LAB" ring="THIRD-PARTY TESTED ✦ THIRD-PARTY TESTED ✦ " /><span>Lab report for every capsule</span></a></li>
+          <li><Seal id="c-usa" word="USA" ring="PACKED IN RENO, NEVADA ✦ PACKED IN RENO ✦ " /><span>Packed to order in Reno, NV</span></li>
+        </ul>
+        <p class="trustnote">An outside lab tested every capsule we use, and every report is public. Nobody has to take our word for it. <a href="/shop#tested">See the lab reports</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec who" aria-labelledby="whoh">
+    <div class="w">
+      <h2 id="whoh">Who we're looking for.</h2>
+      <ul class="wholist">
+        <li><b>You go out. A lot.</b><span>Weekends, shows, festivals. You're there more often than not.</span></li>
+        <li><b>People come with you.</b><span>You plan the trip, run the group chat, or know everyone at the venue.</span></li>
+        <li><b>Friends count as much as followers.</b><span>A big following helps. A group chat of 20 people who actually go out helps just as much.</span></li>
+        <li><b>Your people are in the US.</b><span>That's where we ship for now.</span></li>
+      </ul>
+    </div>
+  </section>
 
   <section class="w sec earn" id="earn" aria-labelledby="earnh">
     <h2 id="earnh">What you get.</h2>
@@ -44,6 +97,16 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
         <p class="fine">Paid by PayPal once a month, for rolls that have shipped. A crew of 3 friends each grabbing a roll is ${3 * CREW_RATE}.</p>
       </div>
     </div>
+  </section>
+
+  <section class="w how" aria-labelledby="howh">
+    <h2 id="howh">How it works.</h2>
+    <ol class="steps">
+      <li><b>Apply</b><span>Takes about a minute, right below.</span></li>
+      <li><b>Get your code</b><span>We look at your page and email you either way. If you're in, your code and link are in that email.</span></li>
+      <li><b>Share it</b><span>Your friends get ${CREW_OFF} off every roll. Send it in the group chat, put it in your bio, say it out loud.</span></li>
+      <li><b>Get paid</b><span>By PayPal once a month, for rolls that have shipped. Pre-orders ship by {SHIP_BY}.</span></li>
+    </ol>
   </section>
 
   <section class="apply" id="apply" aria-labelledby="applyh">
@@ -68,7 +131,7 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
 
       <div class="formcol">
         <h2 id="applyh">Get on the list.</h2>
-        <p class="lede">We read every application. If it's a fit, you'll get your code and link by email.</p>
+        <p class="lede">We read every application and check your page. If it's a fit, you'll get your code and link by email.</p>
 
         <form id="crewform" novalidate>
           <div class="f">
@@ -101,6 +164,24 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
               <label><input type="radio" name="often" value="festivals" /><span>Mostly festivals</span></label>
             </div>
           </fieldset>
+          <fieldset class="f">
+            <legend>How many people usually go out with you</legend>
+            <div class="pick">
+              <label><input type="radio" name="crew" value="1-3" /><span>1 to 3</span></label>
+              <label><input type="radio" name="crew" value="4-8" /><span>4 to 8</span></label>
+              <label><input type="radio" name="crew" value="9-15" /><span>9 to 15</span></label>
+              <label><input type="radio" name="crew" value="15+" /><span>More than 15</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="f">
+            <legend>Your biggest following <em>on any app</em></legend>
+            <div class="pick">
+              <label><input type="radio" name="reach" value="u500" /><span>Under 500</span></label>
+              <label><input type="radio" name="reach" value="500-2k" /><span>500 to 2k</span></label>
+              <label><input type="radio" name="reach" value="2k-10k" /><span>2k to 10k</span></label>
+              <label><input type="radio" name="reach" value="10k+" /><span>10k+</span></label>
+            </div>
+          </fieldset>
           <div class="f">
             <label for="ccode">Pick your code</label>
             <input id="ccode" name="code" class="codein" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="12" required />
@@ -108,7 +189,7 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
           </div>
           <div class="f">
             <label for="cwhy">Why you? <em>optional</em></label>
-            <textarea id="cwhy" name="why" rows="3" maxlength="400" placeholder="The shows you never miss, your crew, what you post"></textarea>
+            <textarea id="cwhy" name="why" rows="3" maxlength="400" placeholder="The shows you never miss, the group chats you run, the crew you bring"></textarea>
           </div>
           <div class="hp" aria-hidden="true"><label for="cweb">Website</label><input id="cweb" name="website" tabindex="-1" autocomplete="off" /></div>
           <label class="tick"><input type="checkbox" id="cadult" name="adult" required /><span>I'm 18 or older.</span></label>
@@ -124,6 +205,16 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="w crewfaq faq" aria-labelledby="cfaqh">
+    <h2 id="cfaqh">Crew questions.</h2>
+    <details><summary><span class="q">Do I need a big following?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. We look at how often you go out and how many people go with you. A busy group chat counts as much as a big following.</p></details>
+    <details><summary><span class="q">Do I have to buy anything?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Joining is free and there's nothing to buy.</p></details>
+    <details><summary><span class="q">Can I try it first?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not yet. The first rolls ship by {SHIP_BY}. Once {FREE_ROLL_AT} rolls have sold with your code, your own roll is free. Until then, the lab reports for every capsule are on our <a href="/shop#tested">shop page</a>.</p></details>
+    <details><summary><span class="q">When do I get paid?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Once a month by PayPal. Pre-orders count 14 days after they ship, so the first payouts go out in January.</p></details>
+    <details><summary><span class="q">Do I have to post?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No quotas. Share your code however works for you. If you do post about Blue Hour, add #ad or mark it as a paid partnership.</p></details>
+    <details><summary><span class="q">Can friends outside the US order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not yet. We only ship within the US for now.</p></details>
   </section>
 
   <section class="w smallprint" aria-labelledby="sph">
@@ -172,8 +263,8 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
         $('bhandle').textContent = '@' + (handle(ig.value) || 'yourhandle');
         $('bcode').textContent = cleanCode(code.value) || 'YOURCODE';
         $('cband').classList.toggle('lit', !!(n || ig.value || code.value));
-        const filled = [name, $('cemail'), ig, $('ccity'), code].filter((i) => i.value.trim()).length + (f.often.value ? 1 : 0);
-        $('bandhint').textContent = filled >= 6 ? 'Looking good. Hit apply.' : 'Your band fills in as you go.';
+        const filled = [name, $('cemail'), ig, $('ccity'), code].filter((i) => i.value.trim()).length + (f.often.value ? 1 : 0) + (f.crew.value ? 1 : 0) + (f.reach.value ? 1 : 0);
+        $('bandhint').textContent = filled >= 8 ? 'Looking good. Hit apply.' : 'Your band fills in as you go.';
       };
       name.addEventListener('input', () => {
         if (!codeTouched) code.value = cleanCode(name.value.split(/\s+/)[0]).slice(0, 8) + (name.value.trim() ? '5' : '');
@@ -193,16 +284,16 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
       const LABELS = {
         name: 'Add your first name.', email: 'Check your email address.', instagram: 'Add your Instagram handle.',
         tiktok: 'Check your TikTok handle, or leave it empty.', city: 'Add where you go out.',
-        often: 'Pick how often you go out.', code: 'Your code needs 3 to 12 letters or numbers.', adult: 'You need to be 18 or older to join.',
+        often: 'Pick how often you go out.', crew: 'Pick how many people go out with you.', reach: 'Pick your biggest following, even if it is under 500.', code: 'Your code needs 3 to 12 letters or numbers.', adult: 'You need to be 18 or older to join.',
       };
-      const FIELD = { name: 'cname', email: 'cemail', instagram: 'cig', tiktok: 'ctt', city: 'ccity', often: null, code: 'ccode', adult: 'cadult' };
+      const FIELD = { name: 'cname', email: 'cemail', instagram: 'cig', tiktok: 'ctt', city: 'ccity', often: null, crew: null, reach: null, code: 'ccode', adult: 'cadult' };
       const msg = $('cmsg'), send = $('csend');
       const flag = (err) => {
         f.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
         msg.textContent = LABELS[err] || 'Something on the form needs a look.';
         msg.className = 'formmsg bad';
         const id = FIELD[err];
-        const el = id ? $(id) : f.querySelector('input[name=often]');
+        const el = id ? $(id) : f.querySelector(`input[name=${err}]`);
         if (el) { if (id) el.setAttribute('aria-invalid', 'true'); el.focus(); }
       };
       const check = (d) => {
@@ -212,6 +303,8 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
         if (d.tiktok && !/^[A-Za-z0-9._]{1,30}$/.test(d.tiktok)) return 'tiktok';
         if (!d.city) return 'city';
         if (!d.often) return 'often';
+        if (!d.crew) return 'crew';
+        if (!d.reach) return 'reach';
         if (d.code.length < 3) return 'code';
         if (!d.adult) return 'adult';
         return '';
@@ -220,7 +313,7 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
         e.preventDefault();
         const d = {
           name: name.value.trim(), email: $('cemail').value.trim(), instagram: handle(ig.value), tiktok: handle($('ctt').value),
-          city: $('ccity').value.trim(), often: f.often.value, code: cleanCode(code.value), why: $('cwhy').value.trim(),
+          city: $('ccity').value.trim(), often: f.often.value, crew: f.crew.value, reach: f.reach.value, code: cleanCode(code.value), why: $('cwhy').value.trim(),
           adult: $('cadult').checked, news: $('cnews').checked, website: $('cweb').value,
         };
         const err = check(d);
@@ -332,12 +425,67 @@ import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } f
   .formmsg.bad{color:#C01633}
   .done{display:grid;gap:16px;justify-items:start;max-width:520px;outline:0}
 
+  /* what it is */
+  .whatgrid{display:grid;gap:clamp(28px,6vw,64px);align-items:center}
+  .whatimg{width:82%;max-width:440px;height:auto;border-radius:28px;transform:rotate(-2deg);box-shadow:0 24px 50px rgba(11,31,158,.18)}
+  .whattext{display:grid;gap:20px;justify-items:start}
+  .whattext h2{color:var(--deep)}
+  .whatbig{font:600 clamp(19px,5vw,23px)/1.32 var(--display);letter-spacing:-.015em;color:var(--ink);max-width:30em}
+  .whatlist{margin:0;padding:0;list-style:none;display:grid;gap:12px;max-width:34em;color:var(--soft)}
+  .whatlist li{padding-left:22px;position:relative}
+  .whatlist li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--cobalt)}
+
+  /* why it sells */
+  .sellband{background:linear-gradient(180deg,var(--deep),var(--cobalt));color:var(--white)}
+  .sellband .w{display:grid;gap:clamp(30px,6vw,52px)}
+  .stats{list-style:none;margin:0;padding:0;display:grid;gap:26px}
+  .stats li{display:grid;gap:6px;padding-top:18px;border-top:1.5px solid rgba(255,255,255,.35)}
+  .stats b{font:900 clamp(64px,18vw,104px)/.9 var(--display);letter-spacing:-.05em;font-style:italic}
+  .stats span{font-weight:600;color:var(--first);max-width:22em}
+  .stats s{opacity:.75}
+  .crewtrust{display:grid;gap:22px;justify-items:center;text-align:center}
+  .crewseals{max-width:460px;width:100%}
+  .crewseals li,.crewseals a{color:var(--white)}
+  .trustnote{color:var(--first);max-width:32em}
+  .trustnote a{color:var(--white);font-weight:700;text-underline-offset:3px}
+
+  /* who */
+  .who{background:var(--mist)}
+  .who h2{color:var(--deep);margin-bottom:clamp(24px,5vw,40px)}
+  .wholist{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  .wholist li{display:grid;gap:4px;padding:20px 22px;border-radius:22px;background:var(--white);border:2px solid var(--ink)}
+  .wholist li:nth-child(odd){transform:rotate(-.6deg)}
+  .wholist li:nth-child(even){transform:rotate(.5deg)}
+  .wholist b{font:800 clamp(21px,5.6vw,27px)/1.15 var(--display);letter-spacing:-.025em;color:var(--cobalt)}
+  .wholist span{color:var(--soft)}
+
+  /* how */
+  .how{padding-bottom:clamp(56px,11vw,100px)}
+  .how h2{margin-bottom:clamp(24px,5vw,40px)}
+  .steps{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:s}
+  .steps li{counter-increment:s;display:grid;grid-template-columns:auto 1fr;column-gap:18px;row-gap:4px;padding:18px 0;border-top:1px solid var(--line)}
+  .steps li::before{content:counter(s);grid-row:span 2;align-self:start;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--cobalt);color:var(--white);font:800 19px/1 var(--display)}
+  .steps b{font:800 clamp(20px,5.4vw,26px)/1.15 var(--display);letter-spacing:-.025em}
+  .steps span{color:var(--soft)}
+
+  /* crew faq */
+  .crewfaq{padding-top:clamp(56px,11vw,100px)}
+  .crewfaq h2{color:var(--deep);margin-bottom:12px}
+  .crewfaq p{color:var(--soft);padding-bottom:22px;max-width:60ch}
+  .crewfaq p a{color:var(--cobalt);font-weight:700}
+
   .smallprint{padding-block:clamp(48px,9vw,90px)}
   .smallprint h2{font-size:clamp(24px,6vw,32px);margin-bottom:16px}
   .smallprint ul{margin:0;padding-left:20px;display:grid;gap:10px;color:var(--soft);font-size:15px;max-width:62ch}
 
   @media (min-width:900px){
     .earngrid{grid-template-columns:1.1fr 1fr}
+    .whatgrid{grid-template-columns:minmax(0,.85fr) minmax(0,1fr)}
+    .stats{grid-template-columns:repeat(3,1fr);gap:36px}
+    .wholist{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:repeat(4,1fr);gap:28px}
+    .steps li{grid-template-columns:1fr;border-top:2px solid var(--ink)}
+    .steps li::before{grid-row:auto;margin-bottom:8px}
     .calc{position:sticky;top:24px}
     .applygrid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:64px}
     .applygrid .formcol{grid-row:1}
