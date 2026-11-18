@@ -52,6 +52,7 @@ export const INGREDIENTS = [
     id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 2, signature: 1,
     facts: [['Vitamin C (as ascorbic acid)', '1,000 mg', '1111%']],
     other: 'Hypromellose (capsule), magnesium stearate, silica.',
+    coa: { file: '/coa/vitamin-c-1000mg-intertek-112724-1718.pdf', lab: 'Intertek', date: 'Dec 2024', lot: '100224127', found: '1,082 mg of vitamin C per capsule (label: 1,000 mg)', micro: 'No E. coli, Salmonella or Staph found. Yeast and mold under 10 per gram, bacteria well within limits.' },
   },
   {
     id: 'spark', name: 'Spark', ingredient: 'Methyl B-complex', dose: '8 B vitamins', blurb: 'B vitamins that help support normal energy metabolism.*', img: 'cap-steady', max: 1, signature: 1,
