@@ -50,7 +50,7 @@ export const INGREDIENTS = [
     coa: { file: '/coa/magnesium-glycinate-eurofins-4201639.pdf', label: '133 mg', got: '142 mg', lab: 'Eurofins', date: 'Aug 2023', lot: '061523126', found: '142 mg of magnesium per capsule (label: 133 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold counts low.' },
   },
   {
-    id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 2, signature: 1,
+    id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 1, signature: 1,
     facts: [['Vitamin C (as ascorbic acid)', '1,000 mg', '1111%']],
     other: 'Hypromellose (capsule), magnesium stearate, silica.',
     coa: { file: '/coa/vitamin-c-1000mg-intertek-112724-1718.pdf', label: '1,000 mg', got: '1,082 mg', lab: 'Intertek', date: 'Dec 2024', lot: '100224127', found: '1,082 mg of vitamin C per capsule (label: 1,000 mg)', micro: 'No E. coli, Salmonella or Staph found. Yeast and mold under 10 per gram, bacteria well within limits.' },
