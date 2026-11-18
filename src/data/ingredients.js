@@ -94,6 +94,7 @@ export const INGREDIENTS = [
     ],
     warn: 'Discontinue use and consult your physician if any adverse conditions occur. If you are pregnant, nursing, taking medication, have a medical condition, or are under medical supervision, consult your healthcare professional before use.',
     other: 'Cellulose, dicalcium phosphate, silica, magnesium stearate (vegetable).',
+    coa: { file: '/coa/probiotic-10b-intertek-082025-1261.pdf', lab: 'Intertek', date: 'Aug 2025', lot: '300-00057323', found: '50 billion live cultures per gram, against a minimum of 10 billion per capsule', micro: 'No E. coli, Salmonella or Staph found. Yeast and mold under 10 per gram.' },
   },
 ];
 
