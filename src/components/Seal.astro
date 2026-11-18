@@ -1,0 +1,15 @@
+---
+// Blue Hour's own quality seal. Not a certifier's mark: it states a fact about our product in our own design.
+interface Props { word: string; ring: string; id: string }
+const { word, ring, id } = Astro.props;
+const small = word.length > 3;
+---
+<svg class="seal" viewBox="0 0 120 120" aria-hidden="true">
+  <defs><path id={`ring-${id}`} d="M60,60 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0" /></defs>
+  <circle cx="60" cy="60" r="58" fill="#fff" />
+  <circle cx="60" cy="60" r="55.5" fill="none" stroke="var(--cobalt)" stroke-opacity=".3" stroke-width="1" />
+  <circle cx="60" cy="60" r="36" fill="var(--deep)" />
+  <circle cx="60" cy="60" r="36" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.2" stroke-dasharray="1.5 3" />
+  <text font-family="var(--display)" font-weight="700" font-size="10" letter-spacing="1.6" fill="var(--cobalt)"><textPath href={`#ring-${id}`} textLength="290" lengthAdjust="spacing">{ring}</textPath></text>
+  <text x="60" y={small ? 66 : 68} text-anchor="middle" font-family="var(--display)" font-weight="900" font-size={small ? 19 : 24} letter-spacing="-.5" fill="#fff">{word}</text>
+</svg>

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Promo from '../components/Promo.astro';
 import Marquee from '../components/Marquee.astro';
+import Seal from '../components/Seal.astro';
 import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
 import { INGREDIENTS, MAX_CAPS, SIGNATURE, mixSummary, TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
@@ -66,9 +67,9 @@ const jsonld = {
           <li><span>Free US shipping, no subscription</span></li>
         </ul>
         <ul class="badges" aria-label="Quality">
-          <li><b>cGMP</b>certified facility</li>
-          <li><a href="#tested"><b>Lab</b>report for every capsule</a></li>
-          <li><b>USA</b>packed in Reno, NV</li>
+          <li><Seal id="gmp" word="cGMP" ring="CERTIFIED FACILITY ✦ CERTIFIED FACILITY ✦ " /><span>Made in a <span class="nw">cGMP-certified</span> facility</span></li>
+          <li><a href="#tested"><Seal id="lab" word="LAB" ring="THIRD-PARTY TESTED ✦ THIRD-PARTY TESTED ✦ " /><span>Lab report for every capsule</span></a></li>
+          <li><Seal id="usa" word="USA" ring="PACKED IN RENO, NEVADA ✦ PACKED IN RENO ✦ " /><span>Packed to order in Reno, NV</span></li>
         </ul>
         {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price on our first run. We charge you today, and if you change your mind any time before your roll ships, you get a full refund.</span></div>}
         <p class="tag">One pouch. One night.</p>
