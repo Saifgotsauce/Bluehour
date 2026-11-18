@@ -753,3 +753,17 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .coa{display:grid;gap:4px;margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--mist);border:1px solid var(--line);font-size:13.5px;line-height:1.4}
 .coa b{font:700 14px/1.3 var(--display);color:var(--cobalt)}
 .coa a{font-weight:700;color:var(--ink);text-underline-offset:3px}
+
+.badges a{display:flex;flex-direction:column;align-items:center;gap:2px;color:inherit;text-decoration:none}
+.badges a:focus-visible{outline:2px solid var(--cobalt);outline-offset:4px;border-radius:10px}
+.labs{list-style:none;margin:30px 0 18px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.labs li{display:grid;gap:10px;align-content:start;padding:18px;border-radius:18px;background:#fff;border:1px solid var(--line)}
+.lname{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.lname b{font:800 18px/1.1 var(--display);color:var(--deep)}
+.lname span{font-size:13px;color:var(--soft)}
+.lgot{display:grid;gap:2px}
+.lgot b{font:900 40px/1 var(--display);letter-spacing:-.03em;color:var(--cobalt)}
+.lgot span{font-size:13.5px;color:var(--soft)}
+.lchk{margin:0;font-size:13.5px;line-height:1.4;color:var(--ink)}
+.lby{margin:0;padding-top:10px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--soft)}
+.lby a{font-weight:700;color:var(--ink);text-underline-offset:3px}

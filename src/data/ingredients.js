@@ -47,13 +47,13 @@ export const INGREDIENTS = [
     id: 'level', name: 'Level', ingredient: 'Magnesium', dose: '133 mg', blurb: 'Magnesium glycinate. Helps support normal muscle and nerve function.*', img: 'cap-still', max: 2, signature: 2,
     facts: [['Magnesium (as magnesium glycinate, 20% magnesium)', '133 mg', '32%']],
     other: 'Hypromellose (vegetable capsule), microcrystalline cellulose, magnesium stearate, silica, stearic acid.',
-    coa: { file: '/coa/magnesium-glycinate-eurofins-4201639.pdf', lab: 'Eurofins', date: 'Aug 2023', lot: '061523126', found: '142 mg of magnesium per capsule (label: 133 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold counts low.' },
+    coa: { file: '/coa/magnesium-glycinate-eurofins-4201639.pdf', label: '133 mg', got: '142 mg', lab: 'Eurofins', date: 'Aug 2023', lot: '061523126', found: '142 mg of magnesium per capsule (label: 133 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold counts low.' },
   },
   {
     id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 2, signature: 1,
     facts: [['Vitamin C (as ascorbic acid)', '1,000 mg', '1111%']],
     other: 'Hypromellose (capsule), magnesium stearate, silica.',
-    coa: { file: '/coa/vitamin-c-1000mg-intertek-112724-1718.pdf', lab: 'Intertek', date: 'Dec 2024', lot: '100224127', found: '1,082 mg of vitamin C per capsule (label: 1,000 mg)', micro: 'No E. coli, Salmonella or Staph found. Yeast and mold under 10 per gram, bacteria well within limits.' },
+    coa: { file: '/coa/vitamin-c-1000mg-intertek-112724-1718.pdf', label: '1,000 mg', got: '1,082 mg', lab: 'Intertek', date: 'Dec 2024', lot: '100224127', found: '1,082 mg of vitamin C per capsule (label: 1,000 mg)', micro: 'No E. coli, Salmonella or Staph found. Yeast and mold under 10 per gram, bacteria well within limits.' },
   },
   {
     id: 'spark', name: 'Spark', ingredient: 'Methyl B-complex', dose: '8 B vitamins', blurb: 'B vitamins that help support normal energy metabolism.*', img: 'cap-steady', max: 1, signature: 1,
@@ -76,20 +76,20 @@ export const INGREDIENTS = [
     id: 'core', name: 'Core', ingredient: 'Zinc', dose: '25 mg', blurb: 'An essential mineral that helps support normal immune function.*', img: 'cap-guard', max: 1, signature: 1,
     facts: [['Zinc', '25 mg', '227%']],
     other: 'Vegetable capsule, rice flour.',
-    coa: { file: '/coa/zinc-25mg-intertek-041725-1156.pdf', lab: 'Intertek', date: 'Apr 2025', lot: 'M250067', found: '25.9 mg of zinc per capsule (label: 25 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold all under 10 per gram.' },
+    coa: { file: '/coa/zinc-25mg-intertek-041725-1156.pdf', label: '25 mg', got: '25.9 mg', lab: 'Intertek', date: 'Apr 2025', lot: 'M250067', found: '25.9 mg of zinc per capsule (label: 25 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold all under 10 per gram.' },
   },
   {
     id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '850 mg', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 3, signature: 1,
     facts: [['L-glycine', '850 mg', '\u2020']],
     other: 'Hypromellose (capsule).',
-    coa: { file: '/coa/glycine-850mg-intertek-062425-1465.pdf', lab: 'Intertek', date: 'Jul 2025', lot: '233791', found: '857 mg of glycine per capsule (label: 850 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold all under 10 per gram.' },
+    coa: { file: '/coa/glycine-850mg-intertek-062425-1465.pdf', label: '850 mg', got: '857 mg', lab: 'Intertek', date: 'Jul 2025', lot: '233791', found: '857 mg of glycine per capsule (label: 850 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold all under 10 per gram.' },
   },
   {
     id: 'prime', name: 'Prime', ingredient: 'NAC', dose: '600 mg', blurb: 'A form of the amino acid cysteine that your body uses to make the antioxidant glutathione.*', img: 'cap-nac', max: 2, signature: 0,
     facts: [['N-acetyl cysteine', '600 mg', '\u2020']],
     other: 'Hypromellose (natural vegetable capsule), rice (Oryza sativa cera) bran, magnesium stearate, silica.',
     // Lab report (CoA) from OK Capsule's catalog. Link the whole PDF: Eurofins doesn't allow publishing part of it.
-    coa: { file: '/coa/nac-600mg-eurofins-4388554.pdf', lab: 'Eurofins', date: 'Feb 2024', lot: '112123126', found: '639 mg of NAC per capsule (label: 600 mg)', micro: 'No E. coli, Salmonella or Staph found. Yeast, mold and bacteria counts within limits.' },
+    coa: { file: '/coa/nac-600mg-eurofins-4388554.pdf', label: '600 mg', got: '639 mg', lab: 'Eurofins', date: 'Feb 2024', lot: '112123126', found: '639 mg of NAC per capsule (label: 600 mg)', micro: 'No E. coli, Salmonella or Staph found. Yeast, mold and bacteria counts within limits.' },
   },
   {
     id: 'culture', name: 'Culture', ingredient: '10B probiotic', dose: '10 billion cultures', blurb: '10 billion live cultures from 10 strains, plus inulin, to help support normal digestive health.*', img: 'cap-probiotic', max: 1, signature: 0,
@@ -99,7 +99,7 @@ export const INGREDIENTS = [
     ],
     warn: 'Discontinue use and consult your physician if any adverse conditions occur. If you are pregnant, nursing, taking medication, have a medical condition, or are under medical supervision, consult your healthcare professional before use.',
     other: 'Cellulose, dicalcium phosphate, silica, magnesium stearate (vegetable).',
-    coa: { file: '/coa/probiotic-10b-intertek-082025-1261.pdf', lab: 'Intertek', date: 'Aug 2025', lot: '300-00057323', found: '50 billion live cultures per gram, against a minimum of 10 billion per capsule', micro: 'No E. coli, Salmonella or Staph found. Yeast and mold under 10 per gram.' },
+    coa: { file: '/coa/probiotic-10b-intertek-082025-1261.pdf', label: '10 billion a capsule (minimum)', got: '50 billion', gotUnit: 'per gram', lab: 'Intertek', date: 'Aug 2025', lot: '300-00057323', found: '50 billion live cultures per gram, against a minimum of 10 billion per capsule', micro: 'No E. coli, Salmonella or Staph found. Yeast and mold under 10 per gram.' },
   },
 ];
 
