@@ -14,6 +14,7 @@ const KLAVIYO_REVISION = '2024-10-15';
 const OFTEN = { weekly: 'Every weekend', monthly: 'A few times a month', festivals: 'Mostly festivals' };
 const CREW = { '1-3': '1 to 3', '4-8': '4 to 8', '9-15': '9 to 15', '15+': 'More than 15' };
 const REACH = { u500: 'Under 500', '500-2k': '500 to 2k', '2k-10k': '2k to 10k', '10k+': '10k+' };
+const PLATFORMS = { instagram: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube', x: 'X', twitch: 'Twitch', other: 'Other' };
 const has = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
 
 const clip = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, n);
@@ -58,11 +59,14 @@ export function readApplication(body) {
   if (!has(OFTEN, body.often)) return { error: 'often' };
   if (!has(CREW, body.crew)) return { error: 'crew' };
   if (!has(REACH, body.reach)) return { error: 'reach' };
+  if (!has(PLATFORMS, body.rplat)) return { error: 'rplat' };
+  const rhandle = clip(body.rhandle, 60).replace(/^@+/, '');
+  if (!/^[A-Za-z0-9._-]{1,40}$/.test(rhandle)) return { error: 'rhandle' };
   const code = cleanCrewCode(body.code);
   if (!code) return { error: 'code' };
   if (body.adult !== true) return { error: 'adult' };
   return {
-    app: { name, email, instagram, tiktok, city, often: OFTEN[body.often], crew: CREW[body.crew], reach: REACH[body.reach], code, why: clip(body.why, 400), news: body.news === true },
+    app: { name, email, instagram, tiktok, city, often: OFTEN[body.often], crew: CREW[body.crew], reach: REACH[body.reach], rplat: PLATFORMS[body.rplat], rhandle, code, why: clip(body.why, 400), news: body.news === true },
   };
 }
 
@@ -82,6 +86,8 @@ export function crewProfile(a) {
           crew_goes_out: a.often,
           crew_group_size: a.crew,
           crew_following: a.reach,
+          crew_following_on: a.rplat,
+          crew_following_handle: '@' + a.rhandle,
           crew_code_request: a.code,
           crew_why: a.why,
         },
@@ -102,6 +108,8 @@ export function crewEvent(a) {
           goes_out: a.often,
           group_size: a.crew,
           following: a.reach,
+          following_on: a.rplat,
+          following_handle: '@' + a.rhandle,
           code_request: a.code,
           why: a.why,
         },
