@@ -68,7 +68,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
         <li><b>You go out. A lot.</b><span>Weekends, shows, festivals. You're there more often than not.</span></li>
         <li><b>People come with you.</b><span>You plan the trip, run the group chat, or know everyone at the venue.</span></li>
         <li><b>Friends count as much as followers.</b><span>A big following helps. A group chat of 20 people who actually go out helps just as much.</span></li>
-        <li><b>Your people are in the US.</b><span>That's where we ship for now.</span></li>
+        <li><b>Your people are in the US.</b><span>That's where we ship for now. You need to be 21 or older to join.</span></li>
       </ul>
     </div>
   </section>
@@ -92,6 +92,20 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
         <p class="paidnote" id="paidnote" aria-live="polite">plus a free roll</p>
         <p class="fine">Paid by PayPal once a month, for rolls that have shipped. A crew of 3 friends each grabbing a roll is ${3 * CREW_RATE}.</p>
       </div>
+    </div>
+  </section>
+
+  <section class="sec longgame" aria-labelledby="longh">
+    <div class="w">
+      <h2 id="longh">If Blue Hour gets big, you come with it.</h2>
+      <p class="longlede">The {CREW_SPOTS} people who get us off the ground don't get forgotten when we grow. These stay yours for as long as the program runs.</p>
+      <ul class="longlist">
+        <li><b>Your rate stays founding</b><span>If we ever pay new members less, the Founding Crew keeps ${CREW_RATE} a roll, and ${BOOST_RATE} after {BOOST_AT}.</span></li>
+        <li><b>First to get anything new</b><span>New capsules, new pouches, new drops. You get them before anyone else.</span></li>
+        <li><b>First call when we hire</b><span>Ambassador leads, events, paid roles. The Founding Crew hears about them before we post them anywhere.</span></li>
+        <li><b>On the list for our nights</b><span>When Blue Hour throws its own events, you and a friend are on the guest list.</span></li>
+      </ul>
+      <p class="longwhy">Every pre-order now gets us closer to making our own pouches. Cheaper to make means more for the crew.</p>
     </div>
   </section>
 
@@ -188,7 +202,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
             <textarea id="cwhy" name="why" rows="3" maxlength="400" placeholder="The shows you never miss, the group chats you run, the crew you bring"></textarea>
           </div>
           <div class="hp" aria-hidden="true"><label for="cweb">Website</label><input id="cweb" name="website" tabindex="-1" autocomplete="off" /></div>
-          <label class="tick"><input type="checkbox" id="cadult" name="adult" required /><span>I'm 18 or older.</span></label>
+          <label class="tick"><input type="checkbox" id="cadult" name="adult" required /><span>I'm 21 or older.</span></label>
           <label class="tick"><input type="checkbox" id="cnews" name="news" /><span>Email me Blue Hour news too.</span></label>
           <button class="btn blue send" type="submit" id="csend">Apply for a spot</button>
           <p class="formmsg" id="cmsg" role="status" aria-live="polite"></p>
@@ -224,7 +238,8 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
       <li>If an order is refunded or disputed after you've been paid for it, it comes off your next payout.</li>
       <li>The free roll is one per person.</li>
       <li>When you post about Blue Hour, say it's a paid partnership or add #ad, and don't say it treats, cures or prevents anything, including hangovers.</li>
-      <li>We can change or end the program with 30 days' notice by email. Anything you've already earned still gets paid.</li>
+      <li>You need to be 21 or older to join.</li>
+      <li>We can change or end the program with 30 days' notice by email. Anything you've already earned still gets paid. While the program runs, Founding Crew members keep the founding commission rates even if new members get less.</li>
     </ul>
   </section>
 
@@ -280,7 +295,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
       const LABELS = {
         name: 'Add your first name.', email: 'Check your email address.', instagram: 'Add your Instagram handle.',
         tiktok: 'Check your TikTok handle, or leave it empty.', city: 'Add where you go out.',
-        often: 'Pick how often you go out.', crew: 'Pick how many people go out with you.', reach: 'Pick your biggest following, even if it is under 500.', code: 'Your code needs 3 to 12 letters or numbers.', adult: 'You need to be 18 or older to join.',
+        often: 'Pick how often you go out.', crew: 'Pick how many people go out with you.', reach: 'Pick your biggest following, even if it is under 500.', code: 'Your code needs 3 to 12 letters or numbers.', adult: 'You need to be 21 or older to join.',
       };
       const FIELD = { name: 'cname', email: 'cemail', instagram: 'cig', tiktok: 'ctt', city: 'ccity', often: null, crew: null, reach: null, code: 'ccode', adult: 'cadult' };
       const msg = $('cmsg'), send = $('csend');
@@ -453,6 +468,17 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
   .wholist b{font:800 clamp(21px,5.6vw,27px)/1.15 var(--display);letter-spacing:-.025em;color:var(--cobalt)}
   .wholist span{color:var(--soft)}
 
+  /* long game */
+  .longgame{background:var(--night);color:var(--white)}
+  .longgame .w{display:grid;gap:clamp(22px,4vw,34px)}
+  .longgame h2{max-width:14em}
+  .longlede{font:600 clamp(18px,4.8vw,22px)/1.35 var(--display);color:var(--pale);max-width:32em}
+  .longlist{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1.5px solid rgba(255,255,255,.3)}
+  .longlist li{display:grid;gap:4px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.16)}
+  .longlist b{font:800 clamp(22px,6vw,30px)/1.1 var(--display);letter-spacing:-.03em;font-style:italic}
+  .longlist span{color:#C9D6FF;max-width:36em}
+  .longwhy{font-weight:600;color:var(--first);max-width:34em}
+
   /* how */
   .how{padding-bottom:clamp(56px,11vw,100px)}
   .how h2{margin-bottom:clamp(24px,5vw,40px)}
@@ -477,6 +503,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
     .whatgrid{grid-template-columns:minmax(0,.85fr) minmax(0,1fr)}
     .stats{grid-template-columns:repeat(3,1fr);gap:36px}
     .wholist{grid-template-columns:1fr 1fr}
+    .longlist{grid-template-columns:1fr 1fr;column-gap:48px}
     .steps{grid-template-columns:repeat(4,1fr);gap:28px}
     .steps li{grid-template-columns:1fr;border-top:2px solid var(--ink)}
     .steps li::before{grid-row:auto;margin-bottom:8px}
