@@ -42,3 +42,14 @@ Actions secret `VERCEL_DEPLOY_HOOK`.
 
 ## Reviews
 Add real customer quotes, with permission, to `src/data/reviews.ts`. The section stays hidden while the list is empty.
+
+## Founding Crew (ambassadors)
+- `/crew` is the application page. Applications land in Klaviyo (see `api/crew.js`).
+- Every ambassador is a Stripe promotion code on the coupon `bh-crew-5` ($5 off the order), with `crew=1` in its metadata.
+  Crew codes work during pre-order; other codes don't.
+- `/api/crew-admin?key=CREW_ADMIN_KEY` is the back office: approve people (makes their code), pause a code, see
+  what each person has earned and why each order did or didn't count, record PayPal payouts and free rolls.
+- The rules live in `api/_crew.js` and the numbers in `src/data/crew.js`: no commission on refunded or disputed orders,
+  on the ambassador's own orders (same email, address, card or name), or on the same buyer twice in 30 days;
+  commission waits until after the hold; every order keeps at least $8 a roll after commission; the free roll is
+  given once, only after the profit kept on that person's orders covers it.

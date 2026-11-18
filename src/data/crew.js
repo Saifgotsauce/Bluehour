@@ -1,19 +1,29 @@
-// Founding Crew: the ambassador program. Change the numbers here and the /crew page follows.
+// Founding Crew: the ambassador program. Change the numbers here and the /crew page and payouts follow.
 //
-// The maths per roll, at the worst case (a single pre-order roll with a crew code):
-//   $99 founding price - $5 crew discount = $94 paid
-//   - about $3 Stripe fee - up to $60 OK Capsule cost - $10 commission  =  about $21 left for Blue Hour
-// The free roll costs about $40-60 to make and is only earned after 5 sales (about $105 kept by then),
-// and the $12 rate only starts after 15 sales.
+// Every order with a crew code is checked against a profit floor before any commission is counted
+// (see api/_crew.js). Worst case per order, using the most an OK Capsule roll can cost:
+//   1 roll:  $99 - $5 code = $94  - ~$3.03 Stripe - $60 - $10 commission = ~$21 kept
+//   3 rolls: $267 - $5 = $262     - ~$7.90 Stripe - $180 - $30          = ~$44 kept (~$14.70 a roll)
+// The free roll (worth up to $60 to make) is only given once the ambassador's earned orders have left
+// at least that much profit on top of the floor, so it can never put the program in the red.
 
 export const CREW_SPOTS = 50;        // how many people get in
-export const CREW_OFF = 5;           // what a friend saves on each roll with a crew code, in dollars
-export const CREW_RATE = 10;         // commission per roll sold, in dollars
-export const FREE_ROLL_AT = 5;       // rolls sold to earn a free roll
-export const BOOST_AT = 15;          // rolls sold before the higher rate starts
+export const CREW_OFF = 5;           // what a friend saves on their order with a crew code, in dollars
+export const CREW_RATE = 10;         // commission per roll, in dollars
+export const FREE_ROLL_AT = 5;       // earned rolls before the one-time free roll
+export const BOOST_AT = 15;          // earned rolls before the higher rate starts
 export const BOOST_RATE = 12;        // commission per roll after BOOST_AT, in dollars
 
-// What someone earns for a number of rolls sold.
+// Rules the payout report enforces (not shown on the site as numbers you can game).
+export const ROLL_COST_MAX = 60;     // most a roll costs us to make and ship, in dollars
+export const MIN_KEEP_PER_ROLL = 8;  // profit we always keep per roll after the commission, in dollars
+export const STRIPE_PCT = 0.029;     // Stripe card fee
+export const STRIPE_FIXED = 0.3;
+export const HOLD_AFTER_SHIP_DAYS = 14; // pre-orders: commission counts this many days after the ship-by date
+export const HOLD_DAYS = 30;         // after launch: commission counts this many days after the order
+export const REPEAT_DAYS = 30;       // one counted order per buyer per code in this many days
+
+// What someone earns for a number of earned rolls (before the profit floor, which only ever lowers it).
 export function crewEarnings(rolls) {
   const n = Math.max(0, Math.floor(rolls) || 0);
   return Math.min(n, BOOST_AT) * CREW_RATE + Math.max(0, n - BOOST_AT) * BOOST_RATE;

@@ -20,15 +20,15 @@ const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)
 // Stripe through /api/promo, saved for 14 days, shown at the top of the page and applied at checkout.
 const CODE_DAYS = 14;
 function getCode() {
-  if (PREORDER) return null; // no codes during pre-order
   try {
     const c = JSON.parse(store.get('bh-code') || 'null');
+    if (PREORDER && !(c && c.crew)) return null; // during pre-order only Founding Crew codes work
     if (c && c.code && Date.now() - c.at < CODE_DAYS * 864e5) return c;
   } catch (e) { /* ignore */ }
   return null;
 }
 function setCode(c) {
-  if (c && c.code) store.set('bh-code', JSON.stringify({ code: c.code, label: c.label || 'Discount', at: c.at || Date.now(), checked: Date.now() }));
+  if (c && c.code) store.set('bh-code', JSON.stringify({ code: c.code, label: c.label || 'Discount', crew: !!c.crew, at: c.at || Date.now(), checked: Date.now() }));
   else store.set('bh-code', '');
   codeBar(); paint();
   try { window.dispatchEvent(new CustomEvent('bh:code')); } catch (e) { /* ignore */ }
@@ -57,8 +57,8 @@ function codeBar() {
 }
 const checkPromo = (code) =>
   fetch('/api/promo?code=' + encodeURIComponent(code)).then((r) => r.json()).catch(() => ({}));
+const usable = (d) => d && d.valid && (!PREORDER || d.crew);
 (function readCodeFromLink() {
-  if (PREORDER) return;
   let url;
   try { url = new URL(location.href); } catch (e) { return; }
   const key = ['code', 'promo', 'discount'].find((k) => url.searchParams.get(k));
@@ -66,13 +66,13 @@ const checkPromo = (code) =>
     const code = url.searchParams.get(key).trim();
     url.searchParams.delete(key);
     try { history.replaceState(history.state, '', url.pathname + url.search + url.hash); } catch (e) { /* ignore */ }
-    checkPromo(code).then((d) => { if (d.valid) setCode({ code: d.code, label: d.label }); });
+    checkPromo(code).then((d) => { if (usable(d)) setCode({ code: d.code, label: d.label, crew: d.crew }); });
     return;
   }
   // Re-check a saved code now and then, in case it was switched off in Stripe.
   const c = getCode();
   if (c && Date.now() - (c.checked || 0) > 6 * 36e5) {
-    checkPromo(c.code).then((d) => { if (d.valid) setCode({ ...c, label: d.label }); else if (d.valid === false) setCode(null); });
+    checkPromo(c.code).then((d) => { if (usable(d)) setCode({ ...c, label: d.label, crew: d.crew }); else if (d.valid === false) setCode(null); });
   }
 })();
 
@@ -255,6 +255,19 @@ function paint() {
     (egg ? '<span><b>' + esc(egg.name) + '</b> egg · $' + egg.amount + ' off</span>' : '') +
     (code ? '<span><b>' + esc(code.code) + '</b> · ' + esc(code.label) + ' <button data-dropcode>Remove</button></span>' : '') +
     '<small>' + (code && egg ? 'Only your best discount applies at checkout.' : 'Applied at checkout.') + '</small>';
+}
+
+const codeform = $('#codeform');
+if (codeform) {
+  codeform.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const inp = $('#codein'), out = $('#codemsg'), v = inp.value.trim();
+    if (!v) return;
+    out.textContent = 'Checking...';
+    const d = await checkPromo(v);
+    if (usable(d)) { setCode({ code: d.code, label: d.label, crew: d.crew }); inp.value = ''; out.textContent = ''; }
+    else out.textContent = PREORDER ? "That isn't a Founding Crew code. Check the spelling with whoever gave it to you." : "That code isn't working. Check the spelling, or it may have ended.";
+  });
 }
 
 const citems = $('#citems');

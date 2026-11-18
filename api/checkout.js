@@ -7,6 +7,8 @@ import { PRICE, INGREDIENTS, cleanMix, mixTotal, isSignature, eachFor, savingFor
 import { findPromo, promoValue } from './_promo.js';
 import { readEgg, eggCoupon } from './_eggs.js';
 import { PREORDER, SHIP_BY } from '../src/data/preorder.js';
+import { findCrew } from './_crew.js';
+import { CREW_OFF } from '../src/data/crew.js';
 
 const MAX_LINES = 8;
 const MAX_QTY = 9;
@@ -26,7 +28,8 @@ export function cleanLines(lines) {
     .filter((l) => mixTotal(l.mix) > 0);
 }
 
-// disc: { promo: promotion code ID } or { coupon: coupon ID } to apply up front.
+// disc: { promo: promotion code ID } or { coupon: coupon ID } to apply up front, plus crew: the Founding Crew
+// code when the promotion is one (saved on the order so the right person gets paid).
 // Without one, shoppers can type a code on the Stripe page.
 export function sessionParams(lines, origin, disc) {
   const rolls = lines.reduce((a, l) => a + l.qty, 0);
@@ -76,6 +79,10 @@ export function sessionParams(lines, origin, disc) {
     p.set(`payment_intent_data[metadata][pouch_${i + 1}]`, line);
     summary.push(`${kind} x${l.qty}`);
   });
+  if (disc && disc.crew) {
+    p.set('metadata[crew_code]', disc.crew);
+    p.set('payment_intent_data[metadata][crew_code]', disc.crew);
+  }
   p.set('metadata[rolls]', String(rolls));
   p.set('metadata[price_each]', String(each));
   if (PREORDER) {
@@ -130,8 +137,10 @@ export default async function handler(req, res) {
     const rolls = lines.reduce((a, l) => a + l.qty, 0);
     const subtotal = totalFor(rolls) * 100;
     const options = [];
-    // During pre-order no code or egg applies: the founding price is the deal.
-    const promo = !PREORDER && body.code ? await findPromo(body.code, key).catch(() => null) : null;
+    // A Founding Crew code always works. During pre-order nothing else does: the founding price is the deal.
+    const crew = body.code ? await findCrew(body.code, key).catch(() => null) : null;
+    if (crew) options.push({ value: Math.min(CREW_OFF * 100, subtotal), disc: { promo: crew.id, crew: crew.code } });
+    const promo = !crew && !PREORDER && body.code ? await findPromo(body.code, key).catch(() => null) : null;
     if (promo) options.push({ value: promoValue(promo, subtotal), disc: { promo: promo.id } });
     const egg = PREORDER ? null : readEgg(body.egg);
     if (egg) {
