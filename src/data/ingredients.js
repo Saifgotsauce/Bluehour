@@ -82,6 +82,7 @@ export const INGREDIENTS = [
     id: 'glow', name: 'Glow', ingredient: 'Glycine', dose: '850 mg', blurb: 'An amino acid your body uses to build proteins, including collagen.*', img: 'cap-glycine', max: 3, signature: 1,
     facts: [['L-glycine', '850 mg', '\u2020']],
     other: 'Hypromellose (capsule).',
+    coa: { file: '/coa/glycine-850mg-intertek-062425-1465.pdf', lab: 'Intertek', date: 'Jul 2025', lot: '233791', found: '857 mg of glycine per capsule (label: 850 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold all under 10 per gram.' },
   },
   {
     id: 'prime', name: 'Prime', ingredient: 'NAC', dose: '600 mg', blurb: 'A form of the amino acid cysteine that your body uses to make the antioxidant glutathione.*', img: 'cap-nac', max: 2, signature: 0,
