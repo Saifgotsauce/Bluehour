@@ -780,7 +780,14 @@ function night() {
 
 /* ---------- sticky buy bar (shop) ---------- */
 const stick = $('#stick'), buyrow = $('#buyrow');
-function buybar() { if (stick && buyrow) stick.classList.toggle('on', buyrow.getBoundingClientRect().bottom < 0); }
+// Shows whenever the main buy buttons are off screen, including on first load when they're further down,
+// so there's always a buy button in reach on a phone. On desktop it only shows after you scroll past them.
+function buybar() {
+  if (!stick || !buyrow) return;
+  const r = buyrow.getBoundingClientRect();
+  stick.classList.toggle('on', r.bottom < 0 || (innerWidth < 900 && r.top > innerHeight - 40));
+}
+buybar(); addEventListener('resize', buybar, { passive: true });
 
 /* ---------- floating capsules (home) ---------- */
 // The capsules ease toward the scroll position, so they glide instead of snapping with it.

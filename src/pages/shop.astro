@@ -60,6 +60,7 @@ const jsonld = {
       </div>
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
+        <p class="pricehead"><b>${FIRST}</b>{FIRST < PRICE && <s>${PRICE}</s>}<span>30 nights, {perNight(FIRST)} a night{PREORDER ? `. Ships by ${SHIP_BY}` : ''}</span></p>
         <ul class="perks">
           <li><span>One sealed pouch of 6 capsules a night</span></li>
           <li><span>No caffeine, stimulants or <span class="nw">5-HTP</span></span></li>
@@ -95,7 +96,7 @@ const jsonld = {
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>One-time purchase, nothing recurring</li>
         </ul>
         <p class="paynote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M5.5 10h13a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5v-8A1.5 1.5 0 0 1 5.5 10Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Secure Stripe checkout · Apple Pay · Google Pay</p>
-        <div class="spec"><b>Suggested use</b><span>Take 1 pouch a day with food and water, like with supper or a late snack before bed. Do not take more than 1 pouch a day.</span></div>
+        <div class="spec"><b>Suggested use</b><span>Take 1 pouch a day with food and water, like with supper or a late snack before bed.</span><strong class="maxone">Do not take more than 1 pouch a day.</strong></div>
         <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.{PREORDER && ` Pre-orders ship by ${SHIP_BY}.`}</span></div>
       </div>
     </div>
