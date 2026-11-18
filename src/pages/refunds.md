@@ -9,7 +9,7 @@ Every Blue Hour roll is packed to order with the capsules you picked, so we can'
 
 ## Pre-orders
 
-When you pre-order, we charge you in full at checkout and your order ships by the date shown on the site and at checkout (currently December 14, 2026).
+When you pre-order, we charge you in full at checkout and your order ships by the date shown on the site and at checkout (currently December 20, 2026).
 
 - **Change your mind before it ships:** email [hello@bluehournights.com](mailto:hello@bluehournights.com) with your order number any time before your order ships, and we'll refund you in full. No questions asked.
 - **If we can't ship on time:** we'll email you before the ship date with a new date. You can cancel then for a full refund, and if we can't ship at all, we'll refund you in full automatically.

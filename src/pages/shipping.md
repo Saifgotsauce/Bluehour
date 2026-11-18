@@ -15,7 +15,7 @@ Shipping is free on every order.
 
 ## Pre-orders
 
-Pre-orders ship by **December 14, 2026**. If that date changes, we'll email you before it passes with a new date and the option to cancel for a full refund. See [Refunds and replacements](/refunds).
+Pre-orders ship by **December 20, 2026**. If that date changes, we'll email you before it passes with a new date and the option to cancel for a full refund. See [Refunds and replacements](/refunds).
 
 ## How long it takes
 

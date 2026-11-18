@@ -9,5 +9,5 @@ export const PREORDER = true;
 
 // The date every pre-order ships by. Customers are promised a full refund any time before their roll ships,
 // and if we can't ship by this date we must email them before it passes, give a new date, and offer a full refund.
-export const SHIP_BY = 'December 14';
-export const SHIP_BY_FULL = 'Monday, December 14, 2026';
+export const SHIP_BY = 'December 20';
+export const SHIP_BY_FULL = 'Sunday, December 20, 2026';
