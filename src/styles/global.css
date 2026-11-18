@@ -116,7 +116,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 @keyframes drift{to{transform:translate(-3%,-3%) scale(1.06)}}
 .sky .w{position:relative;z-index:1}
 .chips{display:flex;flex-wrap:wrap;gap:10px}
-.chips span{padding:9px 18px;border-radius:99px;background:var(--white);color:var(--cobalt);font:700 16px/1.2 var(--display);letter-spacing:-.01em}
+.chips>span{padding:9px 18px;border-radius:99px;background:var(--white);color:var(--cobalt);font:700 16px/1.2 var(--display);letter-spacing:-.01em}
 
 /* 30 nights */
 .nights{position:relative;background:linear-gradient(180deg,#071268,var(--deep));color:var(--white)}
@@ -771,3 +771,4 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .lchk{margin:0;font-size:13.5px;line-height:1.4;color:var(--ink)}
 .lby{margin:0;padding-top:10px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--soft)}
 .lby a{font-weight:700;color:var(--ink);text-underline-offset:3px}
+.home-seals{width:100%;max-width:440px;margin:6px 0 4px}
