@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Promo from '../components/Promo.astro';
 import Marquee from '../components/Marquee.astro';
-import Seal from '../components/Seal.astro';
+import Seals from '../components/Seals.astro';
 import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
 import { INGREDIENTS, MAX_CAPS, SIGNATURE, mixSummary, TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
@@ -66,11 +66,7 @@ const jsonld = {
           <li><span>Take our signature six or pick your own</span></li>
           <li><span>Free US shipping, no subscription</span></li>
         </ul>
-        <ul class="badges" aria-label="Quality">
-          <li><Seal id="gmp" word="cGMP" ring="CERTIFIED FACILITY ✦ CERTIFIED FACILITY ✦ " /><span>Made in a <span class="nw">cGMP-certified</span> facility</span></li>
-          <li><a href="#tested"><Seal id="lab" word="LAB" ring="THIRD-PARTY TESTED ✦ THIRD-PARTY TESTED ✦ " /><span>Lab report for every capsule</span></a></li>
-          <li><Seal id="usa" word="USA" ring="PACKED IN RENO, NEVADA ✦ PACKED IN RENO ✦ " /><span>Packed to order in Reno, NV</span></li>
-        </ul>
+        <Seals prefix="s" labHref="#tested" />
         {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price on our first run. We charge you today, and if you change your mind any time before your roll ships, you get a full refund.</span></div>}
         <p class="tag">One pouch. One night.</p>
         <p>For people who dance till close, train hard and still show up. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>

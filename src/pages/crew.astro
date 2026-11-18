@@ -4,7 +4,7 @@
 import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
-import Seal from '../components/Seal.astro';
+import Seals from '../components/Seals.astro';
 import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } from '../data/crew.js';
 import { PRICE, PREORDER_TIERS } from '../data/ingredients.js';
 import { SHIP_BY } from '../data/preorder.js';
@@ -55,11 +55,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
         <li><b>$0</b><span>risk. Full refund any time before their roll ships.</span></li>
       </ul>
       <div class="crewtrust">
-        <ul class="badges crewseals" aria-label="Quality">
-          <li><Seal id="c-gmp" word="cGMP" ring="CERTIFIED FACILITY ✦ CERTIFIED FACILITY ✦ " /><span>Made in a <span class="nw">cGMP-certified</span> facility</span></li>
-          <li><a href="/shop#tested"><Seal id="c-lab" word="LAB" ring="THIRD-PARTY TESTED ✦ THIRD-PARTY TESTED ✦ " /><span>Lab report for every capsule</span></a></li>
-          <li><Seal id="c-usa" word="USA" ring="PACKED IN RENO, NEVADA ✦ PACKED IN RENO ✦ " /><span>Packed to order in Reno, NV</span></li>
-        </ul>
+        <Seals prefix="c" class="crewseals" />
         <p class="trustnote">An outside lab tested every capsule we use, and every report is public. Nobody has to take our word for it. <a href="/shop#tested">See the lab reports</a></p>
       </div>
     </div>
@@ -444,8 +440,6 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
   .stats span{font-weight:600;color:var(--first);max-width:22em}
   .stats s{opacity:.75}
   .crewtrust{display:grid;gap:22px;justify-items:center;text-align:center}
-  .crewseals{max-width:460px;width:100%}
-  .crewseals li,.crewseals a{color:var(--white)}
   .trustnote{color:var(--first);max-width:32em}
   .trustnote a{color:var(--white);font-weight:700;text-underline-offset:3px}
 

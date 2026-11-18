@@ -1,5 +1,5 @@
 ---
-import Seal from '../components/Seal.astro';
+import Seals from '../components/Seals.astro';
 import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Promo from '../components/Promo.astro';
@@ -88,11 +88,7 @@ const jsonld = {
       <h2>Nothing extra<br>in the pouch.</h2>
       <p style="font-size:clamp(19px,5vw,23px);line-height:1.28;font-weight:600">Five ingredients, every dose on the label, and nothing that keeps you up.</p>
       <div class="chips"><span>No <span class="nw">5-HTP</span></span><span>No caffeine</span><span>No stimulants</span></div>
-      <ul class="badges home-seals" aria-label="Quality">
-        <li><Seal id="h-gmp" word="cGMP" ring="CERTIFIED FACILITY ✦ CERTIFIED FACILITY ✦ " /><span>Made in a <span class="nw">cGMP-certified</span> facility</span></li>
-        <li><a href="/shop#tested"><Seal id="h-lab" word="LAB" ring="THIRD-PARTY TESTED ✦ THIRD-PARTY TESTED ✦ " /><span>Lab report for every capsule</span></a></li>
-        <li><Seal id="h-usa" word="USA" ring="PACKED IN RENO, NEVADA ✦ PACKED IN RENO ✦ " /><span>Packed to order in Reno, NV</span></li>
-      </ul>
+      <Seals prefix="h" class="home-seals" />
       <a class="btn" href="/shop#ingredients">See what's inside</a>
     </div>
   </section>
