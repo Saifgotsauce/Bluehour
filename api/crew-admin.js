@@ -127,7 +127,7 @@ ${people || '<p class="fine">No ambassadors yet. Approve your first one below.</
 <div class="two"><input name="line1" placeholder="Street address"><input name="zip" placeholder="ZIP code"></div>
 <input name="paypal" placeholder="PayPal email (if different)">
 <button>Approve and make their code</button></form>
-<p class="fine">Their friends get $${CREW_OFF} off with the code. Codes work right away; commission shows here as held until it can be paid.</p>
+<p class="fine">Their friends get $${CREW_OFF} off each roll with the code. Codes work right away; commission shows here as held until it can be paid.</p>
 </section>
 </main></body></html>`;
 }

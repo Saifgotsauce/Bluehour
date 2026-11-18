@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
   // Founding Crew codes work any time, including pre-order. Other codes are paused during pre-order.
   const crew = await findCrew(code, key).catch(() => null);
-  if (crew) return res.status(200).json({ valid: true, crew: true, code: crew.code, label: `$${CREW_OFF} off from ${crew.name || 'the Founding Crew'}` });
+  if (crew) return res.status(200).json({ valid: true, crew: true, code: crew.code, label: `$${CREW_OFF} off each roll from ${crew.name || 'the Founding Crew'}` });
   const promo = PREORDER ? null : await findPromo(code, key).catch(() => null);
   if (!promo) return res.status(200).json({ valid: false });
   return res.status(200).json({ valid: true, code: promo.code, label: promo.label });

@@ -7,7 +7,7 @@ import { PRICE, INGREDIENTS, cleanMix, mixTotal, isSignature, eachFor, savingFor
 import { findPromo, promoValue } from './_promo.js';
 import { readEgg, eggCoupon } from './_eggs.js';
 import { PREORDER, SHIP_BY } from '../src/data/preorder.js';
-import { findCrew } from './_crew.js';
+import { findCrew, crewCouponFor } from './_crew.js';
 import { CREW_OFF } from '../src/data/crew.js';
 
 const MAX_LINES = 8;
@@ -139,7 +139,10 @@ export default async function handler(req, res) {
     const options = [];
     // A Founding Crew code always works. During pre-order nothing else does: the founding price is the deal.
     const crew = body.code ? await findCrew(body.code, key).catch(() => null) : null;
-    if (crew) options.push({ value: Math.min(CREW_OFF * 100, subtotal), disc: { promo: crew.id, crew: crew.code } });
+    if (crew) {
+      const coupon = await crewCouponFor(rolls, key).catch(() => null);
+      if (coupon) options.push({ value: Math.min(CREW_OFF * 100 * rolls, subtotal), disc: { coupon, crew: crew.code } });
+    }
     const promo = !crew && !PREORDER && body.code ? await findPromo(body.code, key).catch(() => null) : null;
     if (promo) options.push({ value: promoValue(promo, subtotal), disc: { promo: promo.id } });
     const egg = PREORDER ? null : readEgg(body.egg);

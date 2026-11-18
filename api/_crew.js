@@ -1,7 +1,8 @@
 // Founding Crew codes and payouts. The underscore keeps Vercel from serving it as a page.
 //
 // How it fits together
-// - Every ambassador is a Stripe promotion code (their code, like MAYA5) on one coupon: bh-crew-5, $5 off once.
+// - Every ambassador is a Stripe promotion code (their code, like MAYA5) on one coupon: bh-crew-5. At checkout the
+//   order gets $5 off each roll (a coupon made for that roll count), and crew_code says who sent them.
 //   The promotion code's metadata holds who they are: crew=1, name, email, ship (their address, used to
 //   catch self-referrals), paypal, and paid (cents paid out so far). Switching the code off in Stripe stops it at once.
 // - Checkout writes crew_code on every order that uses one.
@@ -29,7 +30,23 @@ export const stripe = async (key, path, { method = 'GET', params } = {}) => {
   return { ok: r.ok, status: r.status, d };
 };
 
-// The one coupon every crew code hangs off. Made the first time it's needed.
+// $5 off each roll: one coupon per roll count (bh-crew-5-x3 is $15 off), made the first time it's needed.
+// Stripe coupons take a fixed amount off the order, so the roll count is built into the coupon.
+const madeRolls = new Set();
+export async function crewCouponFor(rolls, key) {
+  const n = Math.max(1, Math.min(9, Math.floor(rolls) || 1));
+  const id = `${CREW_COUPON}-x${n}`;
+  if (madeRolls.has(id)) return id;
+  const made = await stripe(key, 'coupons', {
+    method: 'POST',
+    params: new URLSearchParams({ id, amount_off: String(CREW_OFF * 100 * n), currency: 'usd', duration: 'once', name: `Founding Crew: $${CREW_OFF} off each roll` }),
+  });
+  if (made.ok || (made.d.error && made.d.error.code === 'resource_already_exists')) { madeRolls.add(id); return id; }
+  console.error('Could not make the crew coupon:', made.d.error ? made.d.error.message : made.status);
+  return null;
+}
+
+// The coupon every ambassador's promotion code hangs off (it marks the code as a crew code). Made the first time it's needed.
 let couponReady = false;
 export async function ensureCrewCoupon(key) {
   if (couponReady) return true;

@@ -29,7 +29,7 @@ Product photos and capsule illustrations are for display. Your exact pouch is li
 
 ## Pre-orders
 
-Before launch, Blue Hour is sold as a pre-order at a founding price: 1 roll is $99, 2 rolls are $94 each, and 3 or more are $89 each. We charge the full amount at checkout. Your order ships by the date shown on the site and at checkout (currently December 20, 2026). You can cancel for a full refund any time before your order ships. If we can't ship by that date, we'll email you before it passes with a new date and the option to cancel for a full refund, and if we can't ship at all, we'll refund you in full. Codes and site discounts don't apply to pre-orders, except Founding Crew codes from our ambassadors, which take $5 off the order.
+Before launch, Blue Hour is sold as a pre-order at a founding price: 1 roll is $99, 2 rolls are $94 each, and 3 or more are $89 each. We charge the full amount at checkout. Your order ships by the date shown on the site and at checkout (currently December 20, 2026). You can cancel for a full refund any time before your order ships. If we can't ship by that date, we'll email you before it passes with a new date and the option to cancel for a full refund, and if we can't ship at all, we'll refund you in full. Codes and site discounts don't apply to pre-orders, except Founding Crew codes from our ambassadors, which take $5 off each roll.
 
 ## Crew pricing and discounts
 

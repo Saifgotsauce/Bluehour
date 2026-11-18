@@ -45,7 +45,8 @@ Add real customer quotes, with permission, to `src/data/reviews.ts`. The section
 
 ## Founding Crew (ambassadors)
 - `/crew` is the application page. Applications land in Klaviyo (see `api/crew.js`).
-- Every ambassador is a Stripe promotion code on the coupon `bh-crew-5` ($5 off the order), with `crew=1` in its metadata.
+- Every ambassador is a Stripe promotion code on the coupon `bh-crew-5`, with `crew=1` in its metadata. Their code takes
+  $5 off each roll (checkout applies a `bh-crew-5-xN` coupon for N rolls).
   Crew codes work during pre-order; other codes don't.
 - `/api/crew-admin?key=CREW_ADMIN_KEY` is the back office: approve people (makes their code), pause a code, see
   what each person has earned and why each order did or didn't count, record PayPal payouts and free rolls.
