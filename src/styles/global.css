@@ -793,3 +793,6 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
   .perks li::before{background-color:var(--white);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m6 12.5 4 4L18 8' fill='none' stroke='%231436D8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
   .pricehead s{opacity:.7}
 }
+/* the price gets its own light colour so it pops off the title */
+.pricehead b{color:var(--cobalt)}
+@media (max-width:899px){.pricehead b{color:#BFF3FF}.pricehead s{color:var(--first)}}
