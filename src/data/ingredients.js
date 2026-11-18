@@ -83,6 +83,8 @@ export const INGREDIENTS = [
     id: 'prime', name: 'Prime', ingredient: 'NAC', dose: '600 mg', blurb: 'A form of the amino acid cysteine that your body uses to make the antioxidant glutathione.*', img: 'cap-nac', max: 2, signature: 0,
     facts: [['N-acetyl cysteine', '600 mg', '\u2020']],
     other: 'Hypromellose (natural vegetable capsule), rice (Oryza sativa cera) bran, magnesium stearate, silica.',
+    // Lab report (CoA) from OK Capsule's catalog. Link the whole PDF: Eurofins doesn't allow publishing part of it.
+    coa: { file: '/coa/nac-600mg-eurofins-4388554.pdf', lab: 'Eurofins', date: 'Feb 2024', lot: '112123126', found: '639 mg of NAC per capsule (label: 600 mg)', micro: 'No E. coli, Salmonella or Staph found. Yeast, mold and bacteria counts within limits.' },
   },
   {
     id: 'culture', name: 'Culture', ingredient: '10B probiotic', dose: '10 billion cultures', blurb: '10 billion live cultures from 10 strains, plus inulin, to help support normal digestive health.*', img: 'cap-probiotic', max: 1, signature: 0,

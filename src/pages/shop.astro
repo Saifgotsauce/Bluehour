@@ -164,9 +164,12 @@ const jsonld = {
                     <tbody>{i.facts.map(([n, a, dv]) => <tr><td>{n}</td><td>{a}</td><td>{dv}</td></tr>)}</tbody>
                   </table>
                 </div>
-                {i.facts.some((f) => f[2] === '\u2020') && <p class="other">\u2020 Daily Value not established.</p>}
+                {i.facts.some((f) => f[2] === '\u2020') && <p class="other">&dagger; Daily Value not established.</p>}
                 {i.other && <p class="other">Other ingredients: {i.other}</p>}
                 {i.warn && <p class="other">Warnings: {i.warn}</p>}
+                {i.coa
+                  ? <div class="coa"><b>Lab tested by {i.coa.lab}, {i.coa.date}</b><span>Found {i.coa.found}. {i.coa.micro}</span><a href={i.coa.file} target="_blank" rel="noopener">Open the full lab report (PDF)</a></div>
+                  : <p class="other">Lab report for this capsule coming soon.</p>}
               </details>
             )}
           </article>
