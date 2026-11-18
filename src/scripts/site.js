@@ -470,6 +470,56 @@ $$('[data-car]').forEach((car) => {
   }
 });
 
+/* ---------- product gallery ---------- */
+// Swipe, arrows or thumbnails. The next photo peeks in on phones, and the first time someone lands on the page
+// the photos slide a little to show they move.
+$$('[data-gal]').forEach((gal) => {
+  const tr = $('.track', gal), figs = [...tr.children], thumbs = $$('[data-gto]', gal);
+  const curEl = $('[data-gcur]', gal), prev = $('[data-gprev]', gal), next = $('[data-gnext]', gal);
+  let cur = 0;
+  const at = () => {
+    const x = tr.scrollLeft + 4;
+    let i = 0;
+    figs.forEach((f, k) => { if (f.offsetLeft - figs[0].offsetLeft <= x) i = k; });
+    if (tr.scrollLeft + tr.clientWidth >= tr.scrollWidth - 4) i = figs.length - 1;
+    return i;
+  };
+  const mark = () => {
+    curEl.textContent = cur + 1;
+    thumbs.forEach((b, k) => { if (k === cur) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+    const t = thumbs[cur];
+    if (t) t.parentElement.scrollTo({ left: t.offsetLeft - t.parentElement.clientWidth / 2 + t.clientWidth / 2, behavior: reduce ? 'auto' : 'smooth' });
+    if (prev) prev.disabled = cur === 0;
+    if (next) next.disabled = cur === figs.length - 1;
+  };
+  const go = (i) => {
+    i = Math.max(0, Math.min(figs.length - 1, i));
+    tr.scrollTo({ left: figs[i].offsetLeft - figs[0].offsetLeft, behavior: reduce ? 'auto' : 'smooth' });
+  };
+  tr.addEventListener('scroll', () => { const i = at(); if (i !== cur) { cur = i; mark(); } }, { passive: true });
+  thumbs.forEach((b) => b.addEventListener('click', () => go(+b.dataset.gto)));
+  if (prev) prev.addEventListener('click', () => go(cur - 1));
+  if (next) next.addEventListener('click', () => go(cur + 1));
+  tr.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+  });
+  mark();
+  // One small nudge per visit, only on touch screens and only if they haven't touched it yet.
+  let touched = false;
+  ['pointerdown', 'touchstart', 'wheel'].forEach((ev) => tr.addEventListener(ev, () => { touched = true; }, { passive: true }));
+  const seen = store.get('bh-gal-nudge');
+  if (!reduce && !seen && matchMedia('(hover: none)').matches) {
+    setTimeout(() => {
+      if (touched || tr.scrollLeft > 0) return;
+      store.set('bh-gal-nudge', '1');
+      tr.style.scrollSnapType = 'none';
+      tr.scrollTo({ left: 70, behavior: 'smooth' });
+      setTimeout(() => { tr.scrollTo({ left: 0, behavior: 'smooth' }); setTimeout(() => { tr.style.scrollSnapType = ''; }, 600); }, 650);
+    }, 1400);
+  }
+});
+
 /* ---------- FAQ accordion ---------- */
 // Quick, light open and close: only the answer's height and opacity move.
 const FAQ_EASE = 'cubic-bezier(.2,.8,.2,1)';

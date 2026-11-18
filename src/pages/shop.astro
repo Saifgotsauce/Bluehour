@@ -10,6 +10,18 @@ import { PREORDER, SHIP_BY } from '../data/preorder.js';
 const FIRST = TIERS[0].each;
 const BUY = PREORDER ? 'Pre-order now' : 'Buy now';
 const signatureSummary = mixSummary(SIGNATURE);
+// Gallery: product shots mixed with slides that sell (what's in a pouch, how a night works, what it costs).
+// The receipt slide shows founding prices, so swap it out at launch.
+const SLIDES = [
+  { img: 'angle', w: 1122, h: 1402, alt: 'Blue Hour dispenser with pouches rising from the top' },
+  { img: 'gal-callouts', w: 1080, h: 1350, alt: 'The dispenser with labels: tear one off a night, 6 capsules sealed, 30 nights on one roll' },
+  { img: 'hand', w: 1122, h: 1402, alt: 'A hand holding one Blue Hour pouch, about the size of a palm' },
+  { img: 'gal-steps', w: 1080, h: 1350, alt: 'How it works: pull one pouch, tear it off, take it with a snack and water, lights out' },
+  { img: 'gal-six', w: 1080, h: 1350, alt: 'One pouch of six capsules: Level x2, Bright, Spark, Core, Glow, or build your own' },
+  ...(PREORDER ? [{ img: 'gal-receipt', w: 1080, h: 1350, alt: 'A night out receipt where the Blue Hour pouch, $3.30, is the cheapest line' }] : []),
+  { img: 'exploded', w: 1122, h: 1402, alt: 'Dispenser, tray and roll of pouches floating apart' },
+  { img: 'flat', w: 1122, h: 1402, alt: 'Pouch ribbon curving out of the Blue Hour dispenser' },
+];
 const site = Astro.site!;
 const jsonld = {
   '@context': 'https://schema.org',
@@ -32,18 +44,27 @@ const jsonld = {
     <div class="grain"></div>
     <Top />
     <div class="pgrid">
-      <div class="gal" data-car>
-        <div class="track" tabindex="0" aria-label="Product photos">
-          <figure><img src="/images/angle.webp" alt="Blue Hour dispenser with pouches rising from the top" width="1122" height="1402"></figure>
-          <figure><img src="/images/flat.webp" alt="Pouch ribbon curving out of the Blue Hour dispenser" width="1122" height="1402" loading="lazy"></figure>
-          <figure><img src="/images/exploded.webp" alt="Dispenser, tray and roll of pouches floating apart" width="1122" height="1402" loading="lazy"></figure>
-          <figure><img src="/images/hand.webp" alt="A hand holding one Blue Hour pouch" width="1122" height="1402" loading="lazy"></figure>
-          <figure><img src="/images/pouch.webp" alt="One frosted Blue Hour pouch floating" width="1122" height="1402" loading="lazy"></figure>
+      <div class="gal" data-gal>
+        <div class="gview">
+          <div class="track" tabindex="0" aria-label={`Product photos, ${SLIDES.length} in total. Swipe or use the arrows to see more.`}>
+            {SLIDES.map((sl, i) => <figure><img src={`/images/${sl.img}.webp`} alt={sl.alt} width={sl.w} height={sl.h} loading={i ? 'lazy' : 'eager'} fetchpriority={i ? 'auto' : 'high'}></figure>)}
+          </div>
+          <span class="gcount" aria-hidden="true"><b data-gcur>1</b> / {SLIDES.length}</span>
+          <button class="garr prev" type="button" data-gprev aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="garr next" type="button" data-gnext aria-label="Next photo"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
-        <div class="dots"></div>
+        <div class="thumbs">
+          {SLIDES.map((sl, i) => <button type="button" data-gto={i} aria-label={`Show photo ${i + 1}: ${sl.alt}`} aria-current={i === 0 ? 'true' : undefined}><img src={`/images/${sl.img}-t.webp`} alt="" width="160" height="200" loading="lazy"></button>)}
+        </div>
       </div>
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
+        <ul class="perks">
+          <li><span>One sealed pouch of 6 capsules a night</span></li>
+          <li><span>No caffeine, stimulants or <span class="nw">5-HTP</span></span></li>
+          <li><span>Take our signature six or pick your own</span></li>
+          <li><span>Free US shipping, no subscription</span></li>
+        </ul>
         {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price on our first run. We charge you today, and if you change your mind any time before your roll ships, you get a full refund.</span></div>}
         <p class="tag">One pouch. One night.</p>
         <p>For people who dance till close, train hard and still show up. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
@@ -59,12 +80,18 @@ const jsonld = {
             </label>
           ))}
         </fieldset>
+        {PREORDER && <p class="launchnote">Founding price for pre-orders only. At launch, one roll goes back to ${PRICE}.</p>}
         <p class="rollnote"><b>What's a roll?</b> Our 30 sealed pouches, wound on one strip inside the dispenser. Just the capsules on the label, nothing else.</p>
         <p class="crewnote">Ordering with friends? Every roll in your cart counts toward the price, even with different pouches. 3 or more rolls are ${TIERS[2].each} each.</p>
         <div class="row" id="buyrow">
           <button class="add ghost" data-add>Add to cart</button>
           <button class="add" data-buy>{BUY}</button>
         </div>
+        <ul class="assure">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>{PREORDER ? 'Full refund any time before it ships' : 'Replaced or refunded if anything arrives wrong'}</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7zM7 18a1.5 1.5 0 1 0 0-.01M17 18a1.5 1.5 0 1 0 0-.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Free US shipping{PREORDER ? `, ships by ${SHIP_BY}` : ''}</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>One-time purchase, nothing recurring</li>
+        </ul>
         <p class="paynote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M5.5 10h13a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5v-8A1.5 1.5 0 0 1 5.5 10Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Secure Stripe checkout · Apple Pay · Google Pay</p>
         <div class="spec"><b>Suggested use</b><span>Take 1 pouch a day with food and water, like with supper or a late snack before bed. Do not take more than 1 pouch a day.</span></div>
         <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.{PREORDER && ` Pre-orders ship by ${SHIP_BY}.`}</span></div>
