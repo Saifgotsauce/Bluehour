@@ -6,7 +6,7 @@
 //   and mark their free roll as sent.
 
 import crypto from 'node:crypto';
-import { stripe, ensureCrewCoupon, CREW_COUPON, listCrew, listCrewOrders, ledger, normAddress } from './_crew.js';
+import { stripe, ensureCrewCoupon, CREW_COUPON, listCrew, listCrewOrders, ledger, normAddress, dashPath } from './_crew.js';
 import { cleanCrewCode, CREW_OFF } from '../src/data/crew.js';
 import { cleanEmail } from './subscribe.js';
 import { SHIP_BY_FULL } from '../src/data/preorder.js';
@@ -28,7 +28,7 @@ function readForm(req) {
   return {};
 }
 
-async function act(key, f) {
+async function act(key, f, origin) {
   const code = cleanCrewCode(f.code);
   if (f.action === 'approve') {
     const email = cleanEmail(f.email);
@@ -43,7 +43,7 @@ async function act(key, f) {
     if (!r.ok && r.d.error && /promotion/.test(r.d.error.message || '')) {
       r = await stripe(key, 'promotion_codes', { method: 'POST', params: new URLSearchParams({ coupon: CREW_COUPON, code, ...meta }) });
     }
-    return r.ok ? `${code} is live. Send them their link: /?code=${code}` : 'Stripe said: ' + (r.d.error ? r.d.error.message : r.status);
+    return r.ok ? `${code} is live. Send them their dashboard: ${origin}${dashPath(code)}` : 'Stripe said: ' + (r.d.error ? r.d.error.message : r.status);
   }
   const id = String(f.id || '');
   if (!/^promo_[A-Za-z0-9]+$/.test(id)) return 'Unknown ambassador.';
@@ -67,13 +67,14 @@ async function act(key, f) {
   return 'Unknown action.';
 }
 
-function page(adminKey, rows, note) {
+function page(adminKey, rows, note, origin) {
   const k = `<input type="hidden" name="key" value="${esc(adminKey)}">`;
   const owedTotal = rows.reduce((a, c) => a + Math.max(0, c.owedCents), 0);
   const people = rows.sort((a, b) => b.owedCents - a.owedCents).map((c) => `
     <section class="p">
       <div class="ph"><h2>${esc(c.code)}</h2><span class="${c.active ? 'on' : 'off'}">${c.active ? 'Live' : 'Paused'}</span></div>
       <p class="who">${esc(c.name)} · ${esc(c.email)} · PayPal ${esc(c.paypal)}</p>
+      <div class="dash"><span>${esc(origin + dashPath(c.code))}</span><button type="button" class="ghost" data-copy="${esc(origin + dashPath(c.code))}">Copy dashboard link</button></div>
       <div class="nums">
         <div><b>${usd(Math.max(0, c.owedCents))}</b><small>Owed now</small></div>
         <div><b>${usd(c.heldCents)}</b><small>Held</small></div>
@@ -113,6 +114,7 @@ button.ghost{background:#fff;color:#141A3C}
 details{margin-top:12px}summary{cursor:pointer;font-weight:600}table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
 th,td{text-align:left;padding:6px 4px;border-bottom:1px solid #D9E2F2;vertical-align:top}td small{display:block;color:#4B5272}
 tr.void td{color:#8A90AD}tr.held td:last-child{color:#1436D8}tr.earned td:last-child{color:#0B7A3B;font-weight:600}
+.dash{display:flex;gap:8px;align-items:center;background:#F2F8FF;border-radius:12px;padding:6px 6px 6px 12px;margin:0 0 12px}.dash span{flex:1;min-width:0;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#4B5272}.dash button{padding:6px 10px;font-size:13px;flex:none}
 .approve{display:grid;gap:8px}.approve .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fine{color:#4B5272;font-size:13px}
 </style></head><body>
 <header><h1>Founding Crew</h1><p>${rows.length} ambassador${rows.length === 1 ? '' : 's'} · ${usd(owedTotal)} to pay out</p></header>
@@ -129,7 +131,9 @@ ${people || '<p class="fine">No ambassadors yet. Approve your first one below.</
 <button>Approve and make their code</button></form>
 <p class="fine">Their friends get $${CREW_OFF} off each roll with the code. Codes work right away; commission shows here as held until it can be paid.</p>
 </section>
-</main></body></html>`;
+</main>
+<script>document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){var t=b.getAttribute('data-copy');function d(){var o=b.textContent;b.textContent='Copied';setTimeout(function(){b.textContent=o},1500)}navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t).then(d,function(){prompt('Copy',t)}):prompt('Copy',t)})})</script>
+</body></html>`;
 }
 
 export default async function handler(req, res) {
@@ -141,8 +145,10 @@ export default async function handler(req, res) {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return res.status(503).send('Stripe is not connected.');
 
+  const proto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0];
+  const origin = `${proto}://${req.headers['x-forwarded-host'] || req.headers.host}`;
   if (req.method === 'POST') {
-    const note = await act(key, form).catch((e) => 'Something went wrong: ' + e.message);
+    const note = await act(key, form, origin).catch((e) => 'Something went wrong: ' + e.message);
     res.setHeader('Location', `/api/crew-admin?key=${encodeURIComponent(adminKey)}&note=${encodeURIComponent(note)}`);
     return res.status(303).end();
   }
@@ -150,7 +156,7 @@ export default async function handler(req, res) {
     const [crews, orders] = await Promise.all([listCrew(key), listCrewOrders(key)]);
     const rows = ledger(crews, orders, { shipByFull: SHIP_BY_FULL });
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    return res.status(200).send(page(adminKey, rows, req.query.note ? String(req.query.note).slice(0, 300) : ''));
+    return res.status(200).send(page(adminKey, rows, req.query.note ? String(req.query.note).slice(0, 300) : '', origin));
   } catch (e) {
     console.error('Crew admin failed:', e);
     return res.status(502).send("Couldn't load from Stripe. Try again in a minute.");

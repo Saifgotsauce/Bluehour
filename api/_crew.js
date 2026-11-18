@@ -10,6 +10,7 @@
 //   browser: refunds, disputes, self-referrals and repeat buyers are taken out, and every order must leave
 //   Blue Hour a profit after the commission.
 
+import crypto from 'node:crypto';
 import {
   CREW_OFF, CREW_RATE, BOOST_AT, BOOST_RATE, FREE_ROLL_AT, ROLL_COST_MAX, MIN_KEEP_PER_ROLL,
   STRIPE_PCT, STRIPE_FIXED, HOLD_AFTER_SHIP_DAYS, HOLD_DAYS, REPEAT_DAYS, cleanCrewCode,
@@ -215,4 +216,18 @@ export function ledger(crews, orders, { now = Date.now(), shipByFull = '' } = {}
     c.owedCents = c.earnedCents - c.paidCents; // negative after a refund or dispute on an order already paid out
   }
   return [...byCode.values()];
+}
+
+// The private link to an ambassador's own dashboard (/me?c=CODE&t=TOKEN). The token is signed with CREW_ADMIN_KEY,
+// so nobody can guess someone else's link, and it can't be turned back into the admin key.
+export function dashToken(code) {
+  const secret = process.env.CREW_ADMIN_KEY || '';
+  if (secret.length < 16 || !code) return '';
+  return crypto.createHmac('sha256', secret).update('crew-dash:' + code).digest('base64url').slice(0, 22);
+}
+export const dashPath = (code) => `/me?c=${encodeURIComponent(code)}&t=${dashToken(code)}`;
+export function dashOk(code, token) {
+  const want = dashToken(code);
+  const got = String(token || '');
+  return !!want && got.length === want.length && crypto.timingSafeEqual(Buffer.from(got), Buffer.from(want));
 }

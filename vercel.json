@@ -1,6 +1,7 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [{ "source": "/me", "destination": "/api/crew-me" }],
   "headers": [
     {
       "source": "/images/(.*)",
