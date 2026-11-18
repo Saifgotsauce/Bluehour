@@ -168,7 +168,7 @@ const jsonld = {
                 {i.other && <p class="other">Other ingredients: {i.other}</p>}
                 {i.warn && <p class="other">Warnings: {i.warn}</p>}
                 {i.coa
-                  ? <div class="coa"><b>Lab tested by {i.coa.lab}, {i.coa.date}</b><span>Found {i.coa.found}. {i.coa.micro}</span><a href={i.coa.file} target="_blank" rel="noopener">Open the full lab report (PDF)</a></div>
+                  ? <div class="coa"><b>Lab tested by {i.coa.lab}, {i.coa.date}</b><span>{i.coa.found && `Found ${i.coa.found}. `}{i.coa.metals && `${i.coa.metals} `}{i.coa.micro}</span>{(i.coa.files || [['Open the full lab report (PDF)', i.coa.file]]).map(([label, href]) => <a href={href} target="_blank" rel="noopener">{label}</a>)}</div>
                   : <p class="other">Lab report for this capsule coming soon.</p>}
               </details>
             )}

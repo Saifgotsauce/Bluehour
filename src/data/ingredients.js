@@ -68,6 +68,7 @@ export const INGREDIENTS = [
     ],
     warn: 'If you are pregnant or nursing, consult your physician before taking this product.',
     other: 'Microcrystalline cellulose, vegetable capsule (hypromellose), MCT 70% C8/C10 coconut on acacia (GoMCT).',
+    coa: { lab: 'New Wave Scientific', date: 'Jun 2026', lot: '32726426', metals: 'No arsenic, cadmium, lead or mercury detected.', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold all under 10 per gram.', files: [['Heavy metals report (PDF)', '/coa/methyl-b-complex-newwave-metals-NWS26-131618.pdf'], ['Microbial report (PDF)', '/coa/methyl-b-complex-newwave-micro-NWS26-131618.pdf']] },
   },
   {
     id: 'core', name: 'Core', ingredient: 'Zinc', dose: '25 mg', blurb: 'An essential mineral that helps support normal immune function.*', img: 'cap-guard', max: 1, signature: 1,
