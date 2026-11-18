@@ -47,6 +47,7 @@ export const INGREDIENTS = [
     id: 'level', name: 'Level', ingredient: 'Magnesium', dose: '133 mg', blurb: 'Magnesium glycinate. Helps support normal muscle and nerve function.*', img: 'cap-still', max: 2, signature: 2,
     facts: [['Magnesium (as magnesium glycinate, 20% magnesium)', '133 mg', '32%']],
     other: 'Hypromellose (vegetable capsule), microcrystalline cellulose, magnesium stearate, silica, stearic acid.',
+    coa: { file: '/coa/magnesium-glycinate-eurofins-4201639.pdf', lab: 'Eurofins', date: 'Aug 2023', lot: '061523126', found: '142 mg of magnesium per capsule (label: 133 mg)', micro: 'No E. coli, Salmonella or Staph found. Bacteria, yeast and mold counts low.' },
   },
   {
     id: 'bright', name: 'Bright', ingredient: 'Vitamin C', dose: '1,000 mg', blurb: 'An antioxidant that helps support normal immune function.*', img: 'cap-bright', max: 2, signature: 1,
