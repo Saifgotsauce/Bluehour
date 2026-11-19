@@ -2,7 +2,7 @@
 layout: ../layouts/Legal.astro
 title: Privacy policy
 description: What information Blue Hour collects, why we collect it, who we share it with, and how to ask us to see or delete it.
-updated: November 8, 2026
+updated: November 18, 2026
 ---
 
 This policy explains what information Blue Hour ("we" or "us") collects when you visit bluehournights.com or buy from us, how we use it and who we share it with.
@@ -16,12 +16,14 @@ This policy explains what information Blue Hour ("we" or "us") collects when you
 - **Messages:** anything you send us when you contact us.
 - **Technical data:** like most websites, our hosting provider records basic technical information such as your IP address, browser and the pages you visit, to run and secure the site.
 - **Your cart:** your cart is saved in your own browser so it's still there when you come back. It isn't sent to us until you check out.
+- **Creator links:** if you arrive from a creator's video or link, your browser remembers which one for up to 30 days. A tracking tool from Trybe also sets a cookie, so we can credit and pay the creator if you buy.
 
 ## How we use it
 
 - To take payment, make and ship your order, and send you order and shipping updates
 - To answer your questions and handle problems with an order
 - To send news and restocks, only if you signed up. You can unsubscribe at any time.
+- To credit and pay the creators who send people to our site
 - To prevent fraud and keep the site secure
 - To meet our legal obligations
 
@@ -37,8 +39,9 @@ We share information only with the companies that help us run the store, and onl
 - **Klaviyo** sends our marketing emails to people who join our list.
 - **Vercel** hosts this website.
 - **Google Fonts** delivers the fonts on this site, which means your browser connects to Google.
+- **Trybe** runs our creator program. It records visits that come from creators' videos and links, and when you buy after one, we send it your order number, order total, email address and that creator link so the right creator gets paid. We don't send it the capsules you picked.
 
-If we start using advertising or analytics tools, we'll update this policy first. We don't sell your personal information.
+If we add other advertising or analytics tools, we'll update this policy first. We don't sell your personal information.
 
 ## How long we keep it
 
