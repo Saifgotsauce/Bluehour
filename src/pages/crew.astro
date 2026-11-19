@@ -6,11 +6,13 @@ import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
 import Seals from '../components/Seals.astro';
 import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE, FIRST_BONUS, crewEarnings } from '../data/crew.js';
-import { PRICE, PREORDER_TIERS } from '../data/ingredients.js';
+import { PRICE, PREORDER_TIERS, INGREDIENTS } from '../data/ingredients.js';
 import { SHIP_BY } from '../data/preorder.js';
 const FOUNDING = PREORDER_TIERS[0].each;
 const WITH_CODE = FOUNDING - CREW_OFF;
 const NIGHT = (WITH_CODE / 30).toFixed(2);
+const SIG = INGREDIENTS.filter((i) => i.signature > 0);
+const EXTRAS = INGREDIENTS.filter((i) => !i.signature).map((i) => i.name);
 const EX = 6; // the example crew in the hero and the calculator's starting point
 const EX3 = crewEarnings(EX * 3);
 const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2; // what each example month adds
@@ -57,9 +59,16 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
       </figure>
       <div class="selltext">
         <h2 id="sellh">What your friends get.</h2>
-        <p class="whatbig">Blue Hour is a roll of 30 sealed pouches for people who go out late and still have to show up the next day. Pull one off when you get home, take the six capsules, done.</p>
+        <p class="whatbig">A specially curated pack for people who still have to show up tomorrow. 30 sealed pouches on one roll: pull one off when you get home, take the six capsules, done.</p>
+        <div class="sixset">
+          <p class="siglab">The signature six</p>
+          <ul class="sigchips">
+            {SIG.map((i) => <li><b>{i.name}{i.signature > 1 ? ` ×${i.signature}` : ''}</b><span>{i.ingredient}</span></li>)}
+          </ul>
+          <p class="sigmore">Or they build their own six, adding {EXTRAS.slice(0, -1).join(', ')} or {EXTRAS[EXTRAS.length - 1]}.</p>
+        </div>
         <ul class="whatlist">
-          <li>Magnesium, vitamin C, B vitamins, zinc and glycine, or they pick their own six.</li>
+          
           <li>No caffeine, no 5-HTP, no stimulants.</li>
           <li>Every capsule tested by an outside lab, and every report is public.</li>
           <li>One roll is ${WITH_CODE} with your code, for all 30 nights. That's about ${NIGHT} a night, with a full refund any time before it ships.</li>
@@ -446,13 +455,20 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
   @media (max-width:899px){
     .sellgrid{gap:20px}
     .sellgrid .selltext{display:contents}
-    .sellgrid .selltext h2{order:0}.sellgrid .whatbig{order:1}.sellgrid .rollfig{order:2;margin:10px 0}.sellgrid .whatlist{order:3}.sellgrid :global(.crewseals){order:4;justify-self:center}
+    .sellgrid .selltext h2{order:0}.sellgrid .whatbig{order:1}.sellgrid .rollfig{order:2;margin:10px 0}.sellgrid .sixset{order:3}.sellgrid .whatlist{order:4}.sellgrid :global(.crewseals){order:5;justify-self:center}
   }
   .whatimg{width:82%;max-width:440px;height:auto;border-radius:28px;transform:rotate(-2deg);box-shadow:0 24px 50px rgba(11,31,158,.18)}
   .rollfig figcaption{font:700 15px/1.3 var(--display);color:var(--deep);text-align:center}
   .selltext{display:grid;gap:18px;justify-items:start}
   .selltext h2{color:var(--deep)}
   .whatbig{font:600 clamp(19px,5vw,23px)/1.32 var(--display);letter-spacing:-.015em;color:var(--ink);max-width:30em;margin:0}
+  .sixset{display:grid;gap:10px;width:100%}
+  .siglab{font:800 15px/1.2 var(--display);color:var(--deep);margin:0}
+  .sigchips{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+  .sigchips li{background:var(--white);border:2px solid var(--ink);border-radius:16px;padding:10px 12px;display:grid;gap:2px;align-content:start}
+  .sigchips b{font:800 18px/1.1 var(--display);letter-spacing:-.02em;color:var(--cobalt)}
+  .sigchips span{font-size:13px;color:var(--soft);line-height:1.25}
+  .sigmore{margin:0;font-size:15px;color:var(--soft)}
   .whatlist{margin:0;padding:0;list-style:none;display:grid;gap:12px;max-width:34em;color:var(--soft)}
   .whatlist li{padding-left:22px;position:relative}
   .sellband :global(.crewseals li),.sellband :global(.crewseals a){color:var(--ink)}
