@@ -27,7 +27,7 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
       <div class="herotext">
         <p class="kick">Blue Hour Founding Crew, {CREW_SPOTS} spots</p>
         <h1>Get paid every time they reorder.</h1>
-        <p class="dek">Your own code. ${CREW_RATE} for every roll your friends buy, ${CREW_RATE + FIRST_BONUS} on your first, and again every time they come back. Nothing to buy.</p>
+        <p class="dek">Blue Hour is a 30-night roll of supplement pouches for nights out. Share your code and get ${CREW_RATE} for every roll your friends buy, ${CREW_RATE + FIRST_BONUS} on your first, and again every time they reorder. Nothing to buy.</p>
         <div class="ctas">
           <a class="btn solid" href="#apply">Apply in 2 minutes</a>
           <a class="btn hb" href="#earn">See what you'd make</a>
@@ -48,6 +48,26 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
       </figure>
     </div>
   </header>
+
+  <section class="sec sellband" aria-labelledby="sellh">
+    <div class="w sellgrid">
+      <figure class="rollfig">
+        <img class="whatimg" src="/images/angle.webp" alt="A Blue Hour roll: a box with a strip of sealed pouches coming out of the top, each holding six capsules" width="1122" height="1402" loading="lazy" decoding="async" />
+        <figcaption>One roll: 30 sealed pouches, one for each night.</figcaption>
+      </figure>
+      <div class="selltext">
+        <h2 id="sellh">What your friends get.</h2>
+        <p class="whatbig">Blue Hour is a roll of 30 sealed pouches for people who go out late and still have to show up the next day. Pull one off when you get home, take the six capsules, done.</p>
+        <ul class="whatlist">
+          <li>Magnesium, vitamin C, B vitamins, zinc and glycine, or they pick their own six.</li>
+          <li>No caffeine, no 5-HTP, no stimulants.</li>
+          <li>Every capsule tested by an outside lab, and every report is public.</li>
+          <li>One roll is ${WITH_CODE} with your code, for all 30 nights. That's about ${NIGHT} a night, with a full refund any time before it ships.</li>
+        </ul>
+        <Seals prefix="c" class="crewseals" labHref="/shop#tested" />
+      </div>
+    </div>
+  </section>
 
   <section class="w sec earn" id="earn" aria-labelledby="earnh">
     <div class="earngrid">
@@ -70,23 +90,6 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
         <li><b>Your own live dashboard</b><span>Every sale shows up the moment it's paid, with what you've earned and when it pays out.</span></li>
         <li><b>${CREW_OFF} off for your friends</b><span>On every roll, so your code is an easy thing to pass on.</span></li>
       </ul>
-    </div>
-  </section>
-
-  <section class="sec sellband" aria-labelledby="sellh">
-    <div class="w sellgrid">
-      <img class="whatimg" src="/images/hand.webp" alt="A Blue Hour pouch held in one hand, torn open to show six capsules" width="1122" height="1402" loading="lazy" decoding="async" />
-      <div class="selltext">
-        <h2 id="sellh">What your friends get.</h2>
-        <p class="whatbig">One sealed pouch when they get home, six capsules, done. For people who go out late and still have to show up the next day.</p>
-        <ul class="whatlist">
-          <li>Magnesium, vitamin C, B vitamins, zinc and glycine, or they pick their own six.</li>
-          <li>No caffeine, no 5-HTP, no stimulants.</li>
-          <li>Every capsule tested by an outside lab, and every report is public.</li>
-          <li>${WITH_CODE} for 30 nights with your code, about ${NIGHT} a night. Full refund any time before it ships.</li>
-        </ul>
-        <Seals prefix="c" class="crewseals" labHref="/shop#tested" />
-      </div>
     </div>
   </section>
 
@@ -439,7 +442,9 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
   /* what your friends get */
   .sellband{background:var(--mist)}
   .sellgrid{display:grid;gap:clamp(28px,6vw,64px);align-items:center}
-  .whatimg{width:78%;max-width:420px;height:auto;border-radius:28px;transform:rotate(-2deg);box-shadow:0 24px 50px rgba(11,31,158,.18)}
+  .rollfig{margin:0;display:grid;gap:14px;justify-items:center;order:1}
+  .whatimg{width:82%;max-width:440px;height:auto;border-radius:28px;transform:rotate(-2deg);box-shadow:0 24px 50px rgba(11,31,158,.18)}
+  .rollfig figcaption{font:700 15px/1.3 var(--display);color:var(--deep);text-align:center}
   .selltext{display:grid;gap:18px;justify-items:start}
   .selltext h2{color:var(--deep)}
   .whatbig{font:600 clamp(19px,5vw,23px)/1.32 var(--display);letter-spacing:-.015em;color:var(--ink);max-width:30em;margin:0}
@@ -542,6 +547,7 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
     .herogrid{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:56px}
     .earngrid{grid-template-columns:1fr 1fr}
     .sellgrid{grid-template-columns:minmax(0,.8fr) minmax(0,1fr)}
+    .rollfig{order:0}
     .longlist{grid-template-columns:1fr 1fr;column-gap:48px}
     .steps{grid-template-columns:repeat(3,1fr);gap:28px}
     .steps li{grid-template-columns:1fr;border-top:2px solid var(--ink)}
