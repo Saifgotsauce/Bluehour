@@ -5,92 +5,87 @@ import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
 import Seals from '../components/Seals.astro';
-import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE } from '../data/crew.js';
+import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE, FIRST_BONUS, crewEarnings } from '../data/crew.js';
 import { PRICE, PREORDER_TIERS } from '../data/ingredients.js';
 import { SHIP_BY } from '../data/preorder.js';
 const FOUNDING = PREORDER_TIERS[0].each;
 const WITH_CODE = FOUNDING - CREW_OFF;
 const NIGHT = (WITH_CODE / 30).toFixed(2);
+const EX = 6; // the example crew in the hero and the calculator's starting point
+const EX3 = crewEarnings(EX * 3);
+const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2; // what each example month adds
 ---
 <Base
   title="Founding Crew | Blue Hour"
-  description={`${CREW_SPOTS} spots. Bring your people to Blue Hour, give them $${CREW_OFF} off every roll, and earn $${CREW_RATE} on every roll they buy.`}
+  description={`${CREW_SPOTS} spots. Your own code: $${CREW_RATE} for every roll your friends buy, $${CREW_RATE + FIRST_BONUS} on your first, and again every time they reorder. Nothing to buy.`}
 >
   <header class="jhero crewhero">
     <div class="mesh"><i></i><i></i><i></i></div>
     <div class="grain"></div>
     <Top />
-    <div class="in">
-      <h1>Founding Crew.</h1>
-      <p class="dek">{CREW_SPOTS} spots for the friend who's always there at the end of the night. Bring your people to Blue Hour and get paid on every roll they buy.</p>
-      <div class="ctas">
-        <a class="btn solid" href="#apply">Apply for a spot</a>
-        <a class="btn hb" href="#earn">See what you earn</a>
+    <div class="in herogrid">
+      <div class="herotext">
+        <p class="kick">Blue Hour Founding Crew, {CREW_SPOTS} spots</p>
+        <h1>Get paid every time they reorder.</h1>
+        <p class="dek">Your own code. ${CREW_RATE} for every roll your friends buy, ${CREW_RATE + FIRST_BONUS} on your first, and again every time they come back. Nothing to buy.</p>
+        <div class="ctas">
+          <a class="btn solid" href="#apply">Apply in 2 minutes</a>
+          <a class="btn hb" href="#earn">See what you'd make</a>
+        </div>
+        <p class="heronote">21+, US only. We read every application.</p>
       </div>
+
+      <figure class="dash" aria-label={`Example: a member with ${EX} friends who reorder every month`}>
+        <div class="dtop"><span>Your crew dashboard</span><em>Example</em></div>
+        <p class="dhi">Earned in 3 months</p>
+        <p class="dbig"><span>$</span><b id="dcount" data-to={EX3}>{EX3}</b></p>
+        <ul class="drows">
+          <li><div><b>Month 3</b><small>{EX} friends reordered{M3 > EX * CREW_RATE ? `, some at $${BOOST_RATE}` : ''}</small></div><i>+${M3}</i></li>
+          <li><div><b>Month 2</b><small>{EX} friends reordered</small></div><i>+${M2}</i></li>
+          <li><div><b>Month 1</b><small>{EX} rolls, with your ${FIRST_BONUS} first-sale bonus</small></div><i>+${M1}</i></li>
+        </ul>
+        <p class="dgoal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12.5 4 4L18 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Free roll unlocked</p>
+      </figure>
     </div>
   </header>
 
-  <section class="w sec whatis" aria-labelledby="whath">
-    <div class="whatgrid">
-      <img class="whatimg" src="/images/hand.webp" alt="A Blue Hour pouch held in one hand, torn open to show six capsules" width="1122" height="1402" loading="lazy" />
-      <div class="whattext">
-        <h2 id="whath">What you'd be bringing them.</h2>
-        <p class="whatbig">Blue Hour is a roll of 30 pouches for people who go out late and still have to show up the next day. One pouch when you get home, six capsules, done.</p>
-        <ul class="whatlist">
-          <li>Six capsules a pouch, picked from eight: magnesium, vitamin C, B vitamins, zinc, glycine, NAC, a probiotic and ginger.</li>
-          <li>No caffeine, no 5-HTP, no stimulants. Nothing that keeps you up.</li>
-          <li>Pick your own six or take ours. Most brands sell one fixed formula.</li>
-        </ul>
-        <a class="btn" href="/shop">See the roll</a>
+  <section class="w sec earn" id="earn" aria-labelledby="earnh">
+    <div class="earngrid">
+      <div class="calc" aria-labelledby="earnh">
+        <h2 id="earnh">What would you make?</h2>
+        <label class="calclabel" for="friends">Friends who grab a roll each month: <output id="fout" for="friends">{EX}</output></label>
+        <input id="friends" type="range" min="1" max="30" step="1" value={EX} />
+        <div class="paidrow">
+          <div><p class="paid"><span class="cur">$</span><span id="pmonth">{EX * CREW_RATE}</span></p><p class="paidlab">a month</p></div>
+          <div><p class="paid small"><span class="cur">$</span><span id="pyear">{crewEarnings(EX * 12)}</span></p><p class="paidlab">in your first year</p></div>
+        </div>
+        <p class="fine">If they reorder every month. Each friend counts once a month on your code. Includes your ${FIRST_BONUS} first-sale bonus and ${BOOST_RATE} a roll past {BOOST_AT}.</p>
       </div>
+
+      <ul class="deal" aria-label="What you get">
+        <li><b>${CREW_RATE} a roll, every reorder</b><span>Not just the first order. Every time a friend comes back, you get paid again.</span></li>
+        <li><b>${CREW_RATE + FIRST_BONUS} on your first roll</b><span>A ${FIRST_BONUS} bonus on your first sale, so your first payout lands faster.</span></li>
+        <li><b>A free roll after {FREE_ROLL_AT}</b><span>Your own roll, free, once {FREE_ROLL_AT} rolls have sold with your code.</span></li>
+        <li><b>${BOOST_RATE} a roll after {BOOST_AT}</b><span>Every roll past your {BOOST_AT}th pays more.</span></li>
+        <li><b>Your own live dashboard</b><span>Every sale shows up the moment it's paid, with what you've earned and when it pays out.</span></li>
+        <li><b>${CREW_OFF} off for your friends</b><span>On every roll, so your code is an easy thing to pass on.</span></li>
+      </ul>
     </div>
   </section>
 
   <section class="sec sellband" aria-labelledby="sellh">
-    <div class="w">
-      <h2 id="sellh">Easy for your friends to say yes to.</h2>
-      <ul class="stats">
-        <li><b>${WITH_CODE}</b><span>a roll with your code. Founding price ${FOUNDING}, and <s>${PRICE}</s> after launch.</span></li>
-        <li><b>${NIGHT}</b><span>a night. Less than a bottle of water at the club.</span></li>
-        <li><b>$0</b><span>risk. Full refund any time before their roll ships.</span></li>
-      </ul>
-      <div class="crewtrust">
-        <Seals prefix="c" class="crewseals" />
-        <p class="trustnote">An outside lab tested every capsule we use, and every report is public. Nobody has to take our word for it. <a href="/shop#tested">See the lab reports</a></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec who" aria-labelledby="whoh">
-    <div class="w">
-      <h2 id="whoh">Who we're looking for.</h2>
-      <ul class="wholist">
-        <li><b>You go out. A lot.</b><span>Weekends, shows, festivals. You're there more often than not.</span></li>
-        <li><b>People come with you.</b><span>You plan the trip, run the group chat, or know everyone at the venue.</span></li>
-        <li><b>Friends count as much as followers.</b><span>A big following helps. A group chat of 20 people who actually go out helps just as much.</span></li>
-        <li><b>Your people are in the US.</b><span>That's where we ship for now. You need to be 21 or older to join.</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="w sec earn" id="earn" aria-labelledby="earnh">
-    <h2 id="earnh">What you get.</h2>
-    <div class="earngrid">
-      <ul class="deal">
-        <li><b>Your own code</b><span>Your friends get ${CREW_OFF} off every roll when they use it.</span></li>
-        <li><b>${CREW_RATE} a roll</b><span>For every roll your friends buy with your code. No cap.</span></li>
-        <li><b>A free roll</b><span>Yours to keep once {FREE_ROLL_AT} rolls have sold with your code.</span></li>
-        <li><b>${BOOST_RATE} a roll after {BOOST_AT}</b><span>Every roll past your {BOOST_AT}th pays more.</span></li>
-        <li><b>Your name on our site</b><span>On the Founding Crew wall when we launch, and first in line for everything after.</span></li>
-      </ul>
-
-      <div class="calc" aria-labelledby="calch">
-        <h3 id="calch">Do the maths</h3>
-        <label class="calclabel" for="rolls">Rolls sold with your code: <output id="rollsout" for="rolls">8</output></label>
-        <input id="rolls" type="range" min="0" max="40" step="1" value="8" />
-        <p class="paid"><span class="cur">$</span><span id="paid">80</span></p>
-        <p class="paidnote" id="paidnote" aria-live="polite">plus a free roll</p>
-        <p class="fine">Paid by PayPal once a month, for rolls that have shipped. A crew of 3 friends each grabbing a roll is ${3 * CREW_RATE}.</p>
+    <div class="w sellgrid">
+      <img class="whatimg" src="/images/hand.webp" alt="A Blue Hour pouch held in one hand, torn open to show six capsules" width="1122" height="1402" loading="lazy" decoding="async" />
+      <div class="selltext">
+        <h2 id="sellh">What your friends get.</h2>
+        <p class="whatbig">One sealed pouch when they get home, six capsules, done. For people who go out late and still have to show up the next day.</p>
+        <ul class="whatlist">
+          <li>Magnesium, vitamin C, B vitamins, zinc and glycine, or they pick their own six.</li>
+          <li>No caffeine, no 5-HTP, no stimulants.</li>
+          <li>Every capsule tested by an outside lab, and every report is public.</li>
+          <li>${WITH_CODE} for 30 nights with your code, about ${NIGHT} a night. Full refund any time before it ships.</li>
+        </ul>
+        <Seals prefix="c" class="crewseals" labHref="/shop#tested" />
       </div>
     </div>
   </section>
@@ -98,24 +93,22 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
   <section class="sec longgame" aria-labelledby="longh">
     <div class="w">
       <h2 id="longh">If Blue Hour gets <span class="bigword">BIG</span>, you come with it.</h2>
-      <p class="longlede">The {CREW_SPOTS} people who get us off the ground don't get forgotten when we grow. These stay yours for as long as the program runs.</p>
+      <p class="longlede">The {CREW_SPOTS} people who get us off the ground don't get forgotten when we grow.</p>
       <ul class="longlist">
-        <li><b>Your rate stays founding</b><span>If we ever pay new members less, the Founding Crew keeps ${CREW_RATE} a roll, and ${BOOST_RATE} after {BOOST_AT}.</span></li>
-        <li><b>First to get anything new</b><span>New capsules, new pouches, new drops. You get them before anyone else.</span></li>
-        <li><b>First call when we hire</b><span>Ambassador leads, events, paid roles. The Founding Crew hears about them before we post them anywhere.</span></li>
+        <li><b>Your rate stays founding</b><span>If new members ever get paid less, you keep ${CREW_RATE} a roll, and ${BOOST_RATE} after {BOOST_AT}.</span></li>
+        <li><b>First to get anything new</b><span>New capsules, smaller rolls, new drops. You get them before anyone else.</span></li>
+        <li><b>First call when we hire</b><span>Ambassador leads, events and paid roles go to the Founding Crew first.</span></li>
         <li><b>On the list for our nights</b><span>When Blue Hour throws its own events, you and a friend are on the guest list.</span></li>
       </ul>
-      <p class="longwhy">Every pre-order now gets us closer to making our own pouches, and to smaller rolls like a weekend or festival pack. Cheaper to make means more for the crew.</p>
     </div>
   </section>
 
   <section class="w how" aria-labelledby="howh">
     <h2 id="howh">How it works.</h2>
     <ol class="steps">
-      <li><b>Apply</b><span>Takes about a minute, right below.</span></li>
-      <li><b>Get your code</b><span>We look at your page and email you either way. If you're in, your code and link are in that email.</span></li>
-      <li><b>Share it</b><span>Your friends get ${CREW_OFF} off every roll. Send it in the group chat, put it in your bio, say it out loud.</span></li>
-      <li><b>Get paid</b><span>By PayPal once a month, for rolls that have shipped. Pre-orders ship by {SHIP_BY}.</span></li>
+      <li><b>Apply</b><span>About 2 minutes, right below. You go out a lot, people come with you, you're 21+ and in the US.</span></li>
+      <li><b>Get your code</b><span>We check your page and email you either way. If you're in, you get your code and your dashboard link.</span></li>
+      <li><b>Share it, get paid</b><span>Group chat, bio, out loud. We pay by PayPal every month. Pre-orders ship by {SHIP_BY}.</span></li>
     </ol>
   </section>
 
@@ -140,8 +133,8 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
       </div>
 
       <div class="formcol">
-        <h2 id="applyh">Get on the list.</h2>
-        <p class="lede">We read every application and check your page. If it's a fit, you'll get your code and link by email.</p>
+        <h2 id="applyh">Claim your spot.</h2>
+        <p class="lede">Takes about 2 minutes. We read every application and check your page. If you're in, your code and dashboard link come by email.</p>
 
         <form id="crewform" novalidate>
           <div class="f">
@@ -251,32 +244,43 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
       <li>Your code takes ${CREW_OFF} off every roll in the order. It doesn't combine with other codes.</li>
       <li>Don't post your code on coupon or deal sites, or run ads on the Blue Hour name. We pause codes that do.</li>
       <li>If an order is refunded or disputed after you've been paid for it, it comes off your next payout.</li>
-      <li>The free roll is one per person.</li>
+      <li>The free roll is one per person. The ${FIRST_BONUS} first-sale bonus is paid once, on your first order that counts.</li>
+      <li>Reorders count: a friend who buys again 30 or more days after their last counted order earns you commission again.</li>
       <li>When you post about Blue Hour, say it's a paid partnership or add #ad, and don't say it treats, cures or prevents anything, including hangovers.</li>
       <li>You need to be 21 or older to join.</li>
       <li>We can change or end the program with 30 days' notice by email. Anything you've already earned still gets paid. While the program runs, Founding Crew members keep the founding commission rates even if new members get less.</li>
     </ul>
   </section>
 
-  <script define:vars={{ CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE }}>
+  <script define:vars={{ CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE, FIRST_BONUS }}>
     (() => {
       const $ = (id) => document.getElementById(id);
 
-      // ---- earnings calculator ----
-      const r = $('rolls'), out = $('rollsout'), paid = $('paid'), note = $('paidnote');
-      const earn = (n) => Math.min(n, BOOST_AT) * CREW_RATE + Math.max(0, n - BOOST_AT) * BOOST_RATE;
+      // ---- earnings calculator: friends who order each month ----
+      const fr = $('friends'), fout = $('fout'), pm = $('pmonth'), py = $('pyear');
+      const earn = (n) => (n ? FIRST_BONUS : 0) + Math.min(n, BOOST_AT) * CREW_RATE + Math.max(0, n - BOOST_AT) * BOOST_RATE;
       const calc = () => {
-        const n = +r.value;
-        out.textContent = n;
-        paid.textContent = earn(n);
-        r.style.setProperty('--p', (n / +r.max) * 100 + '%');
-        const bits = [];
-        if (n >= FREE_ROLL_AT) bits.push('plus a free roll');
-        else bits.push(`${FREE_ROLL_AT - n} more for a free roll`);
-        if (n > BOOST_AT) bits.push(`$${BOOST_RATE} a roll past ${BOOST_AT}`);
-        note.textContent = bits.join(', ');
+        const n = +fr.value;
+        fout.textContent = n;
+        pm.textContent = (n * CREW_RATE).toLocaleString('en-US');
+        py.textContent = earn(n * 12).toLocaleString('en-US');
+        fr.style.setProperty('--p', ((n - fr.min) / (fr.max - fr.min)) * 100 + '%');
       };
-      r.addEventListener('input', calc); calc();
+      fr.addEventListener('input', calc); calc();
+
+      // ---- the example dashboard counts up once, when the page opens ----
+      const dc = $('dcount');
+      if (dc && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const to = +dc.dataset.to, t0 = performance.now(), dur = 900;
+        dc.textContent = '0';
+        const tick = (t) => {
+          const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+          dc.textContent = Math.round(to * e);
+          if (k < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        document.querySelector('.dash').classList.add('go');
+      }
 
       // ---- the band fills in as you type ----
       const f = $('crewform'), name = $('cname'), ig = $('cig'), code = $('ccode');
@@ -383,29 +387,66 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
 </Base>
 
 <style>
-  .crewhero{padding-bottom:calc(var(--rise) + 60px)}
-  .crewhero h1{font-size:clamp(58px,16vw,128px);line-height:.92;letter-spacing:-.05em;font-style:italic}
+  .crewhero{padding-bottom:calc(var(--rise) + 40px)}
+  .herogrid{display:grid;gap:34px;align-items:center}
+  .kick{font:700 14px/1.3 var(--display);color:var(--first);margin:0 0 10px}
+  .crewhero h1{font-size:clamp(46px,12.6vw,104px);line-height:.95;letter-spacing:-.05em;font-style:italic;max-width:9.5em}
+  .crewhero .dek{max-width:30em}
   .crewhero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
   .crewhero .btn.hb{background:transparent;border-color:var(--white);color:var(--white)}
+  .crewhero h1{margin-bottom:18px}
+  .heronote{font:600 13px/1.3 var(--display);color:var(--first);margin:14px 0 0}
 
-  /* what you get */
-  .earn h2{margin-bottom:clamp(28px,6vw,52px)}
-  .earngrid{display:grid;gap:clamp(36px,7vw,72px);align-items:start}
+  /* the example dashboard */
+  .dash{margin:0;max-width:400px;width:100%;justify-self:center;background:var(--white);color:var(--ink);border-radius:26px;padding:20px 20px 16px;box-shadow:0 30px 60px rgba(3,10,70,.38);transform:rotate(1.6deg)}
+  .dtop{display:flex;justify-content:space-between;align-items:center;font:700 13px/1 var(--display);color:var(--soft)}
+  .dtop em{font-style:normal;background:var(--first);color:var(--deep);border-radius:99px;padding:5px 10px;font-size:12px}
+  .dhi{margin:16px 0 0;font:600 15px/1.2 var(--display);color:var(--soft)}
+  .dbig{margin:2px 0 8px;font:900 clamp(64px,19vw,88px)/.9 var(--display);font-style:italic;letter-spacing:-.06em;color:var(--cobalt)}
+  .dbig span{font-size:.45em;vertical-align:.7em;font-style:normal;margin-right:.03em}
+  .drows{list-style:none;margin:0;padding:0}
+  .drows li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+  .drows b{display:block;font:700 15px/1.2 var(--display)}
+  .drows small{display:block;font-size:13px;color:var(--soft);line-height:1.3}
+  .drows i{font:800 18px/1 var(--display);font-style:normal;color:#0B7A3B;white-space:nowrap}
+  .dgoal{display:flex;align-items:center;gap:8px;margin:6px 0 0;padding:10px 12px;border-radius:14px;background:var(--mist);font:700 14px/1 var(--display);color:var(--deep)}
+  .dgoal svg{width:20px;height:20px;padding:3px;border-radius:50%;background:var(--cobalt);color:var(--white)}
+  .dash.go .drows li{animation:rowin .5s var(--ease-out) both}
+  .dash.go .drows li:nth-child(2){animation-delay:.12s}.dash.go .drows li:nth-child(3){animation-delay:.24s}
+  .dash.go .dgoal{animation:rowin .5s var(--ease-out) .5s both}
+  @keyframes rowin{from{opacity:0;transform:translateY(10px)}}
+
+  /* what you'd make */
+  .earngrid{display:grid;gap:clamp(30px,6vw,64px);align-items:start}
   .deal{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
-  .deal li{display:grid;gap:4px;padding:18px 0;border-bottom:1px solid var(--line)}
-  .deal b{font:800 clamp(24px,6.4vw,34px)/1.1 var(--display);letter-spacing:-.03em;color:var(--cobalt)}
+  .deal li{display:grid;gap:4px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .deal b{font:800 clamp(22px,5.8vw,30px)/1.1 var(--display);letter-spacing:-.03em;color:var(--cobalt)}
   .deal span{color:var(--soft);max-width:34em}
   .calc{position:relative;overflow:hidden;isolation:isolate;border-radius:28px;padding:clamp(24px,5vw,40px);color:var(--white);background:linear-gradient(180deg,var(--deep),var(--cobalt) 55%,var(--bright))}
-  .calc h3{margin-bottom:18px}
-  .calclabel{display:block;font-weight:600;margin-bottom:12px}
-  .calclabel output{font-weight:800}
+  .calc h2{color:var(--white);margin-bottom:18px;font-size:clamp(30px,8vw,48px)}
+  .calclabel{display:block;font-weight:600;margin-bottom:14px}
+  .calclabel output{font-weight:800;font-size:1.25em}
   .calc input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:99px;outline-offset:6px;cursor:pointer;background:linear-gradient(90deg,var(--white) var(--p,20%),rgba(255,255,255,.22) var(--p,20%))}
   .calc input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;border-radius:50%;background:var(--white);border:3px solid var(--deep);box-shadow:0 6px 14px rgba(3,10,60,.4)}
   .calc input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--white);border:3px solid var(--deep)}
-  .paid{display:flex;align-items:flex-start;font:900 clamp(84px,24vw,148px)/.9 var(--display);letter-spacing:-.06em;margin-top:26px;font-style:italic}
+  .paidrow{display:grid;grid-template-columns:auto auto;justify-content:start;column-gap:clamp(22px,6vw,48px);align-items:end;margin:26px 0 16px}
+  .paid{display:flex;align-items:flex-start;font:900 clamp(72px,21vw,132px)/.9 var(--display);letter-spacing:-.06em;font-style:italic;margin:0}
+  .paid.small{font-size:clamp(40px,11vw,68px);color:var(--first)}
   .paid .cur{font-size:.42em;margin:.12em .06em 0 0;font-style:normal}
-  .paidnote{font:700 clamp(18px,4.8vw,22px)/1.3 var(--display);color:var(--first);min-height:1.3em;margin:6px 0 18px}
+  .paidlab{font:700 15px/1.2 var(--display);color:var(--first);margin:6px 0 0}
   .calc .fine{color:#C9D6FF}
+
+  /* what your friends get */
+  .sellband{background:var(--mist)}
+  .sellgrid{display:grid;gap:clamp(28px,6vw,64px);align-items:center}
+  .whatimg{width:78%;max-width:420px;height:auto;border-radius:28px;transform:rotate(-2deg);box-shadow:0 24px 50px rgba(11,31,158,.18)}
+  .selltext{display:grid;gap:18px;justify-items:start}
+  .selltext h2{color:var(--deep)}
+  .whatbig{font:600 clamp(19px,5vw,23px)/1.32 var(--display);letter-spacing:-.015em;color:var(--ink);max-width:30em;margin:0}
+  .whatlist{margin:0;padding:0;list-style:none;display:grid;gap:12px;max-width:34em;color:var(--soft)}
+  .whatlist li{padding-left:22px;position:relative}
+  .sellband :global(.crewseals li),.sellband :global(.crewseals a){color:var(--ink)}
+  .whatlist li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--cobalt)}
 
   /* apply */
   .apply{background:var(--mist);padding-block:clamp(56px,11vw,110px)}
@@ -466,38 +507,6 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
   .formmsg.bad{color:#C01633}
   .done{display:grid;gap:16px;justify-items:start;max-width:520px;outline:0}
 
-  /* what it is */
-  .whatgrid{display:grid;gap:clamp(28px,6vw,64px);align-items:center}
-  .whatimg{width:82%;max-width:440px;height:auto;border-radius:28px;transform:rotate(-2deg);box-shadow:0 24px 50px rgba(11,31,158,.18)}
-  .whattext{display:grid;gap:20px;justify-items:start}
-  .whattext h2{color:var(--deep)}
-  .whatbig{font:600 clamp(19px,5vw,23px)/1.32 var(--display);letter-spacing:-.015em;color:var(--ink);max-width:30em}
-  .whatlist{margin:0;padding:0;list-style:none;display:grid;gap:12px;max-width:34em;color:var(--soft)}
-  .whatlist li{padding-left:22px;position:relative}
-  .whatlist li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--cobalt)}
-
-  /* why it sells */
-  .sellband{background:linear-gradient(180deg,var(--deep),var(--cobalt));color:var(--white)}
-  .sellband .w{display:grid;gap:clamp(30px,6vw,52px)}
-  .stats{list-style:none;margin:0;padding:0;display:grid;gap:26px}
-  .stats li{display:grid;gap:6px;padding-top:18px;border-top:1.5px solid rgba(255,255,255,.35)}
-  .stats b{font:900 clamp(64px,18vw,104px)/.9 var(--display);letter-spacing:-.05em;font-style:italic}
-  .stats span{font-weight:600;color:var(--first);max-width:22em}
-  .stats s{opacity:.75}
-  .crewtrust{display:grid;gap:22px;justify-items:center;text-align:center}
-  .trustnote{color:var(--first);max-width:32em}
-  .trustnote a{color:var(--white);font-weight:700;text-underline-offset:3px}
-
-  /* who */
-  .who{background:var(--mist)}
-  .who h2{color:var(--deep);margin-bottom:clamp(24px,5vw,40px)}
-  .wholist{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-  .wholist li{display:grid;gap:4px;padding:20px 22px;border-radius:22px;background:var(--white);border:2px solid var(--ink)}
-  .wholist li:nth-child(odd){transform:rotate(-.6deg)}
-  .wholist li:nth-child(even){transform:rotate(.5deg)}
-  .wholist b{font:800 clamp(21px,5.6vw,27px)/1.15 var(--display);letter-spacing:-.025em;color:var(--cobalt)}
-  .wholist span{color:var(--soft)}
-
   /* long game */
   .longgame{background:var(--night);color:var(--white)}
   .longgame .w{display:grid;gap:clamp(22px,4vw,34px)}
@@ -530,12 +539,11 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
   .smallprint ul{margin:0;padding-left:20px;display:grid;gap:10px;color:var(--soft);font-size:15px;max-width:62ch}
 
   @media (min-width:900px){
-    .earngrid{grid-template-columns:1.1fr 1fr}
-    .whatgrid{grid-template-columns:minmax(0,.85fr) minmax(0,1fr)}
-    .stats{grid-template-columns:repeat(3,1fr);gap:36px}
-    .wholist{grid-template-columns:1fr 1fr}
+    .herogrid{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:56px}
+    .earngrid{grid-template-columns:1fr 1fr}
+    .sellgrid{grid-template-columns:minmax(0,.8fr) minmax(0,1fr)}
     .longlist{grid-template-columns:1fr 1fr;column-gap:48px}
-    .steps{grid-template-columns:repeat(4,1fr);gap:28px}
+    .steps{grid-template-columns:repeat(3,1fr);gap:28px}
     .steps li{grid-template-columns:1fr;border-top:2px solid var(--ink)}
     .steps li::before{grid-row:auto;margin-bottom:8px}
     .calc{position:sticky;top:24px}
@@ -549,6 +557,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
     .applygrid .formcol{grid-column:1}
   }
   @media (prefers-reduced-motion:reduce){
+    .dash.go .drows li,.dash.go .dgoal{animation:none}
     .cband,.cband.lit{transition:none}
     .cband.stamped .stamp{animation:none;opacity:1;transform:translate(-50%,-50%) rotate(-12deg)}
   }

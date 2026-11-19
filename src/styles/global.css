@@ -1,3 +1,5 @@
+/* Poppins, self-hosted (see public/fonts). */
+@font-face{font-family:Poppins;font-style:normal;font-weight:100;font-display:swap;src:url(/fonts/poppins-100.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:normal;font-weight:200;font-display:swap;src:url(/fonts/poppins-200.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/poppins-400.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/poppins-500.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/poppins-600.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/poppins-700.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:normal;font-weight:800;font-display:swap;src:url(/fonts/poppins-800.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:normal;font-weight:900;font-display:swap;src:url(/fonts/poppins-900.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:italic;font-weight:700;font-display:swap;src:url(/fonts/poppins-700-italic.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:italic;font-weight:800;font-display:swap;src:url(/fonts/poppins-800-italic.woff2) format('woff2')}
 @font-face{font-family:"Poppins Fallback";font-weight:100 500;src:local("Arial"),local("ArialMT"),local("Liberation Sans");size-adjust:112%;ascent-override:93.75%;descent-override:31.25%;line-gap-override:8.93%}
 @font-face{font-family:"Poppins Fallback";font-weight:600 900;src:local("Arial Bold"),local("Arial-BoldMT"),local("Liberation Sans Bold");size-adjust:106.33%;ascent-override:98.75%;descent-override:32.92%;line-gap-override:9.41%}
 
@@ -39,7 +41,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .btn.blue{background:var(--cobalt);border-color:var(--cobalt);color:var(--white)}
 .btn.line{border-color:transparent}
 .grain{position:absolute;inset:0;pointer-events:none;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E")}
-.js-motion .rv{opacity:0;transform:translate3d(0,70px,0);transition:opacity 2s var(--ease-out),transform 2s var(--ease-out);transition-delay:var(--d,0s)}
+.js-motion .rv{opacity:0;transform:translate3d(0,28px,0);transition:opacity .8s var(--ease-out),transform .8s var(--ease-out);transition-delay:var(--d,0s)}
 .js-motion .rv.in{opacity:1;transform:none}
 [hidden]{display:none!important}
 

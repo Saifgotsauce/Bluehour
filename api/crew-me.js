@@ -5,7 +5,7 @@
 // sales, and never who bought: just the date, the rolls and what they earned.
 
 import { listCrew, listCrewOrders, ledger, dashOk } from './_crew.js';
-import { CREW_OFF, CREW_RATE, BOOST_AT, BOOST_RATE, FREE_ROLL_AT, HOLD_AFTER_SHIP_DAYS, HOLD_DAYS, REPEAT_DAYS, cleanCrewCode } from '../src/data/crew.js';
+import { CREW_OFF, CREW_RATE, FIRST_BONUS, BOOST_AT, BOOST_RATE, FREE_ROLL_AT, HOLD_AFTER_SHIP_DAYS, HOLD_DAYS, REPEAT_DAYS, cleanCrewCode } from '../src/data/crew.js';
 import { SHIP_BY, SHIP_BY_FULL, PREORDER } from '../src/data/preorder.js';
 
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -42,7 +42,7 @@ function page(c, origin) {
   const rows = c.orders.slice().reverse().map((o) => {
     const st = statusOf(o);
     return `<li class="${st.cls}"><div><b>${o.rolls} roll${o.rolls > 1 ? 's' : ''}</b><small>${when(o.at)}</small></div>
-      <div class="r"><b>${o.status === 'void' ? '$0' : '+' + usd(o.commissionCents)}</b><small>${esc(st.text)}</small></div></li>`;
+      <div class="r"><b>${o.status === 'void' ? '$0' : '+' + usd(o.commissionCents)}</b><small>${esc(st.text)}${o.bonus && o.status !== 'void' ? `, includes $${FIRST_BONUS} first-sale bonus` : ''}</small></div></li>`;
   }).join('');
 
   const freeLine = c.freeRoll === 'sent' ? 'Your free roll is on its way.'

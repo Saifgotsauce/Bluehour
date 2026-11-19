@@ -12,7 +12,8 @@
 export const CREW_SPOTS = 50;        // how many people get in
 export const CREW_OFF = 5;           // what a friend saves on each roll with a crew code, in dollars
 export const CREW_RATE = 10;         // commission per roll, in dollars
-export const FREE_ROLL_AT = 5;       // earned rolls before the one-time free roll
+export const FREE_ROLL_AT = 3;       // earned rolls before the one-time free roll
+export const FIRST_BONUS = 10;       // one-time extra on an ambassador's first counted order, in dollars (so the first roll pays $20)
 export const BOOST_AT = 15;          // earned rolls before the higher rate starts
 export const BOOST_RATE = 12;        // commission per roll after BOOST_AT, in dollars
 
@@ -26,9 +27,10 @@ export const HOLD_DAYS = 30;         // after launch: commission counts this man
 export const REPEAT_DAYS = 30;       // one counted order per buyer per code in this many days
 
 // What someone earns for a number of earned rolls (before the profit floor, which only ever lowers it).
+// Includes the one-time first-order bonus.
 export function crewEarnings(rolls) {
   const n = Math.max(0, Math.floor(rolls) || 0);
-  return Math.min(n, BOOST_AT) * CREW_RATE + Math.max(0, n - BOOST_AT) * BOOST_RATE;
+  return (n ? FIRST_BONUS : 0) + Math.min(n, BOOST_AT) * CREW_RATE + Math.max(0, n - BOOST_AT) * BOOST_RATE;
 }
 
 // A code people can share: letters and numbers only, 3 to 12 characters.

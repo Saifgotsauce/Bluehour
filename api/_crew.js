@@ -13,7 +13,7 @@
 import crypto from 'node:crypto';
 import {
   CREW_OFF, CREW_RATE, BOOST_AT, BOOST_RATE, FREE_ROLL_AT, ROLL_COST_MAX, MIN_KEEP_PER_ROLL,
-  STRIPE_PCT, STRIPE_FIXED, HOLD_AFTER_SHIP_DAYS, HOLD_DAYS, REPEAT_DAYS, cleanCrewCode,
+  STRIPE_PCT, STRIPE_FIXED, FIRST_BONUS, HOLD_AFTER_SHIP_DAYS, HOLD_DAYS, REPEAT_DAYS, cleanCrewCode,
 } from '../src/data/crew.js';
 
 export const CREW_COUPON = 'bh-crew-5';
@@ -194,6 +194,8 @@ export function ledger(crews, orders, { now = Date.now(), shipByFull = '' } = {}
     // Commission for this order's rolls at the ambassador's current tier, then the profit floor.
     let raw = 0;
     for (let i = 1; i <= o.rolls; i++) raw += (c.earnedRolls + i > BOOST_AT ? BOOST_RATE : CREW_RATE) * 100;
+    // One-time bonus on their first order that counts (held or earned).
+    if (!c.bonusDone) { raw += FIRST_BONUS * 100; c.bonusDone = true; row.bonus = true; }
     const margin = o.paidCents - fee(o.paidCents) - o.rolls * ROLL_COST_MAX * 100;
     const allowed = Math.max(0, margin - o.rolls * MIN_KEEP_PER_ROLL * 100);
     row.commissionCents = Math.min(raw, allowed);
