@@ -12,7 +12,7 @@
 export const CREW_SPOTS = 50;        // how many people get in
 export const CREW_OFF = 5;           // what a friend saves on each roll with a crew code, in dollars
 export const CREW_RATE = 10;         // commission per roll, in dollars
-export const FREE_ROLL_AT = 3;       // earned rolls before the one-time free roll
+export const FREE_ROLL_AT = 5;       // earned rolls before the one-time free roll
 export const FIRST_BONUS = 10;       // one-time extra on an ambassador's first counted order, in dollars (so the first roll pays $20)
 export const BOOST_AT = 15;          // earned rolls before the higher rate starts
 export const BOOST_RATE = 12;        // commission per roll after BOOST_AT, in dollars
