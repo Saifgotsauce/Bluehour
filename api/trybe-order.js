@@ -1,7 +1,8 @@
 // POST /api/trybe-order  { session_id }
 // Called from the thank-you page. Looks the order up in Stripe (so nothing the browser sends is trusted),
 // and if it's paid and came with a Trybe visitor ID, reports it to Trybe so the creator who sent the
-// shopper gets the credit. Each order is reported once: the payment is marked trybe_sent afterwards.
+// shopper gets the credit. Orders that used a Founding Crew code are skipped (the Crew member is paid
+// instead). Each order is reported once: the payment is marked trybe_sent afterwards.
 // Needs TRYBE_API_KEY and STRIPE_SECRET_KEY in Vercel. The Trybe key is private: never use it in the browser.
 
 const TRYBE_URL = 'https://jointrybe.com/attribution/v1/orders';
@@ -44,6 +45,8 @@ export default async function handler(req, res) {
     if (session.payment_status !== 'paid' || !pi || typeof pi !== 'object') return res.status(200).json({ sent: false, reason: 'unpaid' });
     if (!vid) return res.status(200).json({ sent: false, reason: 'no_vid' });
     if (pi.metadata && pi.metadata.trybe_sent) return res.status(200).json({ sent: false, reason: 'already_sent' });
+    // One payout per order: a Founding Crew code means the Crew member is paid, so Trybe isn't told.
+    if (session.metadata.crew_code) return res.status(200).json({ sent: false, reason: 'crew_order' });
 
     const rolls = parseInt(session.metadata.rolls, 10) || 1;
     const order = {
