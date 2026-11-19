@@ -148,7 +148,7 @@ function eggToast(egg, amount) {
 function burst(from, rarity) {
   if (reduce || !from || !from.animate) return;
   const r = from.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  const imgs = ['cap-still', 'cap-bright', 'cap-steady', 'cap-guard', 'cap-glycine', 'cap-nac', 'cap-probiotic'];
+  const imgs = ['cap-still', 'cap-bright', 'cap-steady', 'cap-guard', 'cap-glycine', 'cap-nac', 'cap-probiotic', 'cap-ginger'];
   const n = rarity === 'legendary' ? 22 : rarity === 'rare' ? 16 : 11;
   const layer = document.createElement('div');
   layer.className = 'eggburst';

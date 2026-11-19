@@ -5,8 +5,8 @@
 // the NIH's adult upper limit for supplements: magnesium 350 mg (2 x 133 = 266), vitamin C 2,000 mg (2 x 1,000),
 // zinc 40 mg (1 x 25). B-complex stays at 1: its 15 mg of flushing-type niacin is under the 30-50 mg where flushing
 // starts, but its 75 mg total niacin is over the 35 mg limit on paper, so a pharmacist should sign it off.
-// Glycine, NAC and the probiotic have no official upper limit. Glycine goes to 3 (2,550 mg; studies use 3 to 15 g a day),
-// NAC to 2 (1,200 mg; studies commonly use up to 1,800 mg a day). The probiotic stays at its 1-capsule label serving.
+// Glycine, NAC, the probiotic and ginger have no official upper limit. Glycine goes to 3 (2,550 mg; studies use 3 to 15 g a day),
+// NAC to 2 (1,200 mg; studies commonly use up to 1,800 mg a day). The probiotic stays at its 1-capsule label serving, and ginger at 1 (500 mg).
 // signature = how many the default pouch has.
 // facts = Supplement Facts rows per capsule [nutrient, amount, % Daily Value], copied from OK Capsule. other = other ingredients. warn = label warnings beyond 'keep out of reach of children'.
 // \u2020 means no Daily Value is established.
@@ -100,6 +100,14 @@ export const INGREDIENTS = [
     warn: 'Discontinue use and consult your physician if any adverse conditions occur. If you are pregnant, nursing, taking medication, have a medical condition, or are under medical supervision, consult your healthcare professional before use.',
     other: 'Cellulose, dicalcium phosphate, silica, magnesium stearate (vegetable).',
     coa: { file: '/coa/probiotic-10b-intertek-082025-1261.pdf', label: '10 billion a capsule (minimum)', got: '50 billion', gotUnit: 'per gram', lab: 'Intertek', date: 'Aug 2025', lot: '300-00057323', found: '50 billion live cultures per gram, against a minimum of 10 billion per capsule', micro: 'No E. coli, Salmonella or Staph found. Yeast and mold under 10 per gram.' },
+  },
+  {
+    // Ginger: optional only, never in the signature pouch. Keep its wording plain: no nausea, stomach-settling or
+    // morning-after language, because next to a nights-out brand that reads as a hangover claim (see FDA's 2020
+    // hangover warning letters). Max 1 (500 mg). Ginger may add to the effect of blood thinners; the medication FAQ covers that.
+    id: 'root', name: 'Root', ingredient: 'Ginger root', dose: '500 mg', blurb: 'Organic ginger root, the same spice you cook with, in a capsule.', img: 'cap-ginger', max: 1, signature: 0,
+    facts: [['Organic ginger root (Zingiber officinale)', '500 mg', '\u2020']],
+    other: 'Vegetable cellulose.',
   },
 ];
 
