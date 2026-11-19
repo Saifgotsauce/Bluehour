@@ -7,9 +7,12 @@ import { PREORDER, SHIP_BY } from '../data/preorder.js';
 <Base title="Order received | Blue Hour" description="Thanks for your Blue Hour order." noindex>
   <script is:inline>
     try {
-      if (new URLSearchParams(location.search).has('session_id')) {
+      var sid = new URLSearchParams(location.search).get('session_id');
+      if (sid) {
         localStorage.removeItem('bh-cart2');
         localStorage.removeItem('bh-cart');
+        // Report the order to Trybe (the server checks it with Stripe and only sends paid orders, once).
+        fetch('/api/trybe-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: sid }), keepalive: true }).catch(function () {});
       }
     } catch (e) {}
   </script>

@@ -384,6 +384,17 @@ document.addEventListener('click', (e) => {
 });
 ['#cartx', '#menux', '#scrim'].forEach((s) => { const el = $(s); if (el) el.addEventListener('click', closeAll); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+// Trybe visitor ID: the creator click ID saved on landing (30 days), else the cookie the Trybe pixel sets.
+const TRYBE_STORE = '0b12d37f-be96-4dc4-bb93-52a7160c6598';
+function trybeVid() {
+  try {
+    const s = JSON.parse(localStorage.getItem('bh-trybe') || 'null');
+    if (s && s.v && Date.now() - s.at < 30 * 864e5) return s.v;
+  } catch (e) { /* storage blocked */ }
+  const m = document.cookie.match(new RegExp('(?:^|; )ugc_vid_' + TRYBE_STORE + '=([^;]+)'));
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return '';
+}
 // Sends the cart (and any saved discount code) to /api/checkout, which opens Stripe's payment page.
 const checkout = $('#checkout');
 let leaving = false;
@@ -402,7 +413,7 @@ async function goCheckout(btn) {
     const r = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lines: cart, code: code ? code.code : '', egg: (bestEgg() || {}).token || '' }),
+      body: JSON.stringify({ lines: cart, code: code ? code.code : '', egg: (bestEgg() || {}).token || '', vid: trybeVid() }),
     });
     const d = await r.json().catch(() => ({}));
     if (r.ok && d.url) { location.href = d.url; return; }

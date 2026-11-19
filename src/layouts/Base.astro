@@ -72,6 +72,14 @@ const hide = noindex || site.hostname.endsWith('vercel.app');
       })(window, document, "px_59b996fd8948", "0b12d37f-be96-4dc4-bb93-52a7160c6598", "https://track.bluehournights.com", "CUSTOM", "false");
     </script>
     <!-- End Trybe Attribution Pixel -->
+    <script is:inline>
+      // A creator's link lands with ?trybe=<click id>. Keep it for 30 days so checkout can pass it to
+      // Stripe and the order can be credited to that creator in Trybe (see api/trybe-order.js).
+      try {
+        var t = new URLSearchParams(location.search).get('trybe');
+        if (t && /^[\w.:~-]{1,200}$/.test(t)) localStorage.setItem('bh-trybe', JSON.stringify({ v: t, at: Date.now() }));
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <Sprite />

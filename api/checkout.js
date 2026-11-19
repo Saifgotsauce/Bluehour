@@ -31,7 +31,8 @@ export function cleanLines(lines) {
 // disc: { promo: promotion code ID } or { coupon: coupon ID } to apply up front, plus crew: the Founding Crew
 // code when the promotion is one (saved on the order so the right person gets paid).
 // Without one, shoppers can type a code on the Stripe page.
-export function sessionParams(lines, origin, disc) {
+// vid: the Trybe visitor ID from the browser, saved on the order so api/trybe-order.js can credit the creator.
+export function sessionParams(lines, origin, disc, vid) {
   const rolls = lines.reduce((a, l) => a + l.qty, 0);
   const each = eachFor(rolls);
   const saving = savingFor(rolls);
@@ -83,6 +84,10 @@ export function sessionParams(lines, origin, disc) {
     p.set('metadata[crew_code]', disc.crew);
     p.set('payment_intent_data[metadata][crew_code]', disc.crew);
   }
+  if (vid) {
+    p.set('metadata[trybe_vid]', vid);
+    p.set('payment_intent_data[metadata][trybe_vid]', vid);
+  }
   p.set('metadata[rolls]', String(rolls));
   p.set('metadata[price_each]', String(each));
   if (PREORDER) {
@@ -128,6 +133,7 @@ export default async function handler(req, res) {
   const host = req.headers['x-forwarded-host'] || req.headers.host;
   const proto = req.headers['x-forwarded-proto'] || 'https';
   const origin = `${proto}://${host}`;
+  const vid = typeof body.vid === 'string' && /^[\w.:~-]{1,200}$/.test(body.vid) ? body.vid : '';
 
   try {
     // One discount per order: whichever saves the shopper the most out of their code (from a link or the
@@ -155,7 +161,7 @@ export default async function handler(req, res) {
 
     let out;
     for (const o of tries) {
-      out = await createSession(key, sessionParams(lines, origin, o.disc));
+      out = await createSession(key, sessionParams(lines, origin, o.disc, vid));
       if (out.ok) break;
     }
     if (!out.ok) {
