@@ -23,6 +23,7 @@ This policy explains what information Blue Hour ("we" or "us") collects when you
 - To take payment, make and ship your order, and send you order and shipping updates
 - To answer your questions and handle problems with an order
 - To send news and restocks, only if you signed up. You can unsubscribe at any time.
+- To see how people use the site so we can improve it
 - To credit and pay the creators who send people to our site
 - To prevent fraud and keep the site secure
 - To meet our legal obligations
@@ -40,6 +41,7 @@ We share information only with the companies that help us run the store, and onl
 - **Vercel** hosts this website.
 - **Google Fonts** delivers the fonts on this site, which means your browser connects to Google.
 - **Trybe** runs our creator program. It records visits that come from creators' videos and links, and when you buy after one, we send it your order number, order total, email address and that creator link so the right creator gets paid. We don't send it the capsules you picked.
+- **Microsoft Clarity** shows us how people use the site, such as where they tap and scroll, so we can fix confusing pages. It uses cookies and records page activity. Anything typed into forms is hidden, and payment happens on Stripe's page, which Clarity can't see. See [Microsoft's privacy statement](https://privacy.microsoft.com/privacystatement).
 
 If we add other advertising or analytics tools, we'll update this policy first. We don't sell your personal information.
 
