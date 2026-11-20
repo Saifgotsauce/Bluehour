@@ -1,5 +1,6 @@
 ---
 title: "Methylated B vitamins: what \"methyl B-complex\" means and whether you need it"
+seoTitle: "Methylated B vitamins: do you need them?"
 description: "What methylfolate, methylcobalamin and the other 'active' B vitamins are, what the MTHFR gene really means for you, and the B6 and niacin limits to check on any B-complex label."
 pubDate: 2026-11-19
 category: Ingredients

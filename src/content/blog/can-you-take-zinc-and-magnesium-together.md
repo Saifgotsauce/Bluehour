@@ -1,6 +1,6 @@
 ---
 title: "Can you take zinc and magnesium together?"
-description: "Yes, at normal doses. Here's what the NIH says about zinc and magnesium together, the upper limits for each, what really interferes with them and what the ZMA research found."
+description: "Yes, at normal doses. What the NIH says about taking zinc and magnesium together, the upper limits for each, and what the ZMA research found."
 pubDate: 2026-11-08
 category: Ingredients
 ---

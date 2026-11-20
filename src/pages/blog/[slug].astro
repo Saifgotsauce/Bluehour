@@ -20,7 +20,9 @@ interface Props {
 
 const { post, posts } = Astro.props;
 const { Content } = await render(post);
-const { title, description, pubDate, updatedDate, category, author, image } = post.data;
+const { title, seoTitle, description, pubDate, updatedDate, category, author, image } = post.data;
+// Search results cut titles off at about 60 characters, so the " | Blue Hour" suffix only goes on when it fits.
+const headTitle = (seoTitle || title).length + 12 <= 60 ? `${seoTitle || title} | Blue Hour` : seoTitle || title;
 const site = Astro.site!;
 const url = new URL(`/blog/${post.id}`, site).href;
 const more = posts.filter((p) => p.id !== post.id).slice(0, 3);
@@ -74,7 +76,7 @@ if (faq.length) {
   });
 }
 ---
-<Base title={`${title} | Blue Hour`} description={description} image={image} type="article" jsonld={jsonld}>
+<Base title={headTitle} description={description} image={image} type="article" jsonld={jsonld}>
   <header class="jhero">
     <div class="mesh"><i></i><i></i><i></i></div>
     <div class="grain"></div>

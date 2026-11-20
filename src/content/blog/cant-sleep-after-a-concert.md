@@ -1,5 +1,6 @@
 ---
 title: "Can't sleep after a concert or a night out? Why you're wired at 3 a.m."
+seoTitle: "Can't sleep after a concert? Why you're wired at 3 a.m."
 description: "Why your body won't switch off after a show or a big night, and what actually helps in the hour before bed, when your ears are ringing, and the morning after."
 pubDate: 2026-11-19
 category: Sleep

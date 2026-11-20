@@ -1,5 +1,6 @@
 ---
 title: "How to protect your hearing at raves, clubs and festivals"
+seoTitle: "How to protect your hearing at raves and festivals"
 description: "How loud raves and concerts really get, how long your ears can take it, which earplugs keep the music sounding good, and what ringing ears actually mean."
 pubDate: 2026-11-08
 category: Guides

@@ -1,5 +1,6 @@
 ---
 title: "Glycine for sleep: what the research actually says"
+seoTitle: "Glycine for sleep: what the research says"
 description: "What glycine is, what the small human studies on glycine and sleep found, who funded them, how much people take and who should check with a doctor first."
 pubDate: 2026-11-08
 category: Ingredients

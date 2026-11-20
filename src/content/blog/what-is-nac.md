@@ -1,6 +1,7 @@
 ---
 title: "What is NAC? The supplement that's also a 60-year-old drug"
-description: "What N-acetylcysteine (NAC) is, why hospitals use it, why the FDA nearly pulled it from supplement shelves, how well it's absorbed, its side effects and who should skip it."
+seoTitle: "What is NAC? The supplement that's also a drug"
+description: "What NAC (N-acetylcysteine) is, why hospitals use it, why the FDA nearly pulled it from shelves, its side effects and who should skip it."
 pubDate: 2026-11-19
 category: Ingredients
 ---

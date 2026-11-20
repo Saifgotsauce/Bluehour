@@ -1,5 +1,6 @@
 ---
 title: "Magnesium glycinate vs citrate: what's actually different?"
+seoTitle: "Magnesium glycinate vs citrate: what's different?"
 description: "What the form on a magnesium label means, what the research says about absorption and side effects, and how much is too much."
 pubDate: 2026-11-06
 category: Ingredients

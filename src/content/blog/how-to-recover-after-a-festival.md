@@ -1,5 +1,6 @@
 ---
 title: "How to recover after a festival weekend (and make it to Monday)"
+seoTitle: "How to recover after a festival weekend"
 description: "A practical plan for the drive home, the first night back and the week after a festival: sleep, water, food, your ears, and why so many people get sick afterwards."
 pubDate: 2026-11-19
 category: Festivals

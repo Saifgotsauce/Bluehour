@@ -1,5 +1,6 @@
 ---
 title: "How to stay hydrated at a festival (without overdoing it)"
+seoTitle: "How to stay hydrated at a festival"
 description: "How much water you actually need at a festival, when electrolytes help, the warning signs of heat illness, and why drinking too much water is a real risk too."
 pubDate: 2026-11-08
 category: Festivals

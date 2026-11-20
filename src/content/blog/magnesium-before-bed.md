@@ -1,5 +1,6 @@
 ---
 title: "Magnesium before bed: does it actually help you sleep?"
+seoTitle: "Does magnesium before bed help you sleep?"
 description: "What the trials on magnesium and sleep really found, why the evidence is weaker than the hype, which forms were tested, how much is too much and who should skip it."
 pubDate: 2026-11-19
 category: Sleep

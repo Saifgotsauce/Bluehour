@@ -11,5 +11,6 @@ export default defineConfig({
   site,
   trailingSlash: 'never',
   build: { format: 'file' },
-  integrations: [sitemap({ filter: (page) => !page.includes('/404') })],
+  // Pages marked noindex (404, thank-you, welcome) stay out of the sitemap so Google gets one consistent signal.
+  integrations: [sitemap({ filter: (page) => !/\/(404|thank-you|welcome)$/.test(page.replace(/\/$/, '')) })],
 });

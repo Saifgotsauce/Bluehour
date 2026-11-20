@@ -31,12 +31,25 @@ const jsonld = {
   description: 'One sealed pouch of 6 capsules a day: magnesium, vitamin C, methyl B-complex, zinc and glycine, or build your own. 30 pouches on one roll. No 5-HTP, caffeine or stimulants.',
   image: ['angle', 'flat', 'exploded', 'pouch'].map((n) => new URL(`/images/${n}.webp`, site).href),
   brand: { '@type': 'Brand', name: 'Blue Hour' },
-  offers: { '@type': 'Offer', price: FIRST.toFixed(2), priceCurrency: 'USD', url: new URL('/shop', site).href },
+  offers: {
+    '@type': 'Offer',
+    price: FIRST.toFixed(2),
+    priceCurrency: 'USD',
+    url: new URL('/shop', site).href,
+    availability: PREORDER ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock',
+    itemCondition: 'https://schema.org/NewCondition',
+    seller: { '@type': 'Organization', name: 'Blue Hour' },
+    shippingDetails: {
+      '@type': 'OfferShippingDetails',
+      shippingRate: { '@type': 'MonetaryAmount', value: '0', currency: 'USD' },
+      shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'US' },
+    },
+  },
 };
 ---
 <Base
   title="Blue Hour Nightly Pouches, 30 Nights | Blue Hour"
-  description={`${PREORDER ? `Pre-order now: 30 sealed pouches on one roll for a $${FIRST} founding price (launch price $${PRICE}), shipping by ${SHIP_BY}.` : `30 sealed pouches on one roll for $${PRICE} with free US shipping.`} Six capsules a day with magnesium, vitamin C, B-complex, zinc and glycine, or build your own. For big nights, long sessions and early starts.`}
+  description={`${PREORDER ? `Pre-order now: 30 sealed pouches on one roll for a $${FIRST} founding price (launch price $${PRICE}), shipping by ${SHIP_BY}.` : `30 sealed pouches on one roll for $${PRICE} with free US shipping.`} Build your own pouch or take the Signature Six.`}
   jsonld={jsonld}
 >
 

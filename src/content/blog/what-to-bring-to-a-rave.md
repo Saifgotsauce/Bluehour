@@ -1,5 +1,6 @@
 ---
 title: "What to bring to a rave: the pocket-sized checklist"
+seoTitle: "What to bring to a rave: the checklist"
 description: "Everything worth carrying to a club night or rave, from earplugs and ID to a plan for getting home, plus what to set up before you leave."
 pubDate: 2026-11-06
 category: Guides
