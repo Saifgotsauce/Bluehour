@@ -54,19 +54,21 @@ export function readApplication(body) {
   if (!instagram) return { error: 'instagram' };
   const tiktok = body.tiktok ? cleanHandle(body.tiktok) : '';
   if (body.tiktok && !tiktok) return { error: 'tiktok' };
+  // Only name, email, Instagram and 21+ are required: the short form on /crew asks for nothing else.
+  // The rest is optional and saved when sent (older forms, or follow-up questions later).
   const city = clip(body.city, 80);
-  if (!city) return { error: 'city' };
-  if (!has(OFTEN, body.often)) return { error: 'often' };
-  if (!has(CREW, body.crew)) return { error: 'crew' };
-  if (!has(REACH, body.reach)) return { error: 'reach' };
-  if (!has(PLATFORMS, body.rplat)) return { error: 'rplat' };
+  const often = has(OFTEN, body.often) ? OFTEN[body.often] : '';
+  const crew = has(CREW, body.crew) ? CREW[body.crew] : '';
+  const reach = has(REACH, body.reach) ? REACH[body.reach] : '';
+  const rplat = has(PLATFORMS, body.rplat) ? PLATFORMS[body.rplat] : '';
   const rhandle = clip(body.rhandle, 60).replace(/^@+/, '');
-  if (!/^[A-Za-z0-9._-]{1,40}$/.test(rhandle)) return { error: 'rhandle' };
-  const code = cleanCrewCode(body.code);
-  if (!code) return { error: 'code' };
+  if (rhandle && !/^[A-Za-z0-9._-]{1,40}$/.test(rhandle)) return { error: 'rhandle' };
+  // A code idea is optional now; without one we suggest their first name plus 5 (they can change it once they're in).
+  const code = cleanCrewCode(body.code) || cleanCrewCode(name.split(/\s+/)[0].slice(0, 8) + '5');
+  if (body.code && !cleanCrewCode(body.code)) return { error: 'code' };
   if (body.adult !== true) return { error: 'adult' };
   return {
-    app: { name, email, instagram, tiktok, city, often: OFTEN[body.often], crew: CREW[body.crew], reach: REACH[body.reach], rplat: PLATFORMS[body.rplat], rhandle, code, why: clip(body.why, 400), news: body.news === true },
+    app: { name, email, instagram, tiktok, city, often, crew, reach, rplat, rhandle, code, why: clip(body.why, 400), news: body.news === true },
   };
 }
 
@@ -87,7 +89,7 @@ export function crewProfile(a) {
           crew_group_size: a.crew,
           crew_following: a.reach,
           crew_following_on: a.rplat,
-          crew_following_handle: '@' + a.rhandle,
+          crew_following_handle: a.rhandle ? '@' + a.rhandle : '',
           crew_code_request: a.code,
           crew_why: a.why,
         },
@@ -109,7 +111,7 @@ export function crewEvent(a) {
           group_size: a.crew,
           following: a.reach,
           following_on: a.rplat,
-          following_handle: '@' + a.rhandle,
+          following_handle: a.rhandle ? '@' + a.rhandle : '',
           code_request: a.code,
           why: a.why,
         },

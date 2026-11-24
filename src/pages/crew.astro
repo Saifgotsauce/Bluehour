@@ -1,25 +1,22 @@
 ---
 // Founding Crew: the ambassador application. Numbers come from src/data/crew.js.
 // Applications go to /api/crew, which saves them in Klaviyo.
+//
+// Built for people tapping in from Instagram on a phone: the first screen says what Blue Hour is,
+// what they earn, and has the whole form (name, Instagram, email, 21+). Everything else is below it.
 import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
-import Seals from '../components/Seals.astro';
-import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE, FIRST_BONUS, crewEarnings } from '../data/crew.js';
-import { PRICE, PREORDER_TIERS, INGREDIENTS } from '../data/ingredients.js';
+import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE, FIRST_BONUS } from '../data/crew.js';
+import { PREORDER_TIERS } from '../data/ingredients.js';
 import { SHIP_BY } from '../data/preorder.js';
 const FOUNDING = PREORDER_TIERS[0].each;
 const WITH_CODE = FOUNDING - CREW_OFF;
 const NIGHT = (WITH_CODE / 30).toFixed(2);
-const SIG = INGREDIENTS.filter((i) => i.signature > 0);
-const EXTRAS = INGREDIENTS.filter((i) => !i.signature).map((i) => i.name);
-const EX = 6; // the example crew in the hero and the calculator's starting point
-const EX3 = crewEarnings(EX * 3);
-const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2; // what each example month adds
 ---
 <Base
   title="Founding Crew | Blue Hour"
-  description={`${CREW_SPOTS} spots. Your own code: $${CREW_RATE} for every roll your friends buy, $${CREW_RATE + FIRST_BONUS} on your first, and again every time they reorder. Nothing to buy.`}
+  description={`Get $${CREW_RATE} every time a friend buys Blue Hour with your code, and again when they reorder. Free to join, nothing to buy. ${CREW_SPOTS} spots.`}
 >
   <header class="jhero crewhero">
     <div class="mesh"><i></i><i></i><i></i></div>
@@ -27,224 +24,89 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
     <Top />
     <div class="in herogrid">
       <div class="herotext">
-        <p class="kick">Blue Hour Founding Crew, {CREW_SPOTS} spots</p>
-        <h1>Get paid every time they reorder.</h1>
-        <p class="dek">Blue Hour is a 30-night roll of supplement pouches for nights out. Share your code and get ${CREW_RATE} for every roll your friends buy, ${CREW_RATE + FIRST_BONUS} on your first, and again every time they reorder. Nothing to buy.</p>
-        <div class="ctas">
-          <a class="btn solid" href="#apply">Apply in 2 minutes</a>
-          <a class="btn hb" href="#earn">See what you'd make</a>
-        </div>
-        <p class="heronote">21+, US only. We read every application.</p>
+        <p class="hook">Out every weekend anyway?</p>
+        <h1>Get ${CREW_RATE} every time a friend buys Blue Hour.</h1>
+        <p class="dek">Blue Hour is one pouch of six supplements for after a night out. Your code gets friends ${CREW_OFF} off. You get ${CREW_RATE} every time they buy, and again when they reorder. Free to join.</p>
       </div>
 
-      <figure class="dash" aria-label={`Example: a member with ${EX} friends who reorder every month`}>
-        <div class="dtop"><span>Your crew dashboard</span><em>Example</em></div>
-        <p class="dhi">Earned in 3 months</p>
-        <p class="dbig"><span>$</span><b id="dcount" data-to={EX3}>{EX3}</b></p>
-        <ul class="drows">
-          <li><div><b>Month 3</b><small>{EX} friends reordered{M3 > EX * CREW_RATE ? `, some at $${BOOST_RATE}` : ''}</small></div><i>+${M3}</i></li>
-          <li><div><b>Month 2</b><small>{EX} friends reordered</small></div><i>+${M2}</i></li>
-          <li><div><b>Month 1</b><small>{EX} rolls, with your ${FIRST_BONUS} first-sale bonus</small></div><i>+${M1}</i></li>
-        </ul>
-        <p class="dgoal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12.5 4 4L18 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Free roll unlocked</p>
-      </figure>
-    </div>
-  </header>
-
-  <section class="sec sellband" aria-labelledby="sellh">
-    <div class="w sellgrid">
-      <figure class="rollfig">
-        <img class="whatimg" src="/images/angle.webp" alt="A Blue Hour roll: a box with a strip of sealed pouches coming out of the top, each holding six capsules" width="1122" height="1402" loading="lazy" decoding="async" />
-        <figcaption>One roll: 30 sealed pouches, one for each night.</figcaption>
-      </figure>
-      <div class="selltext">
-        <h2 id="sellh">What your friends get.</h2>
-        <p class="whatbig">A specially curated pack for people who still have to show up tomorrow. 30 sealed pouches on one roll: pull one off when you get home, take the six capsules, done.</p>
-        <div class="sixset">
-          <p class="siglab">The signature six</p>
-          <ul class="sigchips">
-            {SIG.map((i) => <li><b>{i.name}{i.signature > 1 ? ` ×${i.signature}` : ''}</b><span>{i.ingredient}</span></li>)}
-          </ul>
-          <p class="sigmore">Or they build their own six, adding {EXTRAS.slice(0, -1).join(', ')} or {EXTRAS[EXTRAS.length - 1]}.</p>
-        </div>
-        <ul class="whatlist">
-          
-          <li>No caffeine, no 5-HTP, no stimulants.</li>
-          <li>Every capsule tested by an outside lab, and every report is public.</li>
-          <li>One roll is ${WITH_CODE} with your code, for all 30 nights. That's about ${NIGHT} a night, with a full refund any time before it ships.</li>
-        </ul>
-        <Seals prefix="c" class="crewseals" labHref="/shop#tested" />
-      </div>
-    </div>
-  </section>
-
-  <section class="w sec earn" id="earn" aria-labelledby="earnh">
-    <div class="earngrid">
-      <div class="calc" aria-labelledby="earnh">
-        <h2 id="earnh">What would you make?</h2>
-        <label class="calclabel" for="friends">Friends who grab a roll each month: <output id="fout" for="friends">{EX}</output></label>
-        <input id="friends" type="range" min="1" max="30" step="1" value={EX} />
-        <div class="paidrow">
-          <div><p class="paid"><span class="cur">$</span><span id="pmonth">{EX * CREW_RATE}</span></p><p class="paidlab">a month</p></div>
-          <div><p class="paid small"><span class="cur">$</span><span id="pyear">{crewEarnings(EX * 12)}</span></p><p class="paidlab">in your first year</p></div>
-        </div>
-        <p class="fine">If they reorder every month. Each friend counts once a month on your code. Includes your ${FIRST_BONUS} first-sale bonus and ${BOOST_RATE} a roll past {BOOST_AT}.</p>
-      </div>
-
-      <ul class="deal" aria-label="What you get">
-        <li><b>${CREW_RATE} a roll, every reorder</b><span>Not just the first order. Every time a friend comes back, you get paid again.</span></li>
-        <li><b>${CREW_RATE + FIRST_BONUS} on your first roll</b><span>A ${FIRST_BONUS} bonus on your first sale, so your first payout lands faster.</span></li>
-        <li><b>A free roll after {FREE_ROLL_AT}</b><span>Your own roll, free, once {FREE_ROLL_AT} rolls have sold with your code.</span></li>
-        <li><b>${BOOST_RATE} a roll after {BOOST_AT}</b><span>Every roll past your {BOOST_AT}th pays more.</span></li>
-        <li><b>Your own live dashboard</b><span>Every sale shows up the moment it's paid, with what you've earned and when it pays out.</span></li>
-        <li><b>${CREW_OFF} off for your friends</b><span>On every roll, so your code is an easy thing to pass on.</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="sec longgame" aria-labelledby="longh">
-    <div class="w">
-      <h2 id="longh">If Blue Hour gets <span class="bigword">BIG</span>, you come with it.</h2>
-      <p class="longlede">The {CREW_SPOTS} people who get us off the ground don't get forgotten when we grow.</p>
-      <ul class="longlist">
-        <li><b>Your rate stays founding</b><span>If new members ever get paid less, you keep ${CREW_RATE} a roll, and ${BOOST_RATE} after {BOOST_AT}.</span></li>
-        <li><b>First to get anything new</b><span>New capsules, smaller rolls, new drops. You get them before anyone else.</span></li>
-        <li><b>First call when we hire</b><span>Ambassador leads, events and paid roles go to the Founding Crew first.</span></li>
-        <li><b>On the list for our nights</b><span>When Blue Hour throws its own events, you and a friend are on the guest list.</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="w how" aria-labelledby="howh">
-    <h2 id="howh">How it works.</h2>
-    <ol class="steps">
-      <li><b>Apply</b><span>About 2 minutes, right below. You go out a lot, people come with you, you're 21+ and in the US.</span></li>
-      <li><b>Get your code</b><span>We check your page and email you either way. If you're in, you get your code and your dashboard link.</span></li>
-      <li><b>Share it, get paid</b><span>Group chat, bio, out loud. We pay by PayPal every month. Pre-orders ship by {SHIP_BY}.</span></li>
-    </ol>
-  </section>
-
-  <section class="apply" id="apply" aria-labelledby="applyh">
-    <div class="w applygrid">
-      <div class="bandslot">
-        <div class="cband" id="cband" aria-hidden="true">
-          <div class="cbin">
-            <div class="cbhead">
-              <img src="/images/logo-white.webp" alt="" width="1000" height="247" />
-              <span>Founding Crew</span>
-            </div>
-            <p class="cbname" id="bname">Your name</p>
-            <div class="cbfoot">
-              <span id="bhandle">@yourhandle</span>
-              <span class="cbcode">Code <b id="bcode">YOURCODE</b></span>
-            </div>
-            <span class="stamp" id="stamp">Applied</span>
-          </div>
-        </div>
-        <p class="bandhint" id="bandhint">Your band fills in as you go.</p>
-      </div>
-
-      <div class="formcol">
-        <h2 id="applyh">Claim your spot.</h2>
-        <p class="lede">Takes about 2 minutes. We read every application and check your page. If you're in, your code and dashboard link come by email.</p>
-
-        <form id="crewform" novalidate>
+      <div class="applycard" id="apply">
+        <form id="crewform" novalidate aria-labelledby="applyh">
+          <h2 id="applyh">Apply for a spot</h2>
           <div class="f">
             <label for="cname">First name</label>
             <input id="cname" name="name" autocomplete="given-name" maxlength="60" required />
           </div>
           <div class="f">
+            <label for="cig">Instagram</label>
+            <div class="at"><span>@</span><input id="cig" name="instagram" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="60" required /></div>
+          </div>
+          <div class="f">
             <label for="cemail">Email</label>
-            <input id="cemail" name="email" type="email" autocomplete="email" maxlength="254" required />
-          </div>
-          <div class="two-f">
-            <div class="f">
-              <label for="cig">Instagram</label>
-              <div class="at"><span>@</span><input id="cig" name="instagram" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="60" required /></div>
-            </div>
-            <div class="f">
-              <label for="ctt">TikTok <em>if you have one</em></label>
-              <div class="at"><span>@</span><input id="ctt" name="tiktok" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="60" /></div>
-            </div>
-          </div>
-          <div class="f">
-            <label for="ccity">Where you go out</label>
-            <input id="ccity" name="city" placeholder="City or scene" maxlength="80" required />
-          </div>
-          <fieldset class="f">
-            <legend>How often you're out</legend>
-            <div class="pick">
-              <label><input type="radio" name="often" value="weekly" /><span>Every weekend</span></label>
-              <label><input type="radio" name="often" value="monthly" /><span>A few times a month</span></label>
-              <label><input type="radio" name="often" value="festivals" /><span>Mostly festivals</span></label>
-            </div>
-          </fieldset>
-          <fieldset class="f">
-            <legend>How many people usually go out with you</legend>
-            <div class="pick">
-              <label><input type="radio" name="crew" value="1-3" /><span>1 to 3</span></label>
-              <label><input type="radio" name="crew" value="4-8" /><span>4 to 8</span></label>
-              <label><input type="radio" name="crew" value="9-15" /><span>9 to 15</span></label>
-              <label><input type="radio" name="crew" value="15+" /><span>More than 15</span></label>
-            </div>
-          </fieldset>
-          <fieldset class="f">
-            <legend>Your biggest following <em>on any app</em></legend>
-            <div class="pick">
-              <label><input type="radio" name="reach" value="u500" /><span>Under 500</span></label>
-              <label><input type="radio" name="reach" value="500-2k" /><span>500 to 2k</span></label>
-              <label><input type="radio" name="reach" value="2k-10k" /><span>2k to 10k</span></label>
-              <label><input type="radio" name="reach" value="10k+" /><span>10k+</span></label>
-            </div>
-            <div class="reachbox" id="reachbox" hidden>
-              <p class="reachq">Where's that following?</p>
-              <div class="pick">
-                <label><input type="radio" name="rplat" value="instagram" /><span>Instagram</span></label>
-                <label><input type="radio" name="rplat" value="tiktok" /><span>TikTok</span></label>
-                <label><input type="radio" name="rplat" value="youtube" /><span>YouTube</span></label>
-                <label><input type="radio" name="rplat" value="x" /><span>X</span></label>
-                <label><input type="radio" name="rplat" value="twitch" /><span>Twitch</span></label>
-                <label><input type="radio" name="rplat" value="other" /><span>Other</span></label>
-              </div>
-              <label for="crhandle" class="reachl">Username on that account</label>
-              <div class="at"><span>@</span><input id="crhandle" name="rhandle" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="60" /></div>
-            </div>
-          </fieldset>
-          <div class="f">
-            <label for="ccode">Pick your code</label>
-            <input id="ccode" name="code" class="codein" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="12" required />
-            <p class="help">Letters and numbers, 3 to 12 long. Your friends type this, so keep it easy to say out loud.</p>
-          </div>
-          <div class="f">
-            <label for="cwhy">Why you? <em>optional</em></label>
-            <textarea id="cwhy" name="why" rows="3" maxlength="400" placeholder="The shows you never miss, the group chats you run, the crew you bring"></textarea>
+            <input id="cemail" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" required />
           </div>
           <div class="hp" aria-hidden="true"><label for="cweb">Website</label><input id="cweb" name="website" tabindex="-1" autocomplete="off" /></div>
-          <label class="tick"><input type="checkbox" id="cadult" name="adult" required /><span>I'm 21 or older.</span></label>
-          <label class="tick"><input type="checkbox" id="cnews" name="news" /><span>Email me Blue Hour news too.</span></label>
+          <label class="tick"><input type="checkbox" id="cadult" name="adult" required /><span>I'm 21 or older and in the US.</span></label>
+          <label class="tick small"><input type="checkbox" id="cnews" name="news" /><span>Email me Blue Hour news too.</span></label>
           <button class="btn blue send" type="submit" id="csend">Apply for a spot</button>
           <p class="formmsg" id="cmsg" role="status" aria-live="polite"></p>
+          <p class="cardnote">{CREW_SPOTS} spots. We look at your page and email you either way.</p>
         </form>
 
         <div class="done" id="cdone" hidden tabindex="-1">
-          <h2>You're on the list.</h2>
-          <p>We'll look at your page and email you either way. If you're in, your code and link come in that email.</p>
-          <a class="btn solid" href="/shop">See the roll</a>
+          <h2>You applied.</h2>
+          <p>We'll look at your Instagram and email you either way. If you're in, you'll pick your code and get your dashboard link in that email.</p>
+          <a class="btn solid" href="/shop">See what your friends get</a>
         </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="sec sellband" aria-labelledby="sellh">
+    <div class="w sellgrid">
+      <img class="whatimg" src="/images/angle.webp" alt="A Blue Hour roll: a box with a strip of sealed pouches coming out of the top, each holding six capsules" width="1122" height="1402" loading="lazy" decoding="async" />
+      <div class="selltext">
+        <h2 id="sellh">What your friends get</h2>
+        <p class="big">A roll of 30 sealed pouches. When they get home, they pull one off and take the six capsules.</p>
+        <ul class="plain">
+          <li>Magnesium, vitamin C, B vitamins, zinc and glycine.</li>
+          <li>No caffeine, no stimulants. Every capsule is lab tested.</li>
+          <li>${WITH_CODE} with your code, about ${NIGHT} a night. Ships by {SHIP_BY}.</li>
+        </ul>
+        <a class="btn" href="/shop">See the roll</a>
       </div>
     </div>
   </section>
 
+  <section class="w sec paid" aria-labelledby="paidh">
+    <h2 id="paidh">How you get paid</h2>
+    <ol class="steps">
+      <li><b>Apply</b><span>Takes 30 seconds, at the top of this page.</span></li>
+      <li><b>Get your code</b><span>If you're in, we email you your code and a dashboard to track sales.</span></li>
+      <li><b>Friends buy, you get ${CREW_RATE}</b><span>Every roll, every reorder. Paid monthly by PayPal.</span></li>
+    </ol>
+    <ul class="deal" aria-label="What you earn">
+      <li><b>${CREW_RATE + FIRST_BONUS}</b><span>on your first sale</span></li>
+      <li><b>${CREW_RATE}</b><span>every roll after that, reorders too</span></li>
+      <li><b>Free roll</b><span>for you after {FREE_ROLL_AT} sales</span></li>
+      <li><b>${BOOST_RATE}</b><span>a roll after {BOOST_AT} sales</span></li>
+    </ul>
+  </section>
+
   <section class="w crewfaq faq" aria-labelledby="cfaqh">
-    <h2 id="cfaqh">Crew questions.</h2>
+    <h2 id="cfaqh">Questions</h2>
     <details><summary><span class="q">Do I need a big following?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. We look at how often you go out and how many people go with you. A busy group chat counts as much as a big following.</p></details>
     <details><summary><span class="q">Do I have to buy anything?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Joining is free and there's nothing to buy.</p></details>
+    <details><summary><span class="q">Do I have to post?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No quotas. Share your code however works for you: group chat, bio, out loud. If you do post about Blue Hour, add #ad or mark it as a paid partnership.</p></details>
     <details><summary><span class="q">Can I try it first?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not yet. The first rolls ship by {SHIP_BY}. Once {FREE_ROLL_AT} rolls have sold with your code, your own roll is free. Until then, the lab reports for every capsule are on our <a href="/shop#tested">shop page</a>.</p></details>
-    <details><summary><span class="q">What if my friends think 30 nights is a lot?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>A roll isn't 30 nights in a row. It's one pouch for every night you go out, so for most people it covers a lot of weekends. Or split one: two friends, 15 nights each, about ${(WITH_CODE / 2).toFixed(0)} each with your code.</p></details>
-    <details><summary><span class="q">Why is 30 nights the only size?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Every roll is packed to order, pouch by pouch, in a cGMP-certified facility. Most of the cost is the packing, not the capsules, so a 10-night roll would cost nearly as much to make as 30. That's a bad deal for your friends, so we don't sell one yet. Bigger pre-order runs bring that cost down, and that's what gets us to smaller rolls like a weekend or festival pack. The Founding Crew gets those first.</p></details>
+    <details><summary><span class="q">What if my friends think 30 nights is a lot?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>It's not 30 nights in a row. It's one pouch for every night out, so it covers a lot of weekends. Or two friends can split one, about ${(WITH_CODE / 2).toFixed(0)} each with your code.</p></details>
+    <details><summary><span class="q">Why is 30 nights the only size?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Every roll is packed to order, pouch by pouch, in a cGMP-certified facility. Most of the cost is the packing, so a 10-night roll would cost nearly as much to make as 30. Bigger pre-order runs bring that cost down, and that's what gets us to smaller rolls. The Founding Crew gets those first.</p></details>
     <details><summary><span class="q">When do I get paid?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Once a month by PayPal. Pre-orders count 14 days after they ship, so the first payouts go out in January.</p></details>
-    <details><summary><span class="q">Do I have to post?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No quotas. Share your code however works for you. If you do post about Blue Hour, add #ad or mark it as a paid partnership.</p></details>
+    <details><summary><span class="q">What do the first {CREW_SPOTS} get if Blue Hour grows?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You keep the founding rate (${CREW_RATE} a roll, ${BOOST_RATE} after {BOOST_AT}) even if new members get less. You also get new capsules, smaller rolls and drops first, first call on paid roles and events, and a spot for you and a friend on the list when Blue Hour throws its own nights.</p></details>
     <details><summary><span class="q">Can friends outside the US order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not yet. We only ship within the US for now.</p></details>
+  </section>
+
+  <section class="w again" aria-label="Apply">
+    <a class="btn blue" href="#apply" id="backup">Apply for a spot</a>
   </section>
 
   <section class="w smallprint" aria-labelledby="sph">
@@ -264,110 +126,38 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
     </ul>
   </section>
 
-  <script define:vars={{ CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE, FIRST_BONUS }}>
+  <script>
     (() => {
       const $ = (id) => document.getElementById(id);
-
-      // ---- earnings calculator: friends who order each month ----
-      const fr = $('friends'), fout = $('fout'), pm = $('pmonth'), py = $('pyear');
-      const earn = (n) => (n ? FIRST_BONUS : 0) + Math.min(n, BOOST_AT) * CREW_RATE + Math.max(0, n - BOOST_AT) * BOOST_RATE;
-      const calc = () => {
-        const n = +fr.value;
-        fout.textContent = n;
-        pm.textContent = (n * CREW_RATE).toLocaleString('en-US');
-        py.textContent = earn(n * 12).toLocaleString('en-US');
-        fr.style.setProperty('--p', ((n - fr.min) / (fr.max - fr.min)) * 100 + '%');
-      };
-      fr.addEventListener('input', calc); calc();
-
-      // ---- the example dashboard counts up once, when the page opens ----
-      const dc = $('dcount');
-      if (dc && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const to = +dc.dataset.to, t0 = performance.now(), dur = 900;
-        dc.textContent = '0';
-        const tick = (t) => {
-          const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
-          dc.textContent = Math.round(to * e);
-          if (k < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-        document.querySelector('.dash').classList.add('go');
-      }
-
-      // ---- the band fills in as you type ----
-      const f = $('crewform'), name = $('cname'), ig = $('cig'), code = $('ccode');
-      let codeTouched = false;
-      const cleanCode = (s) => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
+      const f = $('crewform'), msg = $('cmsg'), send = $('csend');
       const handle = (s) => String(s || '').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok)\.com\//i, '').replace(/^@+/, '').replace(/[/?#].*$/, '');
-      const band = () => {
-        const n = name.value.trim();
-        $('bname').textContent = n || 'Your name';
-        $('bhandle').textContent = '@' + (handle(ig.value) || 'yourhandle');
-        $('bcode').textContent = cleanCode(code.value) || 'YOURCODE';
-        $('cband').classList.toggle('lit', !!(n || ig.value || code.value));
-        const filled = [name, $('cemail'), ig, $('ccity'), code].filter((i) => i.value.trim()).length + (f.often.value ? 1 : 0) + (f.crew.value ? 1 : 0) + (f.reach.value ? 1 : 0);
-        $('bandhint').textContent = filled >= 8 ? 'Looking good. Hit apply.' : 'Your band fills in as you go.';
-      };
-      name.addEventListener('input', () => {
-        if (!codeTouched) code.value = cleanCode(name.value.split(/\s+/)[0]).slice(0, 8) + (name.value.trim() ? '5' : '');
-        band();
-      });
-      code.addEventListener('input', () => {
-        codeTouched = true;
-        const p = code.selectionStart, before = code.value;
-        code.value = cleanCode(code.value);
-        if (before !== code.value) code.setSelectionRange(Math.min(p, code.value.length), Math.min(p, code.value.length));
-        band();
-      });
-      // Picking a following size opens the box asking where that following is
-      const rbox = $('reachbox');
-      f.addEventListener('change', (e) => {
-        if (e.target.name !== 'reach') return;
-        const was = rbox.hidden; rbox.hidden = false;
-        if (was && !f.rplat.value) {
-          const ig = handle($('cig').value);
-          if (ig) { f.querySelector('input[name=rplat][value=instagram]').checked = true; if (!$('crhandle').value) $('crhandle').value = ig; }
-        }
-      });
-      f.addEventListener('input', band);
-      f.addEventListener('change', band);
 
-      // ---- send ----
+      // The button lower down jumps back to the form and puts the cursor in the first field
+      $('backup').addEventListener('click', () => setTimeout(() => $('cname').focus({ preventScroll: true }), 400));
+
       const LABELS = {
         name: 'Add your first name.', email: 'Check your email address.', instagram: 'Add your Instagram handle.',
-        tiktok: 'Check your TikTok handle, or leave it empty.', city: 'Add where you go out.',
-        often: 'Pick how often you go out.', crew: 'Pick how many people go out with you.', reach: 'Pick your biggest following, even if it is under 500.', rplat: 'Pick which app that following is on.', rhandle: 'Add the username for that account.', code: 'Your code needs 3 to 12 letters or numbers.', adult: 'You need to be 21 or older to join.',
+        code: 'Something went wrong with your code. Try again.', adult: 'You need to be 21 or older to join.',
       };
-      const FIELD = { name: 'cname', email: 'cemail', instagram: 'cig', tiktok: 'ctt', city: 'ccity', often: null, crew: null, reach: null, rplat: null, rhandle: 'crhandle', code: 'ccode', adult: 'cadult' };
-      const msg = $('cmsg'), send = $('csend');
+      const FIELD = { name: 'cname', email: 'cemail', instagram: 'cig', adult: 'cadult' };
       const flag = (err) => {
         f.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
         msg.textContent = LABELS[err] || 'Something on the form needs a look.';
         msg.className = 'formmsg bad';
-        const id = FIELD[err];
-        const el = id ? $(id) : f.querySelector(`input[name=${err}]`);
-        if (el) { if (id) el.setAttribute('aria-invalid', 'true'); el.focus(); }
+        const el = FIELD[err] && $(FIELD[err]);
+        if (el) { el.setAttribute('aria-invalid', 'true'); el.focus(); }
       };
       const check = (d) => {
         if (!d.name) return 'name';
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) return 'email';
         if (!/^[A-Za-z0-9._]{1,30}$/.test(d.instagram)) return 'instagram';
-        if (d.tiktok && !/^[A-Za-z0-9._]{1,30}$/.test(d.tiktok)) return 'tiktok';
-        if (!d.city) return 'city';
-        if (!d.often) return 'often';
-        if (!d.crew) return 'crew';
-        if (!d.reach) return 'reach';
-        if (!d.rplat) return 'rplat';
-        if (!/^[A-Za-z0-9._-]{1,40}$/.test(d.rhandle)) return 'rhandle';
-        if (d.code.length < 3) return 'code';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) return 'email';
         if (!d.adult) return 'adult';
         return '';
       };
       f.addEventListener('submit', async (e) => {
         e.preventDefault();
         const d = {
-          name: name.value.trim(), email: $('cemail').value.trim(), instagram: handle(ig.value), tiktok: handle($('ctt').value),
-          city: $('ccity').value.trim(), often: f.often.value, crew: f.crew.value, reach: f.reach.value, rplat: f.rplat.value, rhandle: handle($('crhandle').value), code: cleanCode(code.value), why: $('cwhy').value.trim(),
+          name: $('cname').value.trim(), instagram: handle($('cig').value), email: $('cemail').value.trim(),
           adult: $('cadult').checked, news: $('cnews').checked, website: $('cweb').value,
         };
         const err = check(d);
@@ -378,10 +168,9 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
           const res = await fetch('/api/crew', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d) });
           const j = await res.json().catch(() => ({}));
           if (res.ok && j.ok) {
-            $('cband').classList.add('stamped');
-            $('bandhint').textContent = "Application in. We'll email you.";
-            f.hidden = true; $('applyh').hidden = true; document.querySelector('.lede').hidden = true;
+            f.hidden = true;
             const done = $('cdone'); done.hidden = false; done.focus();
+            $('backup').closest('section').hidden = true;
             return;
           }
           if (j.error && LABELS[j.error]) return flag(j.error);
@@ -399,192 +188,86 @@ const M1 = crewEarnings(EX), M2 = crewEarnings(EX * 2) - M1, M3 = EX3 - M1 - M2;
 </Base>
 
 <style>
-  .crewhero{padding-bottom:calc(var(--rise) + 40px)}
-  .herogrid{display:grid;gap:34px;align-items:center}
-  .kick{font:700 14px/1.3 var(--display);color:var(--first);margin:0 0 10px}
-  .crewhero h1{font-size:clamp(46px,12.6vw,104px);line-height:.95;letter-spacing:-.05em;font-style:italic;max-width:9.5em}
-  .crewhero .dek{max-width:30em}
-  .crewhero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
-  .crewhero .btn.hb{background:transparent;border-color:var(--white);color:var(--white)}
-  .crewhero h1{margin-bottom:18px}
-  .heronote{font:600 13px/1.3 var(--display);color:var(--first);margin:14px 0 0}
+  /* hero: the pitch and the whole form, in the first screen on a phone */
+  .crewhero .in{padding-top:calc(84px + 2vw)}
+  .herogrid{display:grid;gap:24px;align-items:start;width:100%}
+  .herotext{display:grid;gap:12px}
+  .hook{margin:0;font:700 clamp(17px,4.6vw,22px)/1.2 var(--display);color:var(--first)}
+  .crewhero h1{font-size:clamp(36px,10vw,78px);line-height:1;letter-spacing:-.045em;max-width:11em;margin:0}
+  .crewhero .dek{font-size:clamp(16px,4.2vw,20px);line-height:1.45;max-width:30em;margin:0}
 
-  /* the example dashboard */
-  .dash{margin:0;max-width:400px;width:100%;justify-self:center;background:var(--white);color:var(--ink);border-radius:26px;padding:20px 20px 16px;box-shadow:0 30px 60px rgba(3,10,70,.38);transform:rotate(1.6deg)}
-  .dtop{display:flex;justify-content:space-between;align-items:center;font:700 13px/1 var(--display);color:var(--soft)}
-  .dtop em{font-style:normal;background:var(--first);color:var(--deep);border-radius:99px;padding:5px 10px;font-size:12px}
-  .dhi{margin:16px 0 0;font:600 15px/1.2 var(--display);color:var(--soft)}
-  .dbig{margin:2px 0 8px;font:900 clamp(64px,19vw,88px)/.9 var(--display);font-style:italic;letter-spacing:-.06em;color:var(--cobalt)}
-  .dbig span{font-size:.45em;vertical-align:.7em;font-style:normal;margin-right:.03em}
-  .drows{list-style:none;margin:0;padding:0}
-  .drows li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
-  .drows b{display:block;font:700 15px/1.2 var(--display)}
-  .drows small{display:block;font-size:13px;color:var(--soft);line-height:1.3}
-  .drows i{font:800 18px/1 var(--display);font-style:normal;color:#0B7A3B;white-space:nowrap}
-  .dgoal{display:flex;align-items:center;gap:8px;margin:6px 0 0;padding:10px 12px;border-radius:14px;background:var(--mist);font:700 14px/1 var(--display);color:var(--deep)}
-  .dgoal svg{width:20px;height:20px;padding:3px;border-radius:50%;background:var(--cobalt);color:var(--white)}
-  .dash.go .drows li{animation:rowin .5s var(--ease-out) both}
-  .dash.go .drows li:nth-child(2){animation-delay:.12s}.dash.go .drows li:nth-child(3){animation-delay:.24s}
-  .dash.go .dgoal{animation:rowin .5s var(--ease-out) .5s both}
-  @keyframes rowin{from{opacity:0;transform:translateY(10px)}}
-
-  /* what you'd make */
-  .earngrid{display:grid;gap:clamp(30px,6vw,64px);align-items:start}
-  .deal{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
-  .deal li{display:grid;gap:4px;padding:16px 0;border-bottom:1px solid var(--line)}
-  .deal b{font:800 clamp(22px,5.8vw,30px)/1.1 var(--display);letter-spacing:-.03em;color:var(--cobalt)}
-  .deal span{color:var(--soft);max-width:34em}
-  .calc{position:relative;overflow:hidden;isolation:isolate;border-radius:28px;padding:clamp(24px,5vw,40px);color:var(--white);background:linear-gradient(180deg,var(--deep),var(--cobalt) 55%,var(--bright))}
-  .calc h2{color:var(--white);margin-bottom:18px;font-size:clamp(30px,8vw,48px)}
-  .calclabel{display:block;font-weight:600;margin-bottom:14px}
-  .calclabel output{font-weight:800;font-size:1.25em}
-  .calc input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:99px;outline-offset:6px;cursor:pointer;background:linear-gradient(90deg,var(--white) var(--p,20%),rgba(255,255,255,.22) var(--p,20%))}
-  .calc input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;border-radius:50%;background:var(--white);border:3px solid var(--deep);box-shadow:0 6px 14px rgba(3,10,60,.4)}
-  .calc input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--white);border:3px solid var(--deep)}
-  .paidrow{display:grid;grid-template-columns:auto auto;justify-content:start;column-gap:clamp(22px,6vw,48px);align-items:end;margin:26px 0 16px}
-  .paid{display:flex;align-items:flex-start;font:900 clamp(72px,21vw,132px)/.9 var(--display);letter-spacing:-.06em;font-style:italic;margin:0}
-  .paid.small{font-size:clamp(40px,11vw,68px);color:var(--first)}
-  .paid .cur{font-size:.42em;margin:.12em .06em 0 0;font-style:normal}
-  .paidlab{font:700 15px/1.2 var(--display);color:var(--first);margin:6px 0 0}
-  .calc .fine{color:#C9D6FF}
+  .applycard{width:100%;max-width:480px;background:var(--white);color:var(--ink);border-radius:26px;padding:clamp(20px,5vw,30px);box-shadow:0 26px 60px rgba(3,10,70,.34);scroll-margin-top:16px}
+  #crewform{display:grid;gap:12px}
+  #applyh{font-size:clamp(24px,6.4vw,30px);letter-spacing:-.03em;color:var(--deep)}
+  .f{display:grid;gap:6px;min-width:0}
+  .f label{font:700 15px/1.2 var(--display);letter-spacing:-.01em}
+  .f input{width:100%;min-width:0;border:2px solid var(--ink);border-radius:14px;background:var(--white);padding:12px 16px;font-size:17px;outline:0;transition:box-shadow .25s var(--ease-out)}
+  .f input:focus{box-shadow:0 0 0 4px var(--pale)}
+  .f input[aria-invalid]{border-color:#D3203B;box-shadow:0 0 0 4px rgba(211,32,59,.15)}
+  .at{display:flex;align-items:center;border:2px solid var(--ink);border-radius:14px;background:var(--white);transition:box-shadow .25s var(--ease-out)}
+  .at:focus-within{box-shadow:0 0 0 4px var(--pale)}
+  .at:has([aria-invalid]){border-color:#D3203B}
+  .at span{padding-left:16px;font-weight:700;color:var(--soft)}
+  .at input{border:0;border-radius:14px;padding-left:4px}
+  .at input:focus{box-shadow:none}
+  .tick{display:flex;align-items:center;gap:12px;font-weight:600;cursor:pointer;line-height:1.3}
+  .tick input{width:24px;height:24px;flex:0 0 24px;accent-color:var(--cobalt)}
+  .tick input:focus-visible{outline:3px solid var(--dawn);outline-offset:3px}
+  .tick input[aria-invalid]{outline:3px solid #D3203B;outline-offset:2px}
+  .tick.small{font-size:14px;font-weight:500;color:var(--soft)}
+  .tick.small input{width:20px;height:20px;flex-basis:20px}
+  .send{width:100%;margin-top:4px}
+  .send:disabled{opacity:.6;cursor:wait}
+  .formmsg{font-weight:600;margin:0;font-size:15px}
+  .formmsg:empty{display:none}
+  .formmsg.bad{color:#C01633}
+  .cardnote{margin:0;font-size:14px;color:var(--soft);text-align:center}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .done{display:grid;gap:14px;justify-items:start;outline:0}
+  .done h2{font-size:clamp(28px,7vw,36px);color:var(--deep)}
+  .done p{margin:0;color:var(--soft)}
 
   /* what your friends get */
   .sellband{background:var(--mist)}
-  .sellgrid{display:grid;gap:clamp(28px,6vw,64px);align-items:center}
-  .rollfig{margin:0;display:grid;gap:14px;justify-items:center}
-  @media (max-width:899px){
-    .sellgrid{gap:20px}
-    .sellgrid .selltext{display:contents}
-    .sellgrid .selltext h2{order:0}.sellgrid .whatbig{order:1}.sellgrid .rollfig{order:2;margin:10px 0}.sellgrid .sixset{order:3}.sellgrid .whatlist{order:4}.sellgrid :global(.crewseals){order:5;justify-self:center}
-  }
-  .whatimg{width:82%;max-width:440px;height:auto;border-radius:28px;transform:rotate(-2deg);box-shadow:0 24px 50px rgba(11,31,158,.18)}
-  .rollfig figcaption{font:700 15px/1.3 var(--display);color:var(--deep);text-align:center}
+  .sellgrid{display:grid;gap:28px;align-items:center}
+  .whatimg{width:70%;max-width:400px;height:auto;border-radius:26px;justify-self:center;box-shadow:0 24px 50px rgba(11,31,158,.16)}
   .selltext{display:grid;gap:18px;justify-items:start}
-  .selltext h2{color:var(--deep)}
-  .whatbig{font:600 clamp(19px,5vw,23px)/1.32 var(--display);letter-spacing:-.015em;color:var(--ink);max-width:30em;margin:0}
-  .sixset{display:grid;gap:10px;width:100%}
-  .siglab{font:800 15px/1.2 var(--display);color:var(--deep);margin:0}
-  .sigchips{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
-  .sigchips li{background:var(--white);border:2px solid var(--ink);border-radius:16px;padding:10px 12px;display:grid;gap:2px;align-content:start}
-  .sigchips b{font:800 18px/1.1 var(--display);letter-spacing:-.02em;color:var(--cobalt)}
-  .sigchips span{font-size:13px;color:var(--soft);line-height:1.25}
-  .sigmore{margin:0;font-size:15px;color:var(--soft)}
-  .whatlist{margin:0;padding:0;list-style:none;display:grid;gap:12px;max-width:34em;color:var(--soft)}
-  .whatlist li{padding-left:22px;position:relative}
-  .sellband :global(.crewseals li),.sellband :global(.crewseals a){color:var(--ink)}
-  .whatlist li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--cobalt)}
+  .selltext h2{color:var(--deep);font-size:clamp(30px,8vw,52px)}
+  .big{font:600 clamp(19px,5vw,24px)/1.35 var(--display);letter-spacing:-.015em;margin:0;max-width:26em}
+  .plain{margin:0;padding:0;list-style:none;display:grid;gap:10px;color:var(--soft);max-width:34em}
+  .plain li{padding-left:22px;position:relative}
+  .plain li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--cobalt)}
 
-  /* apply */
-  .apply{background:var(--mist);padding-block:clamp(56px,11vw,110px)}
-  .applygrid{display:grid;gap:30px;align-items:start}
-  .bandslot{position:relative;z-index:5}
-  .cband{transform:rotate(-2.4deg);transition:transform .6s var(--ease-out)}
-  .cband.lit{transform:rotate(-1deg)}
-  .cbin{position:relative;overflow:hidden;isolation:isolate;display:grid;gap:6px;padding:14px 18px 14px 34px;border-radius:20px;color:var(--white);background:linear-gradient(100deg,#0B1F9E,var(--cobalt) 42%,#2A62F0 72%,var(--dawn));box-shadow:0 18px 40px rgba(7,18,104,.35),inset 0 0 0 1.5px rgba(255,255,255,.32)}
-  .cbin::before{content:"";position:absolute;left:15px;top:12px;bottom:12px;border-left:2px dashed rgba(255,255,255,.5)}
-  .cbhead{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .cbhead img{width:min(104px,28vw);height:auto}
-  .cbhead span{font:700 10.5px/1.2 var(--display);letter-spacing:.12em;white-space:nowrap;text-transform:uppercase;opacity:.88;text-align:right}
-  .cbhead i{font-style:normal}
-  .cbname{font:900 clamp(28px,8vw,52px)/.95 var(--display);font-style:italic;letter-spacing:-.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-  .cbfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;font:600 14px/1.2 var(--display);min-width:0}
-  .cbfoot>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.92}
-  .cbcode{flex:0 0 auto;background:var(--white);color:var(--deep);border-radius:99px;padding:6px 12px;font-size:12px}
-  .cbcode b{font-weight:900;letter-spacing:.04em}
-  .stamp{position:absolute;left:52%;top:54%;font:900 clamp(26px,7vw,40px)/1 var(--display);letter-spacing:-.02em;font-style:italic;color:var(--white);border:4px solid var(--white);border-radius:14px;padding:6px 14px;transform:translate(-50%,-50%) rotate(-12deg) scale(2.2);opacity:0;pointer-events:none}
-  .cband.stamped .stamp{animation:stamp .55s cubic-bezier(.3,1.4,.5,1) forwards}
-  .cband.stamped .cbname,.cband.stamped .cbfoot{opacity:.55}
-  @keyframes stamp{to{opacity:1;transform:translate(-50%,-50%) rotate(-12deg) scale(1)}}
-  .bandhint{font:600 13px/1.3 var(--display);color:var(--soft);margin:10px 0 0 6px}
-
-  .formcol h2{margin-bottom:12px}
-  .lede{color:var(--soft);margin-bottom:28px}
-  #crewform{display:grid;gap:20px;max-width:620px}
-  .f{display:grid;gap:8px;border:0;margin:0;padding:0;min-width:0}
-  .f label,.f legend{font:700 15px/1.2 var(--display);letter-spacing:-.01em;padding:0}
-  .f em{font-style:normal;font-weight:500;color:var(--soft)}
-  .f input,.f textarea{width:100%;min-width:0;border:2px solid var(--ink);border-radius:16px;background:var(--white);padding:15px 16px;font-size:17px;outline:0;transition:box-shadow .25s var(--ease-out)}
-  .f textarea{font:inherit;font-size:17px;resize:vertical;min-height:96px;line-height:1.45}
-  .f input:focus,.f textarea:focus{box-shadow:0 0 0 4px var(--pale)}
-  .f input[aria-invalid],.f textarea[aria-invalid]{border-color:#D3203B;box-shadow:0 0 0 4px rgba(211,32,59,.15)}
-  .two-f{display:grid;gap:20px}
-  .at{display:flex;align-items:center;border:2px solid var(--ink);border-radius:16px;background:var(--white);transition:box-shadow .25s var(--ease-out)}
-  .at:focus-within{box-shadow:0 0 0 4px var(--pale)}
-  .at span{padding-left:16px;font-weight:700;color:var(--soft)}
-  .at input{border:0;border-radius:16px;padding-left:4px}
-  .at input:focus{box-shadow:none}
-  .codein{font:900 22px/1 var(--display)!important;letter-spacing:.06em;text-transform:uppercase;color:var(--cobalt)}
-  .help{font-size:14px;color:var(--soft)}
-  .pick{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
-  .pick label{position:relative;cursor:pointer}
-  .pick input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-  .pick span{display:block;padding:12px 18px;border:2px solid var(--ink);border-radius:99px;background:var(--white);font:700 15px/1.2 var(--display);transition:background-color .25s,color .25s,transform .3s var(--ease-out)}
-  .pick input:checked+span{background:var(--ink);color:var(--white);transform:rotate(-2deg)}
-  .pick input:focus-visible+span{outline:3px solid var(--dawn);outline-offset:3px}
-  .reachbox{display:grid;gap:10px;margin-top:14px;padding:18px;border-radius:20px;background:var(--white);border:2px solid var(--ink)}
-  .reachq,.reachl{font:700 15px/1.2 var(--display);margin:0}
-  .reachl{margin-top:6px}
-  .tick{display:flex;align-items:center;gap:12px;font-weight:600;cursor:pointer}
-  .tick input{width:24px;height:24px;flex:0 0 24px;accent-color:var(--cobalt)}
-  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-  .send{justify-self:start;margin-top:6px}
-  .send:disabled{opacity:.6;cursor:wait}
-  .formmsg{font-weight:600;min-height:1.4em}
-  .formmsg.bad{color:#C01633}
-  .done{display:grid;gap:16px;justify-items:start;max-width:520px;outline:0}
-
-  /* long game */
-  .longgame{background:var(--night);color:var(--white)}
-  .longgame .w{display:grid;gap:clamp(22px,4vw,34px)}
-  .longgame h2{max-width:14em}
-  .longlede{font:600 clamp(18px,4.8vw,22px)/1.35 var(--display);color:var(--pale);max-width:32em}
-  .longlist{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1.5px solid rgba(255,255,255,.3)}
-  .longlist li{display:grid;gap:4px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.16)}
-  .longlist b{font:800 clamp(22px,6vw,30px)/1.1 var(--display);letter-spacing:-.03em;font-style:italic}
-  .longlist span{color:#C9D6FF;max-width:36em}
-  .longwhy{font-weight:600;color:var(--first);max-width:34em}
-
-  /* how */
-  .how{padding-top:clamp(64px,13vw,110px);padding-bottom:clamp(56px,11vw,100px)}
-  .bigword{display:inline-block;font-size:1.7em;line-height:.85;letter-spacing:-.05em;color:var(--dawn);font-style:italic;padding-right:.02em}
-  .how h2{margin-bottom:clamp(24px,5vw,40px)}
-  .steps{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:s}
-  .steps li{counter-increment:s;display:grid;grid-template-columns:auto 1fr;column-gap:18px;row-gap:4px;padding:18px 0;border-top:1px solid var(--line)}
-  .steps li::before{content:counter(s);grid-row:span 2;align-self:start;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--cobalt);color:var(--white);font:800 19px/1 var(--display)}
-  .steps b{font:800 clamp(20px,5.4vw,26px)/1.15 var(--display);letter-spacing:-.025em}
+  /* how you get paid */
+  .paid h2{font-size:clamp(30px,8vw,52px);margin-bottom:clamp(20px,5vw,34px)}
+  .steps{list-style:none;margin:0;padding:0;display:grid;counter-reset:s}
+  .steps li{counter-increment:s;display:grid;grid-template-columns:auto 1fr;column-gap:16px;row-gap:2px;padding:16px 0;border-top:1px solid var(--line)}
+  .steps li::before{content:counter(s);grid-row:span 2;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--cobalt);color:var(--white);font:800 18px/1 var(--display)}
+  .steps b{font:800 clamp(19px,5vw,24px)/1.2 var(--display);letter-spacing:-.02em}
   .steps span{color:var(--soft)}
+  .deal{list-style:none;margin:clamp(24px,5vw,40px) 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .deal li{display:grid;gap:2px;align-content:start;padding:16px;border-radius:18px;background:var(--mist)}
+  .deal b{font:800 clamp(26px,7vw,38px)/1 var(--display);letter-spacing:-.04em;color:var(--cobalt)}
+  .deal span{font-size:15px;line-height:1.3;color:var(--ink)}
 
-  /* crew faq */
-  .crewfaq{padding-top:clamp(56px,11vw,100px)}
-  .crewfaq h2{color:var(--deep);margin-bottom:12px}
-  .crewfaq p{color:var(--soft);padding-bottom:22px;max-width:60ch}
+  /* faq, last call, small print */
+  .crewfaq{padding-top:clamp(40px,8vw,80px)}
+  .crewfaq h2{color:var(--deep);margin-bottom:8px;font-size:clamp(30px,8vw,52px)}
+  .crewfaq p{max-width:60ch}
   .crewfaq p a{color:var(--cobalt);font-weight:700}
-
+  .again{padding-top:clamp(36px,7vw,60px);display:flex;justify-content:center}
   .smallprint{padding-block:clamp(48px,9vw,90px)}
-  .smallprint h2{font-size:clamp(24px,6vw,32px);margin-bottom:16px}
-  .smallprint ul{margin:0;padding-left:20px;display:grid;gap:10px;color:var(--soft);font-size:15px;max-width:62ch}
+  .smallprint h2{font-size:clamp(22px,5.6vw,28px);margin-bottom:14px}
+  .smallprint ul{margin:0;padding-left:20px;display:grid;gap:10px;color:var(--soft);font-size:14px;max-width:62ch}
 
   @media (min-width:900px){
-    .herogrid{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:56px}
-    .earngrid{grid-template-columns:1fr 1fr}
+    .herogrid{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px;align-items:center}
+    .applycard{justify-self:end}
     .sellgrid{grid-template-columns:minmax(0,.8fr) minmax(0,1fr)}
-    .longlist{grid-template-columns:1fr 1fr;column-gap:48px}
+    .whatimg{width:82%}
     .steps{grid-template-columns:repeat(3,1fr);gap:28px}
     .steps li{grid-template-columns:1fr;border-top:2px solid var(--ink)}
     .steps li::before{grid-row:auto;margin-bottom:8px}
-    .calc{position:sticky;top:24px}
-    .applygrid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:64px}
-    .applygrid .formcol{grid-row:1}
-    .bandslot{position:sticky;top:40px;grid-column:2;grid-row:1;padding-top:76px}
-    .cbin{padding:22px 26px 22px 44px;gap:10px}
-    .cbin::before{left:20px}
-    .two-f{grid-template-columns:1fr 1fr}
-    .applygrid{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
-    .applygrid .formcol{grid-column:1}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .dash.go .drows li,.dash.go .dgoal{animation:none}
-    .cband,.cband.lit{transition:none}
-    .cband.stamped .stamp{animation:none;opacity:1;transform:translate(-50%,-50%) rotate(-12deg)}
+    .deal{grid-template-columns:repeat(4,1fr)}
   }
 </style>
