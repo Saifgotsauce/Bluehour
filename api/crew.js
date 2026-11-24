@@ -98,6 +98,14 @@ export function crewProfile(a) {
   };
 }
 
+// Step 2 answers only, added to the profile the application already made.
+export function crewMore(a) {
+  const properties = { crew_step2: 'answered' };
+  if (a.often) properties.crew_goes_out = a.often;
+  if (a.crew) properties.crew_group_size = a.crew;
+  return { data: { type: 'profile', attributes: { email: a.email, properties } } };
+}
+
 export function crewEvent(a) {
   return {
     data: {
@@ -131,9 +139,27 @@ export default async function handler(req, res) {
   const list = process.env.KLAVIYO_LIST_ID;
   if (!key) return res.status(503).json({ error: 'not_configured' });
 
-  const { app, error } = readApplication(readBody(req));
+  const body = readBody(req);
+  const { app, error } = readApplication(body);
   if (error === 'spam') return res.status(200).json({ ok: true }); // look done, save nothing
   if (error) return res.status(400).json({ error });
+
+  // Step 2 on /crew: the same applicant adds how often they go out and how many go with them.
+  // Only those answers are added to their profile: no second "Applied" event, no list changes.
+  if (body.step === 'more') {
+    if (!app.often && !app.crew) return res.status(400).json({ error: 'more' });
+    try {
+      const r = await klaviyo('profile-import/', key, crewMore(app));
+      if (!r.ok) {
+        console.error('Klaviyo crew step 2 failed:', r.status, await r.text().catch(() => ''));
+        return res.status(502).json({ error: 'save_failed' });
+      }
+    } catch (e) {
+      console.error('Klaviyo request failed:', e);
+      return res.status(502).json({ error: 'save_failed' });
+    }
+    return res.status(200).json({ ok: true });
+  }
 
   try {
     const r = await klaviyo('profile-import/', key, crewProfile(app));

@@ -52,6 +52,31 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
           <p class="cardnote">{CREW_SPOTS} spots. We look at your page and email you either way.</p>
         </form>
 
+        <form class="step2" id="cmore" hidden tabindex="-1" aria-labelledby="moreh">
+          <p class="gotit">Application saved.</p>
+          <h2 id="moreh">Two taps to help us say yes faster</h2>
+          <fieldset class="q">
+            <legend>How often do you go out?</legend>
+            <div class="pick">
+              <label><input type="radio" name="often" value="weekly" /><span>Every weekend</span></label>
+              <label><input type="radio" name="often" value="monthly" /><span>A few times a month</span></label>
+              <label><input type="radio" name="often" value="festivals" /><span>Mostly festivals</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="q">
+            <legend>How many people usually go out with you?</legend>
+            <div class="pick">
+              <label><input type="radio" name="crew" value="1-3" /><span>1 to 3</span></label>
+              <label><input type="radio" name="crew" value="4-8" /><span>4 to 8</span></label>
+              <label><input type="radio" name="crew" value="9-15" /><span>9 to 15</span></label>
+              <label><input type="radio" name="crew" value="15+" /><span>15+</span></label>
+            </div>
+          </fieldset>
+          <button class="btn blue send" type="submit" id="msend">Send answers</button>
+          <p class="formmsg" id="mmsg" role="status" aria-live="polite"></p>
+          <button class="skip" type="button" id="mskip">Skip</button>
+        </form>
+
         <div class="done" id="cdone" hidden tabindex="-1">
           <h2>You applied.</h2>
           <p>We'll look at your Instagram and email you either way. If you're in, you'll pick your code and get your dashboard link in that email.</p>
@@ -130,6 +155,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
     (() => {
       const $ = (id) => document.getElementById(id);
       const f = $('crewform'), msg = $('cmsg'), send = $('csend');
+      let sent = null; // step 1, once saved
       const handle = (s) => String(s || '').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok)\.com\//i, '').replace(/^@+/, '').replace(/[/?#].*$/, '');
 
       // The button lower down jumps back to the form and puts the cursor in the first field
@@ -168,9 +194,10 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
           const res = await fetch('/api/crew', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d) });
           const j = await res.json().catch(() => ({}));
           if (res.ok && j.ok) {
+            sent = d;
             f.hidden = true;
-            const done = $('cdone'); done.hidden = false; done.focus();
             $('backup').closest('section').hidden = true;
+            const more = $('cmore'); more.hidden = false; more.focus();
             return;
           }
           if (j.error && LABELS[j.error]) return flag(j.error);
@@ -180,6 +207,28 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
           msg.className = 'formmsg bad';
         } finally {
           send.disabled = false; send.textContent = 'Apply for a spot';
+        }
+      });
+
+      // ---- step 2: optional, the application is already saved ----
+      const more = $('cmore'), msend = $('msend'), mmsg = $('mmsg');
+      const finish = () => { more.hidden = true; const done = $('cdone'); done.hidden = false; done.focus(); };
+      $('mskip').addEventListener('click', finish);
+      more.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!more.often.value && !more.crew.value) { mmsg.textContent = 'Tap an answer, or skip.'; mmsg.className = 'formmsg bad'; return; }
+        msend.disabled = true; msend.textContent = 'Sending...';
+        mmsg.textContent = ''; mmsg.className = 'formmsg';
+        try {
+          const res = await fetch('/api/crew', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...sent, step: 'more', often: more.often.value, crew: more.crew.value }) });
+          const j = await res.json().catch(() => ({}));
+          if (res.ok && j.ok) return finish();
+          throw new Error(j.error || 'failed');
+        } catch (x) {
+          mmsg.textContent = "That didn't send. Try again, or skip. Your application is already saved.";
+          mmsg.className = 'formmsg bad';
+        } finally {
+          msend.disabled = false; msend.textContent = 'Send answers';
         }
       });
     })();
@@ -223,6 +272,21 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
   .formmsg.bad{color:#C01633}
   .cardnote{margin:0;font-size:14px;color:var(--soft);text-align:center}
   .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .applycard [hidden]{display:none!important}
+  .step2{display:grid;gap:16px;outline:0}
+  .gotit{margin:0;display:flex;align-items:center;gap:8px;font:700 15px/1.2 var(--display);color:#0B7A3B}
+  .gotit::before{content:"";width:10px;height:10px;border-radius:50%;background:#0B7A3B}
+  #moreh{font-size:clamp(22px,6vw,28px);letter-spacing:-.03em;color:var(--deep)}
+  .q{border:0;margin:0;padding:0;min-width:0;display:grid;gap:8px}
+  .q legend{font:700 15px/1.2 var(--display);padding:0;margin-bottom:8px}
+  .pick{display:flex;flex-wrap:wrap;gap:8px}
+  .pick label{position:relative;cursor:pointer}
+  .pick input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+  .pick span{display:block;padding:11px 16px;border:2px solid var(--ink);border-radius:99px;background:var(--white);font:700 15px/1.2 var(--display);transition:background-color .2s,color .2s}
+  .pick input:checked+span{background:var(--ink);color:var(--white)}
+  .pick input:focus-visible+span{outline:3px solid var(--dawn);outline-offset:3px}
+  .skip{justify-self:center;background:none;border:0;padding:6px 10px;font:600 15px/1.2 var(--display);color:var(--soft);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  .skip:focus-visible{outline:3px solid var(--dawn);outline-offset:2px;border-radius:6px}
   .done{display:grid;gap:14px;justify-items:start;outline:0}
   .done h2{font-size:clamp(28px,7vw,36px);color:var(--deep)}
   .done p{margin:0;color:var(--soft)}
