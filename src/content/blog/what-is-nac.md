@@ -3,6 +3,7 @@ title: "What is NAC? The supplement that's also a 60-year-old drug"
 seoTitle: "What is NAC? The supplement that's also a drug"
 description: "What NAC (N-acetylcysteine) is, why hospitals use it, why the FDA nearly pulled it from shelves, its side effects and who should skip it."
 pubDate: 2026-11-19
+updatedDate: 2026-11-25
 category: Ingredients
 ---
 
@@ -37,7 +38,9 @@ For decades nobody enforced that. Then the FDA changed course:
 - **March 2022:** The FDA denied petitions from two supplement industry groups, the Council for Responsible Nutrition and the Natural Products Association, confirming that NAC is excluded. It said it was still considering the industry's other request to make NAC lawful in supplements through a regulation.
 - **August 2022:** The FDA issued final guidance saying it intends to use "enforcement discretion". In plain English, it won't act against NAC supplements that are otherwise legal while it reviews the safety data and decides on a rule.
 
-That's why you can still buy NAC as a supplement in the US. The guidance says the FDA will let the industry know if that policy changes.
+- **November 2026:** The FDA proposed a rule that would make NAC a lawful dietary supplement ingredient. Comments close in January 2027, and the rule would take effect when it's finalized.
+
+That's why you can still buy NAC as a supplement in the US, and why its status is close to settled.
 
 ## How well is NAC absorbed?
 
@@ -79,11 +82,11 @@ More isn't automatically better, and stomach side effects become more likely as 
 
 ## NAC in Blue Hour
 
-NAC is an optional capsule called **Prime**. It isn't in the Signature Six pouch.
+NAC is in Blue Hour as a capsule called **Prime**, and there's one in every Signature pouch.
 
 - Each Prime capsule contains **600 mg** of NAC.
 - An independent lab (Eurofins) measured **639 mg** per capsule in the batch we use. The full lab report is on our [shop page](/shop).
-- When you [build your own pouch](/shop#build), the builder lets you add up to two, for **1,200 mg a day**.
+- When you [build your own pouch](/shop#build), you can take it out, or add a second, for **1,200 mg a day**.
 
 If any of the points in "who should check with a doctor first" apply to you, leave Prime out of your pouch until you've asked.
 
@@ -91,7 +94,7 @@ If any of the points in "who should check with a doctor first" apply to you, lea
 
 ### Is NAC a supplement or a drug?
 
-Both. It was approved as a drug in 1963. In 2022 the FDA confirmed that, legally, this excludes it from the definition of a dietary supplement, but said it won't act against NAC supplements that are otherwise legal while it decides on a rule.
+Both. It was approved as a drug in 1963. In 2022 the FDA confirmed that, legally, this excludes it from the definition of a dietary supplement, but said it won't act against NAC supplements that are otherwise legal while it decides on a rule. In November 2026 it proposed that rule, which would make NAC lawful in supplements.
 
 ### What does NAC do in the body?
 
@@ -112,6 +115,7 @@ NAC contains sulfur. A faint smell is normal and doesn't mean the product has go
 ## Sources
 
 - US Food and Drug Administration, [Guidance for industry: policy regarding N-acetyl-L-cysteine](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/guidance-industry-policy-regarding-n-acetyl-l-cysteine), August 2022
+- US Food and Drug Administration, [Proposed rule: N-acetyl-L-cysteine is not excluded from the dietary supplement definition](https://public-inspection.federalregister.gov/2026-23351.pdf), Docket FDA-2025-N-2699, November 2026
 - US Food and Drug Administration, [FDA issues response to two citizen petitions on NAC in dietary supplements](https://www.fda.gov/food/hfp-constituent-updates/fda-issues-response-two-citizen-petitions-nac-dietary-supplements), March 2022
 - Josh Long, [FDA issues final 'enforcement discretion' guidance on NAC](https://www.supplysidesj.com/ingredients/fda-issues-final-enforcement-discretion-guidance-nac), *SupplySide Supplement Journal*, 2022
 - Tenório MCDS, Graciliano NG, Moura FA, Oliveira ACM, Goulart MOF, [N-acetylcysteine (NAC): impacts on human health](https://pmc.ncbi.nlm.nih.gov/articles/PMC8234027/), *Antioxidants*, 2021

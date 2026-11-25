@@ -3,7 +3,9 @@
 
 import { EGGS, eggById, inBlueHour, COLLECTOR_NEEDS } from '../data/eggs.js';
 import { PREORDER, SHIP_BY } from '../data/preorder.js';
-import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier, refEachFor } from '../data/ingredients.js';
+import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, SIGNATURE_NAME, minFor, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier, refEachFor } from '../data/ingredients.js';
+import { track, keepRecording, watchSections, attribution, touchString, liveVariants, aid, pageType } from './track.js';
+import { signal, state, freshVisit, faqKind } from './state.js';
 
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -28,7 +30,11 @@ function getCode() {
   return null;
 }
 function setCode(c) {
-  if (c && c.code) store.set('bh-code', JSON.stringify({ code: c.code, label: c.label || 'Discount', crew: !!c.crew, at: c.at || Date.now(), checked: Date.now() }));
+  if (c && c.code) {
+    const had = getCode();
+    store.set('bh-code', JSON.stringify({ code: c.code, label: c.label || 'Discount', crew: !!c.crew, at: c.at || Date.now(), checked: Date.now() }));
+    if (!had || had.code !== c.code) track('code_applied', { crew: !!c.crew });
+  }
   else store.set('bh-code', '');
   codeBar(); paint();
   try { window.dispatchEvent(new CustomEvent('bh:code')); } catch (e) { /* ignore */ }
@@ -207,13 +213,18 @@ const save = () => store.set('bh-cart2', JSON.stringify(cart));
 const cartCount = () => cart.reduce((a, l) => a + l.qty, 0);
 const lineTitle = (mix) => (isSignature(mix) ? 'Signature pouch' : 'Custom pouch');
 
-function addToCart(mix, qty, quiet) {
+function addToCart(mix, qty, quiet, from) {
   const clean = cleanMix(mix);
   if (!mixTotal(clean)) return;
   const line = cart.find((l) => mixKey(l.mix) === mixKey(clean));
   if (line) line.qty = Math.min(9, line.qty + qty);
   else cart.push({ mix: clean, qty });
   save(); paint();
+  const kind = isSignature(clean) ? 'signature' : 'custom';
+  if (kind === 'custom') track('build_completed', { count: mixTotal(clean) });
+  track('add_to_cart', { rolls: qty, kind, value: qty * eachFor(cartCount()), from: from || pageType });
+  keepRecording('add_to_cart');
+  signal('add');
   if (!quiet) openCart();
 }
 
@@ -280,11 +291,17 @@ if (citems) {
     if (q) {
       const l = cart[+q.getAttribute('data-line')];
       if (!l) return;
-      l.qty = Math.min(9, l.qty + +q.getAttribute('data-d'));
+      const d = +q.getAttribute('data-d');
+      l.qty = Math.min(9, l.qty + d);
+      if (d > 0) track('add_to_cart', { rolls: 1, kind: isSignature(l.mix) ? 'signature' : 'custom', from: 'cart' });
+      else track('remove_from_cart', { rolls: 1 });
       if (l.qty < 1) cart.splice(cart.indexOf(l), 1);
     } else if (rm) {
+      const gone = cart[+rm.getAttribute('data-rm')];
+      track('remove_from_cart', { rolls: gone ? gone.qty : 1 });
       cart.splice(+rm.getAttribute('data-rm'), 1);
     } else return;
+    if (!cart.length) signal('add', true);
     save(); paint();
   });
 }
@@ -295,14 +312,14 @@ function paintBuilder() {
   const t = mixTotal(current);
   $$('[data-add], [data-buy]').forEach((b) => { b.disabled = t === 0; });
   const sum = $('#mixsum');
-  if (sum) sum.textContent = t === 0 ? 'Pick at least one capsule.' : (isSignature(current) ? 'Signature six: ' : 'Your custom ' + t + ': ') + mixSummary(current);
+  if (sum) sum.textContent = t === 0 ? 'Pick at least one capsule.' : (isSignature(current) ? SIGNATURE_NAME + ': ' : 'Your custom ' + t + ': ') + mixSummary(current);
   if (!build) return;
   $$('.icard', build).forEach((card) => {
     const id = card.getAttribute('data-id'), max = +card.getAttribute('data-max'), n = current[id] || 0;
     $('[data-n]', card).textContent = String(n);
     card.classList.toggle('on', n > 0);
     $('[data-inc]', card).disabled = n >= max || t >= MAX_CAPS;
-    $('[data-dec]', card).disabled = n <= 0;
+    $('[data-dec]', card).disabled = n <= minFor(id);
   });
   const imgs = [];
   INGREDIENTS.forEach((i) => { for (let k = 0; k < (current[i.id] || 0); k++) imgs.push(i.img); });
@@ -313,25 +330,65 @@ function paintBuilder() {
   const tally = $('#tally');
   if (tally) tally.textContent = t + ' of ' + MAX_CAPS;
 }
+// Builder tracking and the "builder hesitator" rule (report 6.4): lots of changes or a long time in the builder
+// without adding to cart gets one plain offer of The Signature, once per visit. Never a countdown or pressure.
+let buildStart = 0, buildChanges = 0, nudged = false;
+function saveBuild() {
+  // A custom pouch is kept in this browser, so it's still there next visit (the "saved progress" idea).
+  if (isSignature(current)) store.set('bh-build', '');
+  else store.set('bh-build', JSON.stringify(current));
+}
+function builderNudge() {
+  if (nudged || isSignature(current) || !build) return;
+  const slow = buildStart && Date.now() - buildStart > 45e3;
+  if (buildChanges < 6 && !slow) return;
+  try { if (sessionStorage.getItem('bh-bnudge')) return; sessionStorage.setItem('bh-bnudge', '1'); } catch (e) { /* ignore */ }
+  nudged = true;
+  const box = $('#bnudge');
+  if (!box) return;
+  box.hidden = false;
+  track('nudge_shown', { cta: 'builder_signature' });
+}
 if (build) {
   build.addEventListener('click', (e) => {
     const t = e.target;
     if (!(t instanceof Element)) return;
-    if (t.closest('#reset')) { current = { ...SIGNATURE }; paintBuilder(); return; }
+    if (t.closest('#reset, [data-use-signature]')) {
+      current = { ...SIGNATURE }; paintBuilder(); saveBuild();
+      track('builder_change', { action: 'reset', count: mixTotal(current) });
+      if (t.closest('[data-use-signature]')) { track('nudge_click', { cta: t.closest('#bsaved') ? 'saved_build' : 'builder_signature' }); $$('#bnudge, #bsaved').forEach((n) => { n.hidden = true; }); }
+      return;
+    }
     const card = t.closest('.icard');
     if (!card) return;
     const id = card.getAttribute('data-id');
-    if (t.closest('[data-inc]')) current = cleanMix({ ...current, [id]: (current[id] || 0) + 1 });
-    else if (t.closest('[data-dec]')) current = cleanMix({ ...current, [id]: (current[id] || 0) - 1 });
+    let action = '';
+    if (t.closest('[data-inc]')) { current = cleanMix({ ...current, [id]: (current[id] || 0) + 1 }); action = 'add'; }
+    else if (t.closest('[data-dec]')) { current = cleanMix({ ...current, [id]: (current[id] || 0) - 1 }); action = 'remove'; }
     else return;
-    paintBuilder();
+    if (!buildStart) { buildStart = Date.now(); track('build_started', { from: pageType }); signal('build'); }
+    buildChanges++;
+    // Coarse on purpose: which capsule was picked isn't sent anywhere (privacy policy: capsule picks aren't used for ads).
+    track('builder_change', { action, count: mixTotal(current) });
+    paintBuilder(); saveBuild(); builderNudge();
   });
+  // Bring back a custom pouch saved on an earlier visit.
+  try {
+    const saved = JSON.parse(store.get('bh-build') || 'null');
+    if (saved && mixTotal(cleanMix(saved)) && !isSignature(cleanMix(saved))) {
+      current = cleanMix(saved);
+      const note = $('#bsaved');
+      if (note) note.hidden = false;
+      track('nudge_shown', { cta: 'saved_build' });
+    }
+  } catch (e) { /* ignore */ }
 }
 
 const lock = (on) => { document.documentElement.style.overflow = on ? 'hidden' : ''; };
 function openCart() {
   const c = $('#cart'); if (!c) return;
   $('#chknote').hidden = true;
+  track('view_cart', { rolls: cartCount(), value: totalFor(cartCount()) });
   c.classList.add('on'); c.inert = false;
   $('#scrim').classList.add('on'); lock(true); $('#cartx').focus();
 }
@@ -350,12 +407,16 @@ let taps = 0, lastTap = 0;
 document.addEventListener('click', (e) => {
   const t = e.target;
   if (!(t instanceof Element)) return;
-  if (t.closest('[data-cart]')) { openCart(); return; }
+  if (t.closest('[data-cart]')) { if (t.closest('[data-cta]')) track('nudge_click', { cta: t.closest('[data-cta]').getAttribute('data-cta') }); openCart(); return; }
   if (t.closest('[data-menu]')) { openMenu(); return; }
   const buy = t.closest('[data-buy]');
-  if (buy) { if (!buy.disabled) { addToCart(current, picked, true); goCheckout(buy); } return; }
-  if (t.closest('[data-add]')) { addToCart(current, picked); return; }
-  if (t.closest('#upsell')) { addToCart(SIGNATURE, 1, true); return; }
+  if (buy) { if (!buy.disabled) { addToCart(current, picked, true, 'buy_now'); goCheckout(buy); } return; }
+  if (t.closest('[data-add]')) { addToCart(current, picked, false, t.closest('#build') ? 'builder' : pageType); return; }
+  if (t.closest('#upsell')) { addToCart(SIGNATURE, 1, true, 'cart_upsell'); return; }
+  const cta = t.closest('[data-cta]');
+  if (cta) { const c = cta.getAttribute('data-cta'); track(c === 'hero' ? 'hero_cta_click' : 'cta_click', { cta: c, page_type: pageType }); }
+  const lab = t.closest('a[href^="/coa/"]');
+  if (lab) { track('open_lab_report', { report: lab.getAttribute('href').replace(/^\/coa\//, '').replace(/[-_]\d[\w-]*\.pdf$|\.pdf$/, '') }); signal('proof'); }
   if (t.closest('[data-dropcode]')) { setCode(null); return; }
   if (t.closest('#menu a, #cart a')) { closeAll(); return; }
   const cap = t.closest('.cap');
@@ -410,15 +471,24 @@ async function goCheckout(btn) {
   let msg = "Checkout couldn't open. Check your connection and try again.";
   try {
     const code = getCode();
+    const rolls = cartCount();
+    track('begin_checkout', { rolls, value: totalFor(rolls), crew: !!(code && code.crew) });
+    keepRecording('begin_checkout');
+    store.set('bh-pending', JSON.stringify({ rolls, value: totalFor(rolls), at: Date.now() }));
     const r = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lines: cart, code: code ? code.code : '', egg: (bestEgg() || {}).token || '', vid: trybeVid() }),
+      body: JSON.stringify({
+        lines: cart, code: code ? code.code : '', egg: (bestEgg() || {}).token || '', vid: trybeVid(),
+        // Where this buyer came from, saved on the Stripe order (see api/checkout.js).
+        attr: { first: touchString(attribution.first), last: touchString(attribution.last), aid, exp: liveVariants() },
+      }),
     });
     const d = await r.json().catch(() => ({}));
-    if (r.ok && d.url) { location.href = d.url; return; }
+    if (r.ok && d.url) { flushSoon(); location.href = d.url; return; }
+    track('checkout_error', { error: d.error || ('http_' + r.status) });
     if (d.error === 'not_configured') msg = "Checkout isn't switched on yet. Please check back soon.";
-  } catch (e) { /* message below */ }
+  } catch (e) { track('checkout_error', { error: 'network' }); }
   leaving = false;
   btn.disabled = false;
   btn.innerHTML = label;
@@ -449,7 +519,11 @@ function setPicked(n) {
   $$('[data-price-short]').forEach((p) => { p.textContent = '$' + totalFor(picked); });
   $$('[data-rolls]').forEach((p) => { p.textContent = picked + (picked > 1 ? ' rolls' : ' roll'); });
 }
-$$('[data-qty]').forEach((el) => el.addEventListener('change', () => setPicked(parseInt(el.value, 10))));
+$$('[data-qty]').forEach((el) => el.addEventListener('change', () => {
+  setPicked(parseInt(el.value, 10));
+  track('quantity_selected', { qty: picked, value: totalFor(picked) });
+  signal('price');
+}));
 
 /* ---------- carousels ---------- */
 let lastPageScroll = 0;
@@ -532,6 +606,22 @@ $$('[data-gal]').forEach((gal) => {
 });
 
 /* ---------- FAQ accordion ---------- */
+const faqSeen = new Set();
+function faqOpened(d) {
+  const q = (($('.q', d) || $('summary', d) || {}).textContent || '').trim();
+  const topic = q.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40);
+  if (!topic || faqSeen.has(topic)) return;
+  faqSeen.add(topic);
+  track('faq_open', { topic });
+  signal(faqKind(q));
+}
+// FAQs that open without the animation (reduced motion), and Supplement Facts panels.
+document.addEventListener('toggle', (e) => {
+  const d = e.target;
+  if (!(d instanceof HTMLDetailsElement) || !d.open) return;
+  if (d.classList.contains('facts')) { track('view_supplement_facts', { page_type: pageType }); signal('proof'); }
+  else if (d.closest('.faq')) faqOpened(d);
+}, true);
 // Quick, light open and close: only the answer's height and opacity move.
 const FAQ_EASE = 'cubic-bezier(.2,.8,.2,1)';
 $$('.faq details').forEach((d) => {
@@ -541,6 +631,7 @@ $$('.faq details').forEach((d) => {
   sum.addEventListener('click', (e) => {
     e.preventDefault();
     if (anim) anim.cancel();
+    if (!d.open) faqOpened(d);
     if (!d.open) {
       d.open = true;
       d.classList.remove('closing');
@@ -567,6 +658,7 @@ async function subscribe(email, when, source) {
     const d = await r.json().catch(() => ({}));
     if (r.ok && d.ok) {
       store.set('bh-sub', '1');
+      track('newsletter_opt_in', { form: source });
       if (d.code) setCode({ code: d.code, label: d.label });
       return { ok: true, code: d.code };
     }
@@ -829,3 +921,43 @@ codeBar();
 paint();
 paintBuilder();
 float();
+
+/* ---------- tracking: page-level events and visitor-state responses ---------- */
+function flushSoon() { try { dispatchEvent(new Event('pagehide')); } catch (e) { /* ignore */ } }
+watchSections((name) => {
+  // Seeing how it works or what's in the box counts as getting to know the product.
+  if (/^(nights|inbox|signature|pull_tear_sleep|how|build|ingredients|tested)/.test(name)) signal('product');
+});
+if (pageType === 'shop') { track('view_item', { value: eachFor(1), page_type: 'shop' }); signal('product'); }
+// Purchase: Stripe sends buyers to /thank-you?session_id=... (Stripe stays the record of what was paid).
+(function purchase() {
+  if (pageType !== 'thank_you') return;
+  const sidp = new URLSearchParams(location.search).get('session_id');
+  if (!sidp || store.get('bh-tx') === sidp) return;
+  let pend = {};
+  try { pend = JSON.parse(store.get('bh-pending') || '{}') || {}; } catch (e) { /* ignore */ }
+  track('purchase', { tx: sidp.slice(-12), rolls: pend.rolls, value: pend.value });
+  keepRecording('purchase');
+  store.set('bh-tx', sidp); store.set('bh-pending', '');
+  signal('purchase');
+})();
+// Cart holder coming back on a new visit (report 5.2): one quiet reminder that their roll is still saved.
+// No countdown, no "almost gone". Not shown if a code message is already in the top bar.
+(function cartReminder() {
+  if (!freshVisit || !cartCount() || pageType === 'thank_you' || getCode() || bestEgg()) return;
+  const bar = $('.promo');
+  if (!bar) return;
+  bar.classList.add('coded');
+  bar.innerHTML = 'Your ' + (cartCount() > 1 ? cartCount() + ' rolls are' : 'roll is') + ' still in your cart' +
+    (PREORDER ? ', at the founding price.' : '.') + ' <button type="button" data-cart data-cta="cart_reminder">Open cart</button>';
+  track('nudge_shown', { cta: 'cart_reminder' });
+})();
+// Home: if they built a custom pouch on an earlier visit, say it's saved.
+(function savedChip() {
+  const chip = $('#savedchip');
+  if (!chip) return;
+  try {
+    const saved = JSON.parse(store.get('bh-build') || 'null');
+    if (saved && mixTotal(cleanMix(saved)) && !isSignature(cleanMix(saved))) { chip.hidden = false; track('nudge_shown', { cta: 'saved_build_home' }); }
+  } catch (e) { /* ignore */ }
+})();

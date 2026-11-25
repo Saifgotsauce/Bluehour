@@ -32,7 +32,9 @@ export function cleanLines(lines) {
 // code when the promotion is one (saved on the order so the right person gets paid).
 // Without one, shoppers can type a code on the Stripe page.
 // vid: the Trybe visitor ID from the browser, saved on the order so api/trybe-order.js can credit the creator.
-export function sessionParams(lines, origin, disc, vid) {
+// attr: where the buyer came from (first and last visit source), their anonymous visitor ID and live experiment
+// variants, from src/scripts/track.js. Saved on the order so revenue can be traced to channels and tests.
+export function sessionParams(lines, origin, disc, vid, attr) {
   const rolls = lines.reduce((a, l) => a + l.qty, 0);
   const each = eachFor(rolls);
   const saving = savingFor(rolls);
@@ -88,6 +90,15 @@ export function sessionParams(lines, origin, disc, vid) {
     p.set('metadata[trybe_vid]', vid);
     p.set('payment_intent_data[metadata][trybe_vid]', vid);
   }
+  if (attr) {
+    const meta = { source_first: attr.first, source_last: attr.last, visitor: attr.aid, experiments: attr.exp };
+    Object.entries(meta).forEach(([k, v]) => {
+      if (!v) return;
+      p.set(`metadata[${k}]`, v);
+      p.set(`payment_intent_data[metadata][${k}]`, v);
+    });
+    if (attr.aid) p.set('client_reference_id', attr.aid);
+  }
   p.set('metadata[rolls]', String(rolls));
   p.set('metadata[price_each]', String(each));
   if (PREORDER) {
@@ -134,6 +145,10 @@ export default async function handler(req, res) {
   const proto = req.headers['x-forwarded-proto'] || 'https';
   const origin = `${proto}://${host}`;
   const vid = typeof body.vid === 'string' && /^[\w.:~-]{1,200}$/.test(body.vid) ? body.vid : '';
+  const A = (v, n) => (typeof v === 'string' ? v.replace(/[^\w.\-:/ |=,@]/g, '').slice(0, n) : '');
+  const attr = body.attr && typeof body.attr === 'object'
+    ? { first: A(body.attr.first, 300), last: A(body.attr.last, 300), aid: A(body.attr.aid, 40), exp: A(body.attr.exp, 300) }
+    : null;
 
   try {
     // One discount per order: whichever saves the shopper the most out of their code (from a link or the
@@ -161,7 +176,7 @@ export default async function handler(req, res) {
 
     let out;
     for (const o of tries) {
-      out = await createSession(key, sessionParams(lines, origin, o.disc, vid));
+      out = await createSession(key, sessionParams(lines, origin, o.disc, vid, attr));
       if (out.ok) break;
     }
     if (!out.ok) {

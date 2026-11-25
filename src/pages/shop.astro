@@ -6,19 +6,19 @@ import Marquee from '../components/Marquee.astro';
 import Seals from '../components/Seals.astro';
 import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
-import { INGREDIENTS, MAX_CAPS, SIGNATURE, mixSummary, TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
+import { INGREDIENTS, MAX_CAPS, SIGNATURE, SIGNATURE_NAME, LAB_PENDING, labPendingText, mixSummary, TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
 import { PREORDER, SHIP_BY } from '../data/preorder.js';
 const FIRST = TIERS[0].each;
 const BUY = PREORDER ? 'Pre-order now' : 'Buy now';
 const signatureSummary = mixSummary(SIGNATURE);
-// Gallery: product shots mixed with slides that sell (what's in a pouch, how a night works, what it costs).
+// Gallery: product shots mixed with slides that sell (how a night works, what it costs).
+// gal-callouts and gal-six were removed in Nov 2026: their artwork says 6 capsules, and The Signature is now 8.
+// Put them back once they're redrawn for 8 capsules.
 // The receipt slide shows founding prices, so swap it out at launch.
 const SLIDES = [
   { img: 'angle', w: 1122, h: 1402, alt: 'Blue Hour dispenser with pouches rising from the top' },
-  { img: 'gal-callouts', w: 1080, h: 1350, alt: 'The dispenser with labels: tear one off a night, 6 capsules sealed, 30 nights on one roll' },
   { img: 'hand', w: 1122, h: 1402, alt: 'A hand holding one Blue Hour pouch, about the size of a palm' },
   { img: 'gal-steps', w: 1080, h: 1350, alt: 'How it works: pull one pouch, tear it off, take it with a snack and water, lights out' },
-  { img: 'gal-six', w: 1080, h: 1350, alt: 'One pouch of six capsules: Level x2, Bright, Spark, Core, Glow, or build your own' },
   ...(PREORDER ? [{ img: 'gal-receipt', w: 1080, h: 1350, alt: 'A night out receipt where the Blue Hour pouch, $3.30, is the cheapest line' }] : []),
   { img: 'exploded', w: 1122, h: 1402, alt: 'Dispenser, tray and roll of pouches floating apart' },
   { img: 'flat', w: 1122, h: 1402, alt: 'Pouch ribbon curving out of the Blue Hour dispenser' },
@@ -28,7 +28,7 @@ const jsonld = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: 'Blue Hour nightly pouches',
-  description: 'One sealed pouch of 6 capsules a day: magnesium, vitamin C, methyl B-complex, zinc and glycine, or build your own. 30 pouches on one roll. No 5-HTP, caffeine or stimulants.',
+  description: 'One sealed pouch of 8 capsules a day: magnesium, glycine, NAC, vitamin C, zinc and vitamin B12, or build your own. 30 pouches on one roll. No 5-HTP, caffeine or stimulants.',
   image: ['angle', 'flat', 'exploded', 'pouch'].map((n) => new URL(`/images/${n}.webp`, site).href),
   brand: { '@type': 'Brand', name: 'Blue Hour' },
   offers: {
@@ -49,7 +49,7 @@ const jsonld = {
 ---
 <Base
   title="Blue Hour Nightly Pouches, 30 Nights | Blue Hour"
-  description={`${PREORDER ? `Pre-order now: 30 sealed pouches on one roll for a $${FIRST} founding price (launch price $${PRICE}), shipping by ${SHIP_BY}.` : `30 sealed pouches on one roll for $${PRICE} with free US shipping.`} Build your own pouch or take the Signature Six.`}
+  description={`${PREORDER ? `Pre-order now: 30 sealed pouches on one roll for a $${FIRST} founding price (launch price $${PRICE}), shipping by ${SHIP_BY}.` : `30 sealed pouches on one roll for $${PRICE} with free US shipping.`} Build your own pouch or take The Signature.`}
   jsonld={jsonld}
 >
 
@@ -75,16 +75,16 @@ const jsonld = {
         <h1>Blue Hour nightly pouches</h1>
         <p class="pricehead"><b>${FIRST}</b>{FIRST < PRICE && <s>${PRICE}</s>}<span>30 nights, {perNight(FIRST)} a night{PREORDER ? `. Ships by ${SHIP_BY}` : ''}</span></p>
         <ul class="perks">
-          <li><span>One sealed pouch of 6 capsules a night</span></li>
+          <li><span>One sealed pouch of 8 capsules a night</span></li>
           <li><span>No caffeine, stimulants or <span class="nw">5-HTP</span></span></li>
-          <li><span>Take our signature six or pick your own</span></li>
+          <li><span>Take The Signature or pick your own</span></li>
           <li><span>Free US shipping, no subscription</span></li>
         </ul>
         <Seals prefix="s" labHref="#tested" />
         {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price on our first run. We charge you today, and if you change your mind any time before your roll ships, you get a full refund.</span></div>}
         <p class="tag">One pouch. One night.</p>
-        <p>For people who dance till close, train hard and still show up. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
-        <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: {signatureSummary}</span><a href="#build">Build your own pouch</a></div>
+        <p>For people who stay out late and still show up the next day. The Signature holds 8 capsules with magnesium, glycine, NAC, vitamin C, zinc and vitamin B12, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
+        <div class="mix"><b>Your pouch</b><span id="mixsum" data-clarity-mask="true">{SIGNATURE_NAME}: {signatureSummary}</span><a href="#build">Build your own pouch</a></div>
         <fieldset class="tiers">
           <legend>How many rolls?</legend>
           {TIERS.map((t, i) => (
@@ -99,6 +99,9 @@ const jsonld = {
         {PREORDER && <p class="launchnote">Founding price for pre-orders only. At launch, one roll goes back to ${PRICE}.</p>}
         <p class="rollnote"><b>What's a roll?</b> Our 30 sealed pouches, wound on one strip inside the dispenser. Just the capsules on the label, nothing else. <a href="#why30">Why only 30 nights?</a></p>
         <p class="crewnote">Ordering with friends? Every roll in your cart counts toward the price, even with different pouches. 3 or more rolls are ${TIERS[2].each} each.</p>
+        {/* Shown only to visitors in a matching state (src/scripts/state.js, docs/TRACKING.md). */}
+        <p class="ifstate" data-for="proof_seeker">Our capsules are tested by outside labs: Eurofins, Intertek and New Wave Scientific. Every report is public. <a href="#tested">See the reports</a></p>
+        {PREORDER && <p class="ifstate" data-for="price_evaluator cart_holder">Charged today at ${FIRST}. Ships free by {SHIP_BY}. Full refund any time before it ships.</p>}
         <div class="row" id="buyrow">
           <button class="add ghost" data-add>Add to cart</button>
           <button class="add" data-buy>{BUY}</button>
@@ -157,12 +160,14 @@ const jsonld = {
     <div class="w">
       <div class="bhead">
         <h2>Build your pouch.</h2>
-        <p>Start with our signature six or swap in what you want. Pick up to {MAX_CAPS} capsules. Some have a per-pouch limit, so one pouch never stacks up too much of one nutrient. Every roll is packed to order, and the price stays the same.</p>
+        <p>Start with The Signature or swap in what you want. Pick up to {MAX_CAPS} capsules, always with at least 2 Glow (glycine). Some have a per-pouch limit, so one pouch never stacks up too much of one nutrient. Every roll is packed to order, and the price stays the same.</p>
       </div>
       <div class="tray" aria-live="polite">
         <div class="slots" id="slots">{Array.from({ length: MAX_CAPS }, () => <i></i>)}</div>
-        <div class="tally"><b id="tally">{MAX_CAPS} of {MAX_CAPS}</b><button type="button" id="reset">Back to signature</button></div>
+        <div class="tally"><b id="tally">{MAX_CAPS} of {MAX_CAPS}</b><button type="button" id="reset">Back to {SIGNATURE_NAME}</button></div>
       </div>
+      <p class="bnote" id="bsaved" hidden>This is the pouch you built last time. <button type="button" data-use-signature>Use {SIGNATURE_NAME} instead</button></p>
+      <p class="bnote" id="bnudge" hidden>Not sure what to pick? {SIGNATURE_NAME} is the simple choice, and you can change it next roll. <button type="button" data-use-signature>Use {SIGNATURE_NAME}</button></p>
       <div class="ilist">
         {INGREDIENTS.map((i) => (
           <article class:list={['icard', { on: i.signature > 0 }]} data-id={i.id} data-max={i.max}>
@@ -170,7 +175,7 @@ const jsonld = {
             <div class="it">
               <h3>{i.name}{i.signature > 0 && <span class="sig">Signature</span>}</h3>
               <div class="ing">{i.ingredient}{i.dose && ` · ${i.dose}`}</div>
-              <div class="lim">Up to {i.max} per pouch</div>
+              <div class="lim">Up to {i.max} per pouch{i.min ? `, at least ${i.min}` : ''}</div>
               <p>{i.blurb}</p>
             </div>
             <div class="step">
@@ -231,9 +236,9 @@ const jsonld = {
         <tbody>
           <tr><td><span class="nw">5-HTP</span></td><td class="us">None</td><td>Often included</td></tr>
           <tr><td>Caffeine or stimulants</td><td class="us">None</td><td>Varies</td></tr>
-          <tr><td>Choose your capsules</td><td class="us">Yes, up to 6 from a menu of 8</td><td>One fixed formula</td></tr>
+          <tr><td>Choose your capsules</td><td class="us">Yes, up to {MAX_CAPS} a pouch from a menu of {INGREDIENTS.length}</td><td>One fixed formula</td></tr>
           <tr><td>Format</td><td class="us">One dispenser, 30 sealed pouches</td><td>Bottles or loose packs</td></tr>
-          <tr><td>Lab reports</td><td class="us">Public for every capsule</td><td>Often on request, if at all</td></tr>
+          <tr><td>Lab reports</td><td class="us">{LAB_PENDING.length ? 'Public, capsule by capsule' : 'Public for every capsule'}</td><td>Often on request, if at all</td></tr>
           <tr><td>Subscription</td><td class="us">None</td><td>Often the default</td></tr>
           <tr><td>What we promise</td><td class="us">Support, never a cure</td><td>Often big claims</td></tr>
         </tbody>
@@ -256,14 +261,15 @@ const jsonld = {
   <section class="sec" id="ingredients">
     <div class="w">
       <h2 class="rv" style="color:var(--deep)">Ingredients</h2>
-      <p class="sub-h rv" style="margin-top:14px">Five things, and we'll tell you why each one is there.</p>
+      <p class="sub-h rv" style="margin-top:14px">Six things in The Signature, and we'll tell you why each one is there.</p>
       <div class="ingr">
         <article><h3>Magnesium</h3><p>A mineral your body uses for normal muscle and nerve function. Two capsules of magnesium glycinate give you 266 mg.*</p><img src="/images/powder-still.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article><h3>Vitamin C</h3><p>An antioxidant nutrient that helps protect cells and supports normal immune function. Each capsule has 1,000 mg.*</p><img src="/images/powder-bright.webp" alt="" loading="lazy" width="1300" height="560"></article>
-        <article><h3>Methyl B-complex</h3><p>Eight B vitamins that help your body turn food into energy: B1, B2, B3, B5, B6, biotin, folate as 5-MTHF, and B12 as methylcobalamin.*</p><img src="/images/powder-steady.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>Vitamin B12</h3><p>Helps your body turn food into energy. One capsule has 1,000 mcg, as methylcobalamin. We swapped our B-complex for B12 alone, so there's no niacin flush and no B6.*</p><img src="/images/powder-steady.webp" alt="" loading="lazy" width="1300" height="560"></article>
         <article><h3>Zinc</h3><p>An essential mineral that helps support normal immune function. Each capsule has 25 mg.*</p><img src="/images/powder-guard.webp" alt="" loading="lazy" width="1300" height="560"></article>
-        <article><h3>Glycine</h3><p>The simplest amino acid. Your body uses it to build proteins, including collagen. Each capsule has 850 mg.*</p><img src="/images/powder-hush.webp" alt="" loading="lazy" width="1300" height="560"></article>
-        <article class="out"><h3>What we left out</h3><p><span class="nw">5-HTP</span>, caffeine and stimulants. Five ingredients is the whole list.</p></article>
+        <article><h3>Glycine</h3><p>The simplest amino acid. Your body uses it to build proteins, including collagen. Each capsule has 850 mg, and every pouch has at least two, for 1,700 mg.*</p><img src="/images/powder-hush.webp" alt="" loading="lazy" width="1300" height="560"></article>
+        <article><h3>NAC</h3><p>N-acetyl cysteine, a form of the amino acid cysteine. Your body uses it to make the antioxidant glutathione. One capsule has 600 mg.*</p></article>
+        <article class="out"><h3>What we left out</h3><p><span class="nw">5-HTP</span>, caffeine and stimulants. Six ingredients is the whole list.</p></article>
       </div>
     </div>
   </section>
@@ -271,7 +277,7 @@ const jsonld = {
   <section class="sec tested" id="tested">
     <div class="w">
       <h2 class="rv" style="color:var(--deep)">Checked by outside labs.</h2>
-      <p class="sub-h rv" style="margin-top:14px">Independent labs tested every capsule on our menu. Each one tested for strength came back at or above what the label says.</p>
+      <p class="sub-h rv" style="margin-top:14px">{LAB_PENDING.length ? `Independent labs tested every capsule on our menu except ${labPendingText()}, whose reports are on the way.` : 'Independent labs tested every capsule on our menu.'} Each one tested for strength came back at or above what the label says.</p>
       <ul class="labs">
         {INGREDIENTS.filter((i) => i.coa).map((i) => (
           <li>
@@ -304,7 +310,7 @@ const jsonld = {
         <details><summary><span class="q">When am I charged?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Today, at the founding price. That price is only for pre-orders. At launch, one roll goes back to ${PRICE}.</p></details>
         <details><summary><span class="q">Can I cancel my pre-order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Any time before your roll ships, email <a href="mailto:hello@bluehournights.com">hello@bluehournights.com</a> with your order number and we'll refund you in full, with no questions. If we ever can't ship by {SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.</p></details>
       </>}
-      <details><summary><span class="q">Is Blue Hour third-party tested?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Independent labs (Eurofins, Intertek and New Wave Scientific) tested every capsule on our menu for strength or contaminants, and you can open every full report on this page. Each capsule tested for strength came back at or above its label. These are lab tests, not a certification like NSF or USP.</p></details>
+      <details><summary><span class="q">Is Blue Hour third-party tested?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Independent labs (Eurofins, Intertek and New Wave Scientific) tested {LAB_PENDING.length ? `every capsule on our menu except ${labPendingText()}` : 'every capsule on our menu'} for strength or contaminants, and you can open every full report on this page. Each capsule tested for strength came back at or above its label. These are lab tests, not a certification like NSF or USP.</p></details>
       <details><summary><span class="q">Is there a smaller size than 30 nights?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not yet. Every roll is packed to order, pouch by pouch, and most of the cost is the packing, not the capsules, so a 10-night roll would cost nearly as much as 30. Bigger runs bring that cost down, and smaller rolls like a weekend or festival pack are next once we get there. Until then, a roll isn't 30 nights in a row, it's one pouch for every night out. You can also split one with a friend.</p></details>
       <details><summary><span class="q">Where is Blue Hour made?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Every roll is packed to order by our manufacturing partner in Reno, Nevada, in a facility that's independently certified for current Good Manufacturing Practices (cGMP). Ingredients are tested by independent labs, and the Supplement Facts for every capsule are on this page and on the pamphlet in your box.</p></details>
       <details><summary><span class="q">What do you mean by a roll?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>A roll is how our pouches come: 30 sealed pouches on one perforated strip, wound up inside the dispenser. When we say a roll, a crew roll or 3 rolls, that's all we mean. Every roll holds only the dietary supplements listed on your label and pamphlet, and nothing else.</p></details>
@@ -315,7 +321,8 @@ const jsonld = {
       {PREORDER
         ? <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. At the founding price, one roll is ${TIERS[0].each}, or {perNight(TIERS[0].each)} a night. Order 2 rolls and each is ${TIERS[1].each}. Order 3 or more and each is ${TIERS[2].each}, which is {perNight(TIERS[2].each)} a night. At launch, one roll will be ${PRICE}.</p></details>
         : <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. One roll works out at $4.30 a night. Order 2 rolls and each is $119. Order 3 or more and each is $109, which is $3.63 a night. Rolls with different pouches count together, so you can order with friends.</p></details>}
-      <details><summary><span class="q">Can I change what's in my pouch?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from the signature six or build your own from our menu of 8 capsules, up to 6 per pouch. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
+      <details><summary><span class="q">What's in {SIGNATURE_NAME}?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>{MAX_CAPS} capsules: 2 Level (266 mg magnesium), 2 Glow (1,700 mg glycine), 1 Prime (600 mg NAC), 1 Bright (1,000 mg vitamin C), 1 Core (25 mg zinc) and 1 Spark (1,000 mcg vitamin B12). Every capsule's Supplement Facts and lab report are in the menu above.</p></details>
+      <details><summary><span class="q">Can I change what's in my pouch?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from The Signature or build your own from our menu of 8 capsules, up to 8 per pouch, always with at least 2 glycine. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
       <details><summary><span class="q">What if something's wrong with my order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Tell us within 5 business days of delivery and we'll send a replacement or a refund. Rolls are packed to order, so we can't take returns for change of mind. See <a href="/refunds">Refunds and replacements</a>.</p></details>
       {PREORDER
         ? <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not during pre-order. The founding price is already our best deal, so codes and hidden discounts are paused until launch. Crew pricing still applies when you order more than one roll. The one exception is a Founding Crew code from one of our ambassadors, which takes $5 off each roll.</p></details>
@@ -328,6 +335,13 @@ const jsonld = {
   </section>
   <Foot id="em-shop" />
   <style>
+    .ifstate{display:none;margin:0;padding:12px 14px;border-radius:14px;background:var(--mist);border:1px solid var(--line);font-size:14.5px;line-height:1.4;font-weight:600}
+    .ifstate a{color:var(--cobalt)}
+    html[data-state="proof_seeker"] .ifstate[data-for~="proof_seeker"],
+    html[data-state="price_evaluator"] .ifstate[data-for~="price_evaluator"],
+    html[data-state="cart_holder"] .ifstate[data-for~="cart_holder"]{display:block}
+    .bnote{margin:14px 0 0;padding:14px 16px;border-radius:16px;background:var(--mist);border:1px solid var(--line);font-size:15px;line-height:1.45;max-width:none}
+    .bnote button{margin-left:4px;padding:0;border:0;background:none;color:var(--cobalt);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
     .rollnote a{color:var(--cobalt);font-weight:600;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
     .why30{background:var(--mist);scroll-margin-top:12px}
     .why30in{display:grid;gap:clamp(18px,4vw,40px)}

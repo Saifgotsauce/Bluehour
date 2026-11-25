@@ -3,12 +3,13 @@
 // The money-back seal only shows during pre-orders, when every order can be refunded in full before it ships.
 import Seal from './Seal.astro';
 import { PREORDER } from '../data/preorder.js';
+import { LAB_PENDING } from '../data/ingredients.js';
 interface Props { prefix: string; labHref?: string; class?: string }
 const { prefix, labHref = '/shop#tested', class: cls = '' } = Astro.props;
 ---
 <ul class={`badges ${PREORDER ? 'four' : ''} ${cls}`} aria-label="Quality and guarantee">
   <li><Seal id={`${prefix}-gmp`} word="cGMP" ring="CERTIFIED FACILITY ✦ CERTIFIED FACILITY ✦ " /><span><span class="nw">cGMP-certified</span> facility</span></li>
-  <li><a href={labHref}><Seal id={`${prefix}-lab`} word="LAB" ring="THIRD-PARTY TESTED ✦ THIRD-PARTY TESTED ✦ " /><span>Lab report for every capsule</span></a></li>
+  <li><a href={labHref}><Seal id={`${prefix}-lab`} word="LAB" ring="THIRD-PARTY TESTED ✦ THIRD-PARTY TESTED ✦ " /><span>{LAB_PENDING.length ? 'Lab reports, published' : 'Lab report for every capsule'}</span></a></li>
   <li><Seal id={`${prefix}-usa`} word="USA" ring="PACKED IN RENO, NEVADA ✦ PACKED IN RENO ✦ " /><span>Packed in Reno, NV</span></li>
   {PREORDER && <li><a href="/refunds"><Seal id={`${prefix}-back`} word="100%" ring="MONEY BACK ✦ BEFORE IT SHIPS ✦ MONEY BACK ✦ " /><span>Money back before it ships</span></a></li>}
 </ul>

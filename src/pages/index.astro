@@ -1,4 +1,9 @@
 ---
+// Homepage, ordered the way the conversion report lays it out (section 5.3):
+// 1 hero (one occasion, one sentence, one CTA) > 2 what arrives > brand story > 3 format > ingredients and proof >
+// how it works > price with pre-order terms beside the button > short FAQ > final CTA.
+// Every section has data-sec so section views show up in tracking (docs/TRACKING.md).
+// Claims rule: structure/function wording only, with an asterisk. Nothing about hangovers, alcohol or drugs.
 import Seals from '../components/Seals.astro';
 import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
@@ -6,7 +11,7 @@ import Promo from '../components/Promo.astro';
 import Marquee from '../components/Marquee.astro';
 import Foot from '../components/Foot.astro';
 import { PREORDER, SHIP_BY } from '../data/preorder.js';
-import { TIERS, PRICE, perNight } from '../data/ingredients.js';
+import { TIERS, PRICE, perNight, INGREDIENTS, SIGNATURE, SIGNATURE_NAME, MAX_CAPS } from '../data/ingredients.js';
 const FIRST = TIERS[0].each;
 const site = Astro.site!;
 const jsonld = {
@@ -16,22 +21,31 @@ const jsonld = {
   url: site.href,
   logo: new URL('/favicon-512.png', site).href,
 };
+// The Signature, capsule by capsule, with the total dose when there's more than one.
+const total = (dose: string, n: number) => {
+  const m = dose.match(/^([\d,]+) (mg|mcg)$/);
+  if (!m || n < 2) return dose;
+  return (parseInt(m[1].replace(/,/g, ''), 10) * n).toLocaleString('en-US') + ' ' + m[2];
+};
+const sig = INGREDIENTS.filter((i) => SIGNATURE[i.id]).map((i) => ({ ...i, n: SIGNATURE[i.id], amount: total(i.dose, SIGNATURE[i.id]) }));
+const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
 ---
 <Base
   title="Blue Hour | One nightly pouch for big nights"
-  description="Out late. Up early. One pouch a night with magnesium, vitamin C, B vitamins, zinc and glycine, for people who still show up tomorrow. Free US shipping."
+  description={`Out late. Up early. One sealed pouch of ${MAX_CAPS} capsules a night: ${ING}. 30 pouches on a roll, free US shipping, no subscription.`}
   jsonld={jsonld}
 >
 
   <Promo text="Free US shipping on every roll." link="Shop 30 nights" href="/shop" />
-  <header class="hero">
+  <header class="hero" data-sec="hero">
     <div class="mesh"><i></i><i></i><i></i></div><div class="grain"></div>
     <Top />
     <div class="copy">
       <h1><span class="ln"><span>Out late.</span></span><span class="ln"><span style="--d:.09s">Up early.</span></span></h1>
-      <p class="sub">Monday doesn't care what time you got home. Blue Hour is one pouch a night for people who dance till close, train hard and still show up.</p>
-      <a class="btn" href="/shop">{PREORDER ? 'Pre-order now' : 'Buy now'}</a>
-      <p class="note">{PREORDER ? <>30 nights. ${FIRST}{' '}<s>${PRICE}</s>{' '}founding price. Ships by {SHIP_BY}.</> : `30 nights. $${PRICE}. Free US shipping.`}</p>
+      <p class="sub">One sealed pouch of {MAX_CAPS} capsules for when you get home: {ING}. Thirty pouches on one roll.</p>
+      <a class="btn" href="/shop" data-cta="hero">{PREORDER ? 'Pre-order now' : 'Buy now'}</a>
+      <p class="note">{PREORDER ? <>30 nights. ${FIRST}{' '}<s>${PRICE}</s>{' '}founding price. Ships by {SHIP_BY}. Full refund before it ships.</> : `30 nights. $${PRICE}. Free US shipping.`}</p>
+      <a class="savedchip" id="savedchip" href="/shop#build" data-cta="saved_build_home" hidden>Your custom pouch is saved →</a>
     </div>
     <div class="shot">
       <img class="ph" src="/images/angle.webp" alt="White Blue Hour dispenser with clear pouches of capsules rising from the top" width="1122" height="1402" fetchpriority="high">
@@ -40,15 +54,29 @@ const jsonld = {
         <b>${FIRST}</b>
         {PREORDER && <s class="was">${PRICE}</s>}
       </div>
-      <button class="cap" data-float=".14" style="--tt:1.7s;--f:.14;--x:3%;--y:22%;--w:27%;--r:-38deg;--t:5.200s" aria-label="Spin capsule"><span><img src="/images/cap-steady.webp" alt="" width="900" height="340"></span></button>
+      <button class="cap" data-float=".14" style="--tt:1.7s;--f:.14;--x:3%;--y:22%;--w:27%;--r:-38deg;--t:5.200s" aria-label="Spin capsule"><span><img src="/images/cap-glycine.webp" alt="" width="900" height="340"></span></button>
       <button class="cap" data-float=".22" style="--tt:2.1s;--f:.22;--x:72%;--y:50%;--w:25%;--r:18deg;--t:4.300s" aria-label="Spin capsule"><span><img src="/images/cap-still.webp" alt="" width="900" height="340"></span></button>
-      <button class="cap" data-float=".1" style="--tt:2.4s;--f:.1;--x:0%;--y:70%;--w:21%;--r:62deg;--t:6s" aria-label="Spin capsule"><span><img src="/images/cap-guard.webp" alt="" width="900" height="340"></span></button>
+      <button class="cap" data-float=".1" style="--tt:2.4s;--f:.1;--x:0%;--y:70%;--w:21%;--r:62deg;--t:6s" aria-label="Spin capsule"><span><img src="/images/cap-nac.webp" alt="" width="900" height="340"></span></button>
       <button class="cap" data-float=".18" style="--tt:2.7s;--f:.18;--x:73%;--y:82%;--w:24%;--r:-24deg;--t:4.800s" aria-label="Spin capsule"><span><img src="/images/cap-bright.webp" alt="" width="900" height="340"></span></button>
     </div>
   </header>
   <Marquee />
 
-  <section class="sec why">
+  <section class="sec inbox" data-sec="inbox" aria-labelledby="inboxh">
+    <div class="w stack" style="gap:34px;align-items:stretch">
+      <h2 id="inboxh" class="rv">What you get.</h2>
+      <ul class="boxlist">
+        <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-roll"/></svg><div><b>30 sealed pouches on one roll</b><span>Inside a dispenser. Pull one, tear it off.</span></div></li>
+        <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-list"/></svg><div><b>{MAX_CAPS} capsules in every pouch</b><span>{SIGNATURE_NAME} by default, or build your own.</span></div></li>
+        <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-spark"/></svg><div><b>Every dose on the label</b><span>Outside lab reports, public on the shop page.</span></div></li>
+        <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-truck"/></svg><div><b>Free US shipping</b><span>{PREORDER ? `Pre-orders ship by ${SHIP_BY}.` : 'Packed to order.'}</span></div></li>
+        <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-free"/></svg><div><b>One-time purchase</b><span>No subscription. Nothing renews.</span></div></li>
+        {PREORDER && <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-moon"/></svg><div><b>Full refund before it ships</b><span>Change your mind any time before your roll ships.</span></div></li>}
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec why" data-sec="story">
     <div class="w stack rv">
       <p class="def"><b>blue hour</b> <span>noun</span></p>
       <h2>The deep blue light right before sunrise, when the night is over and the day hasn't started yet.</h2>
@@ -56,49 +84,54 @@ const jsonld = {
     </div>
   </section>
 
-  <section class="sec band-mist">
+  <section class="sec band-mist" data-sec="format">
     <div class="w two">
       <div class="stack rv">
-        <h2>Six capsules.<br>One pouch.<br>Zero thinking.</h2>
-        <p>No lining up five bottles at 4am. Everything is sealed in one pouch, so you tear it off, take it with a snack and some water, and go to sleep. Take our signature six or build your own.</p>
-        <a class="btn" href="/shop#build">Build your pouch</a>
+        <h2>Eight capsules.<br>One pouch.<br>Zero thinking.</h2>
+        <p>No lining up six bottles at 4am. Everything is sealed in one pouch, so you tear it off, take it with a snack and some water, and go to sleep. Take {SIGNATURE_NAME} or build your own.</p>
+        <a class="btn" href="/shop#build" data-cta="format_build">Build your pouch</a>
       </div>
       <div class="rv" style="position:relative"><img src="/images/hand.webp" alt="A hand holding one frosted Blue Hour pouch against a blue sky" width="1122" height="1402" loading="lazy" style="border-radius:24px;box-shadow:0 26px 60px rgba(11,31,158,.28)"></div>
     </div>
   </section>
 
-  <section class="sec dark slant">
-    <div class="w stack" style="gap:34px">
-      <p class="lead rv">Your body put in a shift tonight. Every capsule has a job, and together they help support:</p>
-      <ol class="glist rv">
-        <li><i>1</i><b>Energy production*</b></li>
-        <li style="--dl:-1.200s"><i>2</i><b>Immune function*</b></li>
-        <li style="--dl:-2.400s"><i>3</i><b>Muscle function*</b></li>
-        <li style="--dl:-3.600s"><i>4</i><b>Nerve function*</b></li>
-        <li style="--dl:-4.800s"><i>5</i><b>Antioxidant defense*</b></li>
-      </ol>
-      <a class="btn" href="/shop#build">See the menu</a>
+  <section class="sec dark slant" data-sec="signature" aria-labelledby="sigh">
+    <div class="w stack" style="gap:30px;align-items:stretch">
+      <h2 id="sigh" class="rv">What's in {SIGNATURE_NAME}.</h2>
+      <p class="lead rv">{MAX_CAPS} capsules, six ingredients. Every capsule has a job:</p>
+      <ul class="siglist">
+        {sig.map((i) => (
+          <li>
+            <img src={`/images/${i.img}.webp`} alt="" width="900" height="340" loading="lazy">
+            <div><b>{i.name}{i.n > 1 && <em> ×{i.n}</em>}</b><span class="amt">{i.ingredient} · {i.amount}</span><p>{i.blurb}</p></div>
+          </li>
+        ))}
+      </ul>
+      <div class="sigfoot">
+        <a class="btn" href="/shop#build" data-cta="signature_menu">See the full menu</a>
+        <a class="txtlink" href="/shop#tested" data-cta="signature_labs">Open the lab reports</a>
+      </div>
     </div>
   </section>
 
-  <section class="sec sky">
+  <section class="sec sky" data-sec="nothing_extra">
     <img class="burst" src="/images/burst.webp" alt="" loading="lazy" width="1100" height="820">
     <div class="grain"></div>
     <div class="w stack rv">
       <h2>Nothing extra<br>in the pouch.</h2>
-      <p style="font-size:clamp(19px,5vw,23px);line-height:1.28;font-weight:600">Five ingredients, every dose on the label, and nothing that keeps you up.</p>
+      <p style="font-size:clamp(19px,5vw,23px);line-height:1.28;font-weight:600">Six ingredients, every dose on the label, and nothing that keeps you up.</p>
       <div class="chips"><span>No <span class="nw">5-HTP</span></span><span>No caffeine</span><span>No stimulants</span></div>
       <Seals prefix="h" class="home-seals" />
-      <a class="btn" href="/shop#ingredients">See what's inside</a>
+      <a class="btn" href="/shop#ingredients" data-cta="see_inside">See what's inside</a>
     </div>
   </section>
 
-  <section class="sec nights" id="nights">
+  <section class="sec nights" id="nights" data-sec="nights">
     <div class="w two">
       <div class="stack" style="gap:18px">
         <div class="ncount"><span class="thin">Night</span> <span id="ncount">30</span></div>
         <div class="ngrid" id="ngrid" aria-hidden="true"></div>
-        <p style="font-weight:600">30 pouches on one roll, from the first night to the last.</p>
+        <p style="font-weight:600">30 pouches on one roll. One for every night out, not 30 nights in a row.</p>
       </div>
       <div class="stack rv" style="gap:28px">
         <h2>Pull. Tear.<br>Sleep.</h2>
@@ -107,21 +140,70 @@ const jsonld = {
           <li>Tear it off along the perforated line.</li>
           <li>Take it with a late snack and a big glass of water, then lights out.</li>
         </ol>
-        <p style="font-size:16px;opacity:.88">Hot room, long set, long run? Drink water through the day too. The pouch doesn't replace it.</p>
-        <a class="btn" href="/shop">Get the roll</a>
+        <p style="font-size:16px;opacity:.88">Hot room, long set, long night? Drink water through the day too. The pouch doesn't replace it, and it doesn't replace sleep.</p>
+        <a class="btn" href="/shop" data-cta="how_get">Get the roll</a>
       </div>
     </div>
   </section>
 
   <div class="fullshot cropd"><img class="ph" src="/images/exploded.webp" alt="The Blue Hour dispenser, pulp tray and roll of pouches floating on a blue background" loading="lazy" width="1122" height="1402"></div>
 
-  <section class="sec pricey">
+  <section class="sec pricey" data-sec="price">
     <div class="w stack rv">
       <div class="bign">{perNight(FIRST)}{PREORDER && <s class="was">{perNight(PRICE)}</s>}</div>
       <h2 style="max-width:13em">a night. Less than a bottle of water at the club.</h2>
-      <p class="crewline">Or {perNight(TIERS[2].each)} a night when you order 3 rolls with your crew.{PREORDER && ` Founding prices, for pre-orders shipping by ${SHIP_BY}.`}</p>
-      <a class="btn solid" href="/shop">{PREORDER ? 'Pre-order 30 nights' : 'Buy 30 nights'}</a>
+      <p class="crewline">${FIRST} for 30 nights{PREORDER ? ', the founding price' : ''}. Or {perNight(TIERS[2].each)} a night when you order 3 rolls with your crew.</p>
+      {PREORDER && (
+        <ul class="assure hometerms">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Charged today at the founding price. ${PRICE} at launch.</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7zM7 18a1.5 1.5 0 1 0 0-.01M17 18a1.5 1.5 0 1 0 0-.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Ships free by {SHIP_BY}.</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Full refund any time before it ships. No subscription.</li>
+        </ul>
+      )}
+      <a class="btn solid" href="/shop" data-cta="price">{PREORDER ? 'Pre-order 30 nights' : 'Buy 30 nights'}</a>
+    </div>
+  </section>
+
+  <section class="sec faq" id="faq" data-sec="home_faq" style="background:#FAFBFF">
+    <div class="w">
+      <h2 style="color:var(--deep);margin-bottom:18px">Before you buy</h2>
+      <details><summary><span class="q">What is Blue Hour, exactly?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>A dietary supplement: one sealed pouch of {MAX_CAPS} capsules with {ING}, taken with food and water when you get home. It isn't a cure for anything, and it doesn't make alcohol or anything else you take safer. Water, food and sleep still do the heavy lifting.</p></details>
+      <details><summary><span class="q">Why 30 nights, and why ${FIRST}?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Every roll is packed to order, pouch by pouch, and most of the cost is the packing, so a smaller roll would cost nearly as much to make. A roll is one pouch for every night out, not 30 nights in a row, and you can split one with a friend. That's {perNight(FIRST)} a night.</p></details>
+      {PREORDER && <details><summary><span class="q">When does it ship, and can I cancel?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pre-orders ship by {SHIP_BY}, free within the US. Change your mind any time before your roll ships and email <a href="mailto:hello@bluehournights.com">hello@bluehournights.com</a> for a full refund. If we can't ship by {SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.</p></details>}
+      <details><summary><span class="q">Can I take it with medication?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Ask a pharmacist first if you take any medication, especially heart medication like nitroglycerin, blood thinners, antibiotics or antidepressants. You can leave any capsule except glycine out of your pouch. The full list is in the <a href="/shop#faq">shop FAQs</a>.</p></details>
+    </div>
+  </section>
+
+  <section class="sec sky tagband" data-sec="final_cta">
+    <div class="grain"></div>
+    <div class="w">
+      <h2>Out late.<br>Up early.</h2>
+      <a class="btn" href="/shop" data-cta="final">{PREORDER ? `Pre-order, $${FIRST}` : `Buy now, $${PRICE}`}</a>
     </div>
   </section>
   <Foot id="em-home" />
+  <style>
+    .inbox{background:var(--mist)}
+    .inbox h2{color:var(--deep)}
+    .boxlist{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+    .boxlist li{display:flex;gap:16px;align-items:center;padding:16px 18px;border-radius:20px;background:var(--white);border:1px solid var(--line)}
+    .boxlist svg{flex:0 0 44px;width:44px;height:44px;color:var(--cobalt)}
+    .boxlist b{display:block;font:800 18px/1.25 var(--display);letter-spacing:-.015em;color:var(--ink)}
+    .boxlist span{display:block;font-size:15px;line-height:1.4;color:var(--soft)}
+    .siglist{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+    .siglist li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:16px;align-items:center;padding:14px 16px;border-radius:20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14)}
+    .siglist img{width:72px;transform:rotate(-14deg)}
+    .siglist b{font:800 19px/1.2 var(--display);letter-spacing:-.015em;color:var(--white)}
+    .siglist em{font-style:normal;color:var(--dawn)}
+    .siglist .amt{display:block;margin-top:2px;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--pale)}
+    .siglist p{margin-top:4px;font-size:15px;line-height:1.4;color:rgba(255,255,255,.82)}
+    .sigfoot{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center}
+    .txtlink{color:var(--white);font-weight:700;text-underline-offset:4px}
+    .hometerms{max-width:34em}
+    .savedchip{display:inline-block;margin-top:14px;padding:9px 16px;border-radius:99px;background:rgba(255,255,255,.16);color:var(--white);font-weight:700;font-size:15px;text-decoration:none}
+    @media (min-width:900px){
+      .boxlist{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .siglist{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+  </style>
 </Base>

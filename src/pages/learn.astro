@@ -15,9 +15,10 @@ const BUY = PREORDER ? 'Pre-order' : 'Buy now';
 const pouch = [
   { img: 'cap-still', two: true, name: 'Level ×2', what: 'Magnesium glycinate · 266 mg', why: 'Helps support normal muscle and nerve function.*' },
   { img: 'cap-bright', name: 'Bright', what: 'Vitamin C · 1,000 mg', why: 'An antioxidant that helps support normal immune function.*' },
-  { img: 'cap-steady', name: 'Spark', what: 'Methyl B-complex · 8 B vitamins', why: 'B vitamins that help support normal energy metabolism.*' },
+  { img: 'cap-steady', name: 'Spark', what: 'Vitamin B12 · 1,000 mcg', why: 'Helps support normal energy metabolism.*' },
   { img: 'cap-guard', name: 'Core', what: 'Zinc · 25 mg', why: 'An essential mineral that helps support normal immune function.*' },
-  { img: 'cap-glycine', name: 'Glow', what: 'Glycine · 850 mg', why: 'An amino acid your body uses to build proteins, including collagen.*' },
+  { img: 'cap-glycine', two: true, name: 'Glow ×2', what: 'Glycine · 1,700 mg', why: 'An amino acid your body uses to build proteins, including collagen.*' },
+  { img: 'cap-nac', name: 'Prime', what: 'NAC · 600 mg', why: 'A form of cysteine your body uses to make the antioxidant glutathione.*' },
 ];
 
 const preFaqs = PREORDER ? [
@@ -111,8 +112,8 @@ const faqs = [
       <div class="grain"></div>
       <div class="w col">
         <p class="kick lt">Meet Blue Hour</p>
-        <h2>Six capsules. One pouch. Zero thinking.</h2>
-        <p class="lede">One sealed pouch a night. Five ingredients, every dose on the label. Pull one off the roll, tear it open, take it with a snack and water, and go to sleep.</p>
+        <h2>Eight capsules. One pouch. Zero thinking.</h2>
+        <p class="lede">One sealed pouch a night. Six ingredients, every dose on the label. Pull one off the roll, tear it open, take it with a snack and water, and go to sleep.</p>
         <ul class="caps">
           {pouch.map((c) => (
             <li>
@@ -131,17 +132,17 @@ const faqs = [
         <table class="tb">
           <thead><tr><th></th><th class="us">Blue Hour</th><th>Bottles at home</th></tr></thead>
           <tbody>
-            <tr><td>Ready in one tear</td><td class="us">Yes</td><td>Open 5 lids, count out 6</td></tr>
+            <tr><td>Ready in one tear</td><td class="us">Yes</td><td>Open 6 lids, count out 8</td></tr>
             <tr><td>Fits in a pocket or festival bag</td><td class="us">Yes</td><td>Not really</td></tr>
             <tr><td>Your own mix, packed to order</td><td class="us">Yes</td><td>Only if you sort it</td></tr>
             <tr><td>No caffeine or stimulants</td><td class="us">Yes</td><td>Check every label</td></tr>
-            <tr><td>Every dose listed</td><td class="us">Yes, on your pamphlet</td><td>Yes, across 5 labels</td></tr>
+            <tr><td>Every dose listed</td><td class="us">Yes, on your pamphlet</td><td>Yes, across 6 labels</td></tr>
           </tbody>
         </table>
       </div>
 
       <h2>Make it yours</h2>
-      <p>Start from the signature six, or build your own pouch from our menu of 8 capsules. Add Prime (NAC, 600 mg), Culture (10 billion live cultures) or Root (ginger, 500 mg), up to 6 capsules a pouch. Each capsule has a limit that keeps every nutrient at or under its daily upper limit for adults.*</p>
+      <p>Start from The Signature, or build your own pouch from our menu of 8 capsules. Swap in Culture (10 billion live cultures) or Root (ginger, 500 mg), up to 8 capsules a pouch, always with at least 2 glycine. Each capsule has a limit that keeps every nutrient at or under its daily upper limit for adults.*</p>
       <a class="txt" href="/shop#build">Build your pouch →</a>
     </div>
 
@@ -175,7 +176,7 @@ const faqs = [
         <h2>a night{PREORDER && ' at the founding price'}. Less than a bottle of water at the club.</h2>
         <div class="obox">
           {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for pre-orders only. ${PRICE} a roll at launch.</span></div>}
-          <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: magnesium ×2, vitamin C, B-complex, zinc, glycine</span><a href="/shop#build">Build your own instead</a></div>
+          <div class="mix"><b>Your pouch</b><span id="mixsum" data-clarity-mask="true">The Signature: magnesium ×2, glycine ×2, NAC, vitamin C, zinc, vitamin B12</span><a href="/shop#build">Build your own instead</a></div>
           <fieldset class="tiers">
             <legend>How many rolls?</legend>
             {TIERS.map((t, i) => (

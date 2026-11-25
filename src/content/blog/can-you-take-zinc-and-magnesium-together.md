@@ -95,13 +95,14 @@ The NIH's upper limit for vitamin C is **2,000 mg a day** from food and suppleme
 
 ## How it works in a Blue Hour pouch
 
-Our signature pouch has six capsules:
+Our signature pouch, The Signature, has eight capsules:
 
 - **2 magnesium capsules:** 266 mg of magnesium (as magnesium glycinate), under the 350 mg supplement limit
 - **1 zinc capsule:** 25 mg, under the 40 mg limit, leaving some room for zinc from food
 - **1 vitamin C capsule:** 1,000 mg
-- **1 methyl B-complex capsule**
-- **1 glycine capsule:** 850 mg
+- **1 vitamin B12 capsule:** 1,000 mcg
+- **2 glycine capsules:** 1,700 mg
+- **1 NAC capsule:** 600 mg
 
 When you [build your own pouch](/shop#build), the builder won't let you add more than 2 magnesium capsules or more than 1 zinc capsule. Every capsule's full Supplement Facts are on the shop page. If you take other supplements too, add up your zinc and magnesium before you build.
 

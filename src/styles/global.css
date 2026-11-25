@@ -538,6 +538,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .codeline button{flex:none;background:none;border:0;color:var(--soft);text-decoration:underline;cursor:pointer;font-size:13px;padding:4px 0}
 .promo.coded{background:var(--sale)}
 .promo.coded b{letter-spacing:.03em}
+.promo button{margin-left:6px;padding:0;border:0;background:none;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 
 .popscrim{position:fixed;inset:0;z-index:60;background:rgba(9,14,48,.42);opacity:0;transition:opacity .6s var(--ease-out)}
 .popscrim.on{opacity:1}

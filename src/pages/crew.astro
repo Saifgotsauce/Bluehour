@@ -88,13 +88,13 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
 
   <section class="sec sellband" aria-labelledby="sellh">
     <div class="w sellgrid">
-      <img class="whatimg" src="/images/angle.webp" alt="A Blue Hour roll: a box with a strip of sealed pouches coming out of the top, each holding six capsules" width="1122" height="1402" loading="lazy" decoding="async" />
+      <img class="whatimg" src="/images/angle.webp" alt="A Blue Hour roll: a box with a strip of sealed pouches coming out of the top, each holding eight capsules" width="1122" height="1402" loading="lazy" decoding="async" />
       <div class="selltext">
         <h2 id="sellh">What your friends get</h2>
-        <p class="big">A roll of 30 sealed pouches. When they get home, they pull one off and take the six capsules.</p>
+        <p class="big">A roll of 30 sealed pouches. When they get home, they pull one off and take the eight capsules.</p>
         <ul class="plain">
-          <li>Magnesium, vitamin C, B vitamins, zinc and glycine.</li>
-          <li>No caffeine, no stimulants. Every capsule is lab tested.</li>
+          <li>Magnesium, glycine, NAC, vitamin C, zinc and vitamin B12.</li>
+          <li>No caffeine, no stimulants. Lab reports are public.</li>
           <li>${WITH_CODE} with your code, about ${NIGHT} a night. Ships by {SHIP_BY}.</li>
         </ul>
         <a class="btn" href="/shop">See the roll</a>
@@ -152,6 +152,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
   </section>
 
   <script>
+    import { track } from '../scripts/track.js';
     (() => {
       const $ = (id) => document.getElementById(id);
       const f = $('crewform'), msg = $('cmsg'), send = $('csend');
@@ -194,6 +195,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
           const res = await fetch('/api/crew', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d) });
           const j = await res.json().catch(() => ({}));
           if (res.ok && j.ok) {
+            track('crew_application', { step: 'first', form: 'crew' });
             sent = d;
             f.hidden = true;
             $('backup').closest('section').hidden = true;

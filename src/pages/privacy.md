@@ -2,7 +2,7 @@
 layout: ../layouts/Legal.astro
 title: Privacy policy
 description: What information Blue Hour collects, why we collect it, who we share it with, and how to ask us to see or delete it.
-updated: November 18, 2026
+updated: November 25, 2026
 ---
 
 This policy explains what information Blue Hour ("we" or "us") collects when you visit bluehournights.com or buy from us, how we use it and who we share it with.
@@ -16,6 +16,8 @@ This policy explains what information Blue Hour ("we" or "us") collects when you
 - **Messages:** anything you send us when you contact us.
 - **Technical data:** like most websites, our hosting provider records basic technical information such as your IP address, browser and the pages you visit, to run and secure the site.
 - **Your cart:** your cart is saved in your own browser so it's still there when you come back. It isn't sent to us until you check out.
+- **Site analytics:** an anonymous visitor ID made in your browser (a random string, not your name or email), plus what happens on our pages: which pages and sections you see, which buttons and questions you tap, what goes in and out of your cart, and whether checkout opened. We don't record which capsules you pick in these events, or anything you type.
+- **Where you came from:** if you arrive from a link with campaign tags (like an ad or a creator's link) or from another website, your browser remembers the source and campaign. It's saved with your order, so we know which ads and partners actually work.
 - **Creator links:** if you arrive from a creator's video or link, your browser remembers which one for up to 30 days. A tracking tool from Trybe also sets a cookie, so we can credit and pay the creator if you buy.
 
 ## How we use it
@@ -23,7 +25,8 @@ This policy explains what information Blue Hour ("we" or "us") collects when you
 - To take payment, make and ship your order, and send you order and shipping updates
 - To answer your questions and handle problems with an order
 - To send news and restocks, only if you signed up. You can unsubscribe at any time.
-- To see how people use the site so we can improve it
+- To see how people use the site so we can improve it, and to test changes to our pages
+- To see which ads, partners and links bring customers, so we spend on what works
 - To credit and pay the creators who send people to our site
 - To prevent fraud and keep the site secure
 - To meet our legal obligations
@@ -41,6 +44,8 @@ We share information only with the companies that help us run the store, and onl
 - **Vercel** hosts this website.
 - **Trybe** runs our creator program. It records visits that come from creators' videos and links, and when you buy after one, we send it your order number, order total, email address and that creator link so the right creator gets paid. We don't send it the capsules you picked.
 - **Microsoft Clarity** shows us how people use the site, such as where they tap and scroll, so we can fix confusing pages. It uses cookies and records page activity. Anything typed into forms is hidden, and payment happens on Stripe's page, which Clarity can't see. See [Microsoft's privacy statement](https://privacy.microsoft.com/privacystatement).
+
+- **Our own analytics log:** the anonymous site analytics above are also sent to our hosting provider, Vercel, and kept in our own records. They don't include your name, email, address or payment details.
 
 If we add other advertising or analytics tools, we'll update this policy first. We don't sell your personal information.
 
