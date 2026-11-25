@@ -97,7 +97,7 @@ const jsonld = {
           ))}
         </fieldset>
         {PREORDER && <p class="launchnote">Founding price for pre-orders only. At launch, one roll goes back to ${PRICE}.</p>}
-        <p class="rollnote"><b>What's a roll?</b> Our 30 sealed pouches, wound on one strip inside the dispenser. Just the capsules on the label, nothing else.</p>
+        <p class="rollnote"><b>What's a roll?</b> Our 30 sealed pouches, wound on one strip inside the dispenser. Just the capsules on the label, nothing else. <a href="#why30">Why only 30 nights?</a></p>
         <p class="crewnote">Ordering with friends? Every roll in your cart counts toward the price, even with different pouches. 3 or more rolls are ${TIERS[2].each} each.</p>
         <div class="row" id="buyrow">
           <button class="add ghost" data-add>Add to cart</button>
@@ -125,6 +125,18 @@ const jsonld = {
           ))}
         </div>
       )}
+    </div>
+  </section>
+
+  <section class="sec why30" id="why30" aria-labelledby="why30h">
+    <div class="w why30in">
+      <h2 id="why30h" class="rv">Why only 30 nights, for now.</h2>
+      <div class="why30txt rv">
+        <p class="lead">Blue Hour is a tiny, fully bootstrapped team. No investors, no warehouse full of stock.</p>
+        <p>Our packer makes every roll to order, pouch by pouch, and most of the cost is the packing. A 10-night roll would cost us almost as much to make as 30.</p>
+        <p>Smaller rolls and better packs are next. To get them made, we have to show our suppliers that people actually want this, and that's what founding rolls do. Every one is a vote for the smaller sizes, and founding customers hear about them first.</p>
+        <p class="sign">Built by and for people who go out. Thanks for backing it early.</p>
+      </div>
     </div>
   </section>
 
@@ -315,6 +327,17 @@ const jsonld = {
     </div>
   </section>
   <Foot id="em-shop" />
+  <style>
+    .rollnote a{color:var(--cobalt);font-weight:600;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+    .why30{background:var(--mist);scroll-margin-top:12px}
+    .why30in{display:grid;gap:clamp(18px,4vw,40px)}
+    .why30 h2{color:var(--deep);font-size:clamp(32px,8.4vw,58px);line-height:1.02;letter-spacing:-.04em;max-width:10em;margin:0}
+    .why30txt{display:grid;gap:14px;max-width:36em}
+    .why30txt p{margin:0;font-size:clamp(16px,4.2vw,19px);line-height:1.5;color:var(--soft)}
+    .why30txt .lead{font:700 clamp(19px,5vw,24px)/1.35 var(--display);letter-spacing:-.015em;color:var(--ink)}
+    .why30txt .sign{color:var(--ink);font-weight:600}
+    @media (min-width:900px){.why30in{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:start}}
+  </style>
   <div class="stick" id="stick">
     <div class="in">
       <div class="row">
