@@ -418,6 +418,7 @@ async function goCheckout(btn) {
     const d = await r.json().catch(() => ({}));
     if (r.ok && d.url) { location.href = d.url; return; }
     if (d.error === 'not_configured') msg = "Checkout isn't switched on yet. Please check back soon.";
+    if (d.error === 'founding_full') msg = "All 100 founding orders are gone. Join the list at the bottom of the page and we'll email you when regular orders open.";
   } catch (e) { /* message below */ }
   leaving = false;
   btn.disabled = false;

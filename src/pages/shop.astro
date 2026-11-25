@@ -8,6 +8,7 @@ import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
 import { INGREDIENTS, MAX_CAPS, SIGNATURE, mixSummary, TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
 import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { FOUNDING_LIMIT, FOLLOWER_OFF, FOLLOWER_LIMIT } from '../data/offers.js';
 const FIRST = TIERS[0].each;
 const BUY = PREORDER ? 'Pre-order now' : 'Buy now';
 const signatureSummary = mixSummary(SIGNATURE);
@@ -81,7 +82,7 @@ const jsonld = {
           <li><span>Free US shipping, no subscription</span></li>
         </ul>
         <Seals prefix="s" labHref="#tested" />
-        {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price on our first run. We charge you today, and if you change your mind any time before your roll ships, you get a full refund.</span></div>}
+        {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for our first {FOUNDING_LIMIT} orders<span data-foundleft></span>. We charge you today, and if you change your mind any time before your roll ships, you get a full refund.</span></div>}
         <p class="tag">One pouch. One night.</p>
         <p>For people who dance till close, train hard and still show up. Our signature pouch holds 6 capsules with magnesium, vitamin C, B-complex, zinc and glycine, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
         <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: {signatureSummary}</span><a href="#build">Build your own pouch</a></div>
@@ -96,7 +97,7 @@ const jsonld = {
             </label>
           ))}
         </fieldset>
-        {PREORDER && <p class="launchnote">Founding price for pre-orders only. At launch, one roll goes back to ${PRICE}.</p>}
+        {PREORDER && <p class="launchnote">Founding price for the first {FOUNDING_LIMIT} orders only. After that, one roll goes back to ${PRICE}.</p>}
         <p class="rollnote"><b>What's a roll?</b> Our 30 sealed pouches, wound on one strip inside the dispenser. Just the capsules on the label, nothing else. <a href="#why30">Why only 30 nights?</a></p>
         <p class="crewnote">Ordering with friends? Every roll in your cart counts toward the price, even with different pouches. 3 or more rolls are ${TIERS[2].each} each.</p>
         <div class="row" id="buyrow">
@@ -301,7 +302,7 @@ const jsonld = {
       <h2 style="color:var(--deep);margin-bottom:18px">FAQs</h2>
       {PREORDER && <>
         <details><summary><span class="q">When will my roll ship?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pre-orders ship by {SHIP_BY}, free within the US. Delivery usually takes 3 to 8 business days after that, and we'll email you tracking when it ships.</p></details>
-        <details><summary><span class="q">When am I charged?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Today, at the founding price. That price is only for pre-orders. At launch, one roll goes back to ${PRICE}.</p></details>
+        <details><summary><span class="q">When am I charged?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Today, at the founding price. That price is only for our first {FOUNDING_LIMIT} orders. After that, one roll goes back to ${PRICE}.</p></details>
         <details><summary><span class="q">Can I cancel my pre-order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Any time before your roll ships, email <a href="mailto:hello@bluehournights.com">hello@bluehournights.com</a> with your order number and we'll refund you in full, with no questions. If we ever can't ship by {SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.</p></details>
       </>}
       <details><summary><span class="q">Is Blue Hour third-party tested?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Independent labs (Eurofins, Intertek and New Wave Scientific) tested every capsule on our menu for strength or contaminants, and you can open every full report on this page. Each capsule tested for strength came back at or above its label. These are lab tests, not a certification like NSF or USP.</p></details>
@@ -318,7 +319,7 @@ const jsonld = {
       <details><summary><span class="q">Can I change what's in my pouch?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from the signature six or build your own from our menu of 8 capsules, up to 6 per pouch. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
       <details><summary><span class="q">What if something's wrong with my order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Tell us within 5 business days of delivery and we'll send a replacement or a refund. Rolls are packed to order, so we can't take returns for change of mind. See <a href="/refunds">Refunds and replacements</a>.</p></details>
       {PREORDER
-        ? <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not during pre-order. The founding price is already our best deal, so codes and hidden discounts are paused until launch. Crew pricing still applies when you order more than one roll. The one exception is a Founding Crew code from one of our ambassadors, which takes $5 off each roll.</p></details>
+        ? <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Mostly no. The founding price is already our best deal, and Crew pricing still applies when you order more than one roll. There are two exceptions: a Founding Crew code from one of our ambassadors takes $5 off each roll, and our Instagram followers' code takes ${FOLLOWER_OFF} off one order, for the first {FOLLOWER_LIMIT} people who use it. Follow <a href="https://www.instagram.com/takebluehour/">@takebluehour</a> to get it. Codes don't combine.</p></details>
         : <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>New visitors can get 10% off their first roll through the welcome pop-up. The offer only lasts while the pop-up is open, and once it's closed it won't come back on that browser for 24 hours. If you came from a link with a code, it's saved and comes off at checkout automatically. You can also type a code on the payment page. And a few discounts are hidden around this site, if you look closely. Only one discount applies per order, and we always use the one that saves you the most.</p></details>}
       <details><summary><span class="q">Is this a subscription?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. You buy a roll when you want one, and nothing renews.</p></details>
       <details><summary><span class="q">Can I take Blue Hour with medication?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Most people can, but ask a pharmacist first if you take seizure medication, blood thinners, heart or blood pressure medication (including nitrates or nitrites), antibiotics, ADHD medication, antidepressants or other psychiatric medication, or methotrexate. Take antibiotics at least 2 hours apart from your pouch. If your immune system is weakened, talk to your doctor before taking the probiotic.</p></details>
@@ -326,6 +327,13 @@ const jsonld = {
       <details><summary><span class="q">Do you ship to my country?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>We ship within the US for now.</p></details>
     </div>
   </section>
+  {PREORDER && <script>
+    // "(N left)" next to the founding offer, counted live from paid orders by /api/founding.
+    fetch('/api/founding').then((r) => r.json()).then((d) => {
+      if (typeof d.left !== 'number') return;
+      document.querySelectorAll('[data-foundleft]').forEach((el) => { el.textContent = d.left > 0 ? ` (${d.left} left)` : ' (all gone)'; });
+    }).catch(() => {});
+  </script>}
   <Foot id="em-shop" />
   <style>
     .rollnote a{color:var(--cobalt);font-weight:600;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}

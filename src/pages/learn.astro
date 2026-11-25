@@ -9,6 +9,7 @@ import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
 import { TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
 import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { FOUNDING_LIMIT } from '../data/offers.js';
 const FIRST = TIERS[0].each;
 const BUY = PREORDER ? 'Pre-order' : 'Buy now';
 
@@ -22,7 +23,7 @@ const pouch = [
 
 const preFaqs = PREORDER ? [
   ['When will my roll ship?', `Pre-orders ship by ${SHIP_BY}, free within the US. Delivery usually takes 3 to 8 business days after that, and we'll email you tracking.`],
-  ['When am I charged?', `Today, at the founding price. That price is only for pre-orders. At launch, one roll goes back to $${PRICE}.`],
+  ['When am I charged?', `Today, at the founding price. That price is only for our first ${FOUNDING_LIMIT} orders. After that, one roll goes back to $${PRICE}.`],
   ['Can I cancel?', `Yes. Any time before your roll ships, email hello@bluehournights.com with your order number and we'll refund you in full, no questions. If we ever can't ship by ${SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.`],
 ] : [];
 const faqs = [
@@ -174,7 +175,7 @@ const faqs = [
         <div class="bign">{perNight(FIRST)}</div>
         <h2>a night{PREORDER && ' at the founding price'}. Less than a bottle of water at the club.</h2>
         <div class="obox">
-          {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for pre-orders only. ${PRICE} a roll at launch.</span></div>}
+          {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for our first {FOUNDING_LIMIT} orders. ${PRICE} a roll after that.</span></div>}
           <div class="mix"><b>Your pouch</b><span id="mixsum">Signature six: magnesium ×2, vitamin C, B-complex, zinc, glycine</span><a href="/shop#build">Build your own instead</a></div>
           <fieldset class="tiers">
             <legend>How many rolls?</legend>

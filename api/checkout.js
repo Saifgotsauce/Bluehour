@@ -9,6 +9,8 @@ import { readEgg, eggCoupon } from './_eggs.js';
 import { PREORDER, SHIP_BY } from '../src/data/preorder.js';
 import { findCrew, crewCouponFor } from './_crew.js';
 import { CREW_OFF } from '../src/data/crew.js';
+import { isFollowerCode, FOLLOWER_OFF } from '../src/data/offers.js';
+import { followerCoupon, foundingLeft } from './_offers.js';
 
 const MAX_LINES = 8;
 const MAX_QTY = 9;
@@ -84,6 +86,10 @@ export function sessionParams(lines, origin, disc, vid) {
     p.set('metadata[crew_code]', disc.crew);
     p.set('payment_intent_data[metadata][crew_code]', disc.crew);
   }
+  if (disc && disc.offer) {
+    p.set('metadata[offer]', disc.offer);
+    p.set('payment_intent_data[metadata][offer]', disc.offer);
+  }
   if (vid) {
     p.set('metadata[trybe_vid]', vid);
     p.set('payment_intent_data[metadata][trybe_vid]', vid);
@@ -140,6 +146,12 @@ export default async function handler(req, res) {
     // welcome offer) and the best easter egg they've found. Crew pricing isn't a discount and always applies.
     // If Stripe turns a discount down (expired, first orders only...), try the next one, then none, so the
     // shopper still gets to checkout and can type a code there.
+    // Founding price is for the first FOUNDING_LIMIT orders only. Once they're gone, stop taking pre-orders
+    // at that price (time to switch PREORDER off). If Stripe can't be counted, let the order through.
+    if (PREORDER) {
+      const left = await foundingLeft(key).catch(() => null);
+      if (left === 0) return res.status(409).json({ error: 'founding_full' });
+    }
     const rolls = lines.reduce((a, l) => a + l.qty, 0);
     const subtotal = totalFor(rolls) * 100;
     const options = [];
@@ -149,7 +161,11 @@ export default async function handler(req, res) {
       const coupon = await crewCouponFor(rolls, key).catch(() => null);
       if (coupon) options.push({ value: Math.min(CREW_OFF * 100 * rolls, subtotal), disc: { coupon, crew: crew.code } });
     }
-    const promo = !crew && !PREORDER && body.code ? await findPromo(body.code, key).catch(() => null) : null;
+    if (!crew && isFollowerCode(body.code)) {
+      const coupon = await followerCoupon(key).catch(() => null);
+      if (coupon) options.push({ value: Math.min(FOLLOWER_OFF * 100, subtotal), disc: { coupon, offer: 'followers' } });
+    }
+    const promo = !crew && !PREORDER && body.code && !isFollowerCode(body.code) ? await findPromo(body.code, key).catch(() => null) : null;
     if (promo) options.push({ value: promoValue(promo, subtotal), disc: { promo: promo.id } });
     const egg = PREORDER ? null : readEgg(body.egg);
     if (egg) {
