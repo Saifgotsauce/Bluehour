@@ -7,7 +7,7 @@ import Seals from '../components/Seals.astro';
 import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
 import { INGREDIENTS, MAX_CAPS, SIGNATURE, SIGNATURE_NAME, LAB_PENDING, labPendingText, mixSummary, TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
-import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { PREORDER, SHIP_BY , FOUNDING_CAP } from '../data/preorder.js';
 const FIRST = TIERS[0].each;
 const BUY = PREORDER ? 'Pre-order now' : 'Buy now';
 const signatureSummary = mixSummary(SIGNATURE);
@@ -49,7 +49,7 @@ const jsonld = {
 ---
 <Base
   title="Blue Hour Nightly Pouches, 30 Nights | Blue Hour"
-  description={`${PREORDER ? `Pre-order now: 30 sealed pouches on one roll for a $${FIRST} founding price (launch price $${PRICE}), shipping by ${SHIP_BY}.` : `30 sealed pouches on one roll for $${PRICE} with free US shipping.`} Build your own pouch or take The Signature.`}
+  description={`${PREORDER ? `Pre-order now: 30 sealed pouches on one roll for a $${FIRST} founding price (the first 100 orders; $${PRICE} after that), shipping by ${SHIP_BY}.` : `30 sealed pouches on one roll for $${PRICE} with free US shipping.`} Build your own pouch or take The Signature.`}
   jsonld={jsonld}
 >
 
@@ -73,7 +73,7 @@ const jsonld = {
       </div>
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
-        <p class="pricehead"><b>${FIRST}</b>{FIRST < PRICE && <s>${PRICE}</s>}<span>30 nights, {perNight(FIRST)} a night{PREORDER ? `. Ships by ${SHIP_BY}` : ''}</span></p>
+        <p class="pricehead"><b>${FIRST}</b>{!PREORDER && FIRST < PRICE && <s>${PRICE}</s>}<span>30 nights, {perNight(FIRST)} a night{PREORDER ? `. Ships by ${SHIP_BY}` : ''}</span></p>
         <ul class="perks">
           <li><span>One sealed pouch of 8 capsules a night</span></li>
           <li><span>No caffeine, stimulants or <span class="nw">5-HTP</span></span></li>
@@ -91,12 +91,13 @@ const jsonld = {
             <label class="tier">
               <input type="radio" name="rolls" value={t.rolls} checked={i === 0} data-qty />
               <span class="tn"><b>{t.rolls} roll{t.rolls > 1 ? 's' : ''}{t.name && <em>{t.name}</em>}</b><small>{t.rolls * 30} nights · {perNight(t.each)} a night</small></span>
-              <span class="tp"><b>${t.rolls * t.each}</b>{t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
+              <span class="tp"><b>${t.rolls * t.each}</b>{!PREORDER && t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
               {t.each < refEachFor(t.rolls) && <span class="save">Save ${t.rolls * (refEachFor(t.rolls) - t.each)}</span>}
             </label>
           ))}
         </fieldset>
-        {PREORDER && <p class="launchnote">Founding price for pre-orders only. At launch, one roll goes back to ${PRICE}.</p>}
+        {PREORDER && <p class="launchnote">Founding prices for the first {FOUNDING_CAP} orders. After that, one roll is ${PRICE}.</p>}
+        {PREORDER && <p class="fcount" data-founding hidden></p>}
         <p class="rollnote"><b>What's a roll?</b> Our 30 sealed pouches, wound on one strip inside the dispenser. Just the capsules on the label, nothing else. <a href="#why30">Why only 30 nights?</a></p>
         <p class="crewnote">Ordering with friends? Every roll in your cart counts toward the price, even with different pouches. 3 or more rolls are ${TIERS[2].each} each.</p>
         {/* Shown only to visitors in a matching state (src/scripts/state.js, docs/TRACKING.md). */}
@@ -307,7 +308,7 @@ const jsonld = {
       <h2 style="color:var(--deep);margin-bottom:18px">FAQs</h2>
       {PREORDER && <>
         <details><summary><span class="q">When will my roll ship?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pre-orders ship by {SHIP_BY}, free within the US. Delivery usually takes 3 to 8 business days after that, and we'll email you tracking when it ships.</p></details>
-        <details><summary><span class="q">When am I charged?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Today, at the founding price. That price is only for pre-orders. At launch, one roll goes back to ${PRICE}.</p></details>
+        <details><summary><span class="q">When am I charged?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Today, at the founding price. The founding price is for the first {FOUNDING_CAP} orders. After that, one roll is ${PRICE}.</p></details>
         <details><summary><span class="q">Can I cancel my pre-order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Any time before your roll ships, email <a href="mailto:hello@bluehournights.com">hello@bluehournights.com</a> with your order number and we'll refund you in full, with no questions. If we ever can't ship by {SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.</p></details>
       </>}
       <details><summary><span class="q">Is Blue Hour third-party tested?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Independent labs (Eurofins, Intertek and New Wave Scientific) tested {LAB_PENDING.length ? `every capsule on our menu except ${labPendingText()}` : 'every capsule on our menu'} for strength or contaminants, and you can open every full report on this page. Each capsule tested for strength came back at or above its label. These are lab tests, not a certification like NSF or USP.</p></details>
@@ -319,7 +320,7 @@ const jsonld = {
       <details><summary><span class="q">Does it cure anything?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Blue Hour is a dietary supplement. It isn't intended to diagnose, treat, cure or prevent any disease, and it doesn't make alcohol or anything else you take safer. Water, food and sleep still do the heavy lifting.</p></details>
       <details><summary><span class="q">Is it only for nights out?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. It's for any day that asks a lot of you: a long set, a festival weekend, a hard training session or a double shift. Take 1 pouch a day with food.</p></details>
       {PREORDER
-        ? <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. At the founding price, one roll is ${TIERS[0].each}, or {perNight(TIERS[0].each)} a night. Order 2 rolls and each is ${TIERS[1].each}. Order 3 or more and each is ${TIERS[2].each}, which is {perNight(TIERS[2].each)} a night. At launch, one roll will be ${PRICE}.</p></details>
+        ? <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. At the founding price, one roll is ${TIERS[0].each}, or {perNight(TIERS[0].each)} a night. Order 2 rolls and each is ${TIERS[1].each}. Order 3 or more and each is ${TIERS[2].each}, which is {perNight(TIERS[2].each)} a night. After the first {FOUNDING_CAP} orders, one roll is ${PRICE}.</p></details>
         : <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. One roll works out at $4.30 a night. Order 2 rolls and each is $119. Order 3 or more and each is $109, which is $3.63 a night. Rolls with different pouches count together, so you can order with friends.</p></details>}
       <details><summary><span class="q">What's in {SIGNATURE_NAME}?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>{MAX_CAPS} capsules: 2 Level (266 mg magnesium), 2 Glow (1,700 mg glycine), 1 Prime (600 mg NAC), 1 Bright (1,000 mg vitamin C), 1 Core (25 mg zinc) and 1 Spark (1,000 mcg vitamin B12). Every capsule's Supplement Facts and lab report are in the menu above.</p></details>
       <details><summary><span class="q">Can I change what's in my pouch?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from The Signature or build your own from our menu of 8 capsules, up to 8 per pouch, always with at least 2 glycine. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
@@ -335,6 +336,7 @@ const jsonld = {
   </section>
   <Foot id="em-shop" />
   <style>
+    .fcount{margin:6px 0 0;font-weight:800;color:var(--cobalt)}
     .ifstate{display:none;margin:0;padding:12px 14px;border-radius:14px;background:var(--mist);border:1px solid var(--line);font-size:14.5px;line-height:1.4;font-weight:600}
     .ifstate a{color:var(--cobalt)}
     html[data-state="proof_seeker"] .ifstate[data-for~="proof_seeker"],

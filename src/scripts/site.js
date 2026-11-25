@@ -4,7 +4,7 @@
 import { EGGS, eggById, inBlueHour, COLLECTOR_NEEDS } from '../data/eggs.js';
 import { PREORDER, SHIP_BY } from '../data/preorder.js';
 import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, SIGNATURE_NAME, minFor, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier, refEachFor } from '../data/ingredients.js';
-import { track, keepRecording, watchSections, attribution, touchString, liveVariants, aid, pageType } from './track.js';
+import { track, keepRecording, watchSections, attribution, touchString, liveVariants, aid, pageType, visitNumber } from './track.js';
 import { signal, state, freshVisit, faqKind } from './state.js';
 
 
@@ -257,7 +257,7 @@ function paint() {
     '</h3><div class="mt">' + packSummary(l.mix) + '</div><div class="mt">30 nights per roll</div><div class="ctl"><div class="qty"><button data-line="' + i +
     '" data-d="-1" aria-label="Remove one roll">−</button><span>' + l.qty + '</span><button data-line="' + i +
     '" data-d="1" aria-label="Add one roll">+</button></div><div class="price">' +
-    (each < refEachFor(n) ? '<s>' + money(l.qty * refEachFor(n)) + '</s> ' : '') + money(l.qty * each) +
+    (!PREORDER && each < refEachFor(n) ? '<s>' + money(l.qty * refEachFor(n)) + '</s> ' : '') + money(l.qty * each) +
     '</div></div><button class="trash" data-rm="' + i + '">Remove</button></div></div>'
   ).join('');
   const code = getCode(), egg = bestEgg(), cl = $('#codeline');
@@ -488,6 +488,7 @@ async function goCheckout(btn) {
     if (r.ok && d.url) { flushSoon(); location.href = d.url; return; }
     track('checkout_error', { error: d.error || ('http_' + r.status) });
     if (d.error === 'not_configured') msg = "Checkout isn't switched on yet. Please check back soon.";
+    if (d.error === 'founding_full') msg = 'All 100 founding orders are taken. We\'re switching to launch prices now. Please try again shortly.';
   } catch (e) { track('checkout_error', { error: 'network' }); }
   leaving = false;
   btn.disabled = false;
@@ -648,12 +649,12 @@ $$('.faq details').forEach((d) => {
 /* ---------- email sign-up and the welcome offer ---------- */
 // Both the footer form and the popup post to /api/subscribe, which adds the email to Klaviyo and returns
 // the welcome code. The code is saved like a link code, so it comes off at checkout without typing it.
-async function subscribe(email, when, source) {
+async function subscribe(email, when, source, event) {
   try {
     const r = await fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, when, source }),
+      body: JSON.stringify({ email, when, source, event }),
     });
     const d = await r.json().catch(() => ({}));
     if (r.ok && d.ok) {
@@ -669,6 +670,20 @@ const subError = (e) =>
   e === 'bad_email' ? 'That email doesn\'t look right. Check it and try again.'
   : e === 'not_configured' ? 'Sign-ups go live very soon.'
   : 'That didn\'t go through. Try again in a moment.';
+
+// Event pouch page (/tried): email for the founding offer and a reminder before the next night out.
+$$('.triedform').forEach((f) => {
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const note = $('.formnote', f.parentNode), input = $('input', f), btn = $('button', f);
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const r = await subscribe(input.value, '', 'event', f.getAttribute('data-event') || '');
+    btn.disabled = false;
+    if (r.ok) { input.value = ''; note.textContent = 'Done. Check your inbox.'; }
+    else note.textContent = subError(r.error);
+  });
+});
 
 $$('.foot .form').forEach((f) => {
   f.addEventListener('submit', async (e) => {
@@ -951,6 +966,19 @@ if (pageType === 'shop') { track('view_item', { value: eachFor(1), page_type: 's
   bar.innerHTML = 'Your ' + (cartCount() > 1 ? cartCount() + ' rolls are' : 'roll is') + ' still in your cart' +
     (PREORDER ? ', at the founding price.' : '.') + ' <button type="button" data-cart data-cta="cart_reminder">Open cart</button>';
   track('nudge_shown', { cta: 'cart_reminder' });
+})();
+// Founding counter (docs/FUNNEL.md): real paid orders from Stripe, shown only to warm visitors (been here before,
+// came in with a code, or already looking at the product closely), and only once there are enough orders to count.
+(function foundingCounter() {
+  const els = $$('[data-founding]');
+  if (!els.length || !PREORDER) return;
+  const warm = visitNumber > 1 || !!getCode() || state() !== 'cold' && state() !== 'curious';
+  if (!warm) return;
+  fetch('/api/founding').then((r) => r.json()).then((d) => {
+    if (!d || !d.show) return;
+    els.forEach((el) => { el.textContent = d.claimed + ' of ' + d.cap + ' founding orders claimed. ' + d.left + ' left at the founding price.'; el.hidden = false; });
+    track('nudge_shown', { cta: 'founding_counter' });
+  }).catch(() => {});
 })();
 // Home: if they built a custom pouch on an earlier visit, say it's saved.
 (function savedChip() {

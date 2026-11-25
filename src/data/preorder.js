@@ -10,4 +10,9 @@ export const PREORDER = true;
 // The date every pre-order ships by. Customers are promised a full refund any time before their roll ships,
 // and if we can't ship by this date we must email them before it passes, give a new date, and offer a full refund.
 export const SHIP_BY = 'December 20';
+
+// Founding offer (docs/FUNNEL.md). The founding prices are an introductory offer for the first FOUNDING_CAP paid
+// orders. FTC rules (16 CFR 233): never show $129 crossed out until $129 has really been charged, and the cap must
+// be real. When order #100 is paid, the price must go to the launch prices and stay there.
+export const FOUNDING_CAP = 100;
 export const SHIP_BY_FULL = 'Sunday, December 20, 2026';

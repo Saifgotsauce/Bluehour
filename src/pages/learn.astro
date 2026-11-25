@@ -8,7 +8,7 @@ import Promo from '../components/Promo.astro';
 import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
 import { TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
-import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
 const FIRST = TIERS[0].each;
 const BUY = PREORDER ? 'Pre-order' : 'Buy now';
 
@@ -23,7 +23,7 @@ const pouch = [
 
 const preFaqs = PREORDER ? [
   ['When will my roll ship?', `Pre-orders ship by ${SHIP_BY}, free within the US. Delivery usually takes 3 to 8 business days after that, and we'll email you tracking.`],
-  ['When am I charged?', `Today, at the founding price. That price is only for pre-orders. At launch, one roll goes back to $${PRICE}.`],
+  ['When am I charged?', `Today, at the founding price. It's for the first ${FOUNDING_CAP} orders. After that, one roll is $${PRICE}.`],
   ['Can I cancel?', `Yes. Any time before your roll ships, email hello@bluehournights.com with your order number and we'll refund you in full, no questions. If we ever can't ship by ${SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.`],
 ] : [];
 const faqs = [
@@ -82,7 +82,7 @@ const faqs = [
       {PREORDER && (
         <a class="nudge" href="#offer">
           <img src="/images/pouch.webp" alt="" width="1122" height="1402" loading="lazy">
-          <span><b>Blue Hour is on pre-order.</b> ${FIRST} for 30 nights instead of ${PRICE}, shipping by {SHIP_BY}. <u>See the founding offer</u></span>
+          <span><b>Blue Hour is on pre-order.</b> ${FIRST} for 30 nights for the first {FOUNDING_CAP} orders, shipping by {SHIP_BY}. <u>See the founding offer</u></span>
         </a>
       )}
 
@@ -164,7 +164,7 @@ const faqs = [
     {PREORDER && (
       <section class="w col"><div class="fnote">
         <p class="kick">Why pre-order?</p>
-        <p>Every Blue Hour roll is packed to order, and before we launch we want to know who's in. So our first run comes with a founding price: ${FIRST} a roll instead of ${PRICE}.</p>
+        <p>Every Blue Hour roll is packed to order, and before we launch we want to know who's in. So the first {FOUNDING_CAP} orders get a founding price: ${FIRST} a roll. After that, it's ${PRICE}.</p>
         <p>We charge you today and your roll ships by {SHIP_BY}. If you change your mind any time before it ships, email us and you get every cent back. No forms, no questions.</p>
         <p class="fsig">Saif, founder of Blue Hour</p>
       </div></section>
@@ -175,7 +175,7 @@ const faqs = [
         <div class="bign">{perNight(FIRST)}</div>
         <h2>a night{PREORDER && ' at the founding price'}. Less than a bottle of water at the club.</h2>
         <div class="obox">
-          {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for pre-orders only. ${PRICE} a roll at launch.</span></div>}
+          {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for the first {FOUNDING_CAP} orders. ${PRICE} a roll after that.</span></div>}
           <div class="mix"><b>Your pouch</b><span id="mixsum" data-clarity-mask="true">The Signature: magnesium ×2, glycine ×2, NAC, vitamin C, zinc, vitamin B12</span><a href="/shop#build">Build your own instead</a></div>
           <fieldset class="tiers">
             <legend>How many rolls?</legend>
@@ -183,7 +183,7 @@ const faqs = [
               <label class="tier">
                 <input type="radio" name="rolls" value={t.rolls} checked={i === 0} data-qty />
                 <span class="tn"><b>{t.rolls} roll{t.rolls > 1 ? 's' : ''}{t.name && <em>{t.name}</em>}</b><small>{t.rolls * 30} nights · {perNight(t.each)} a night</small></span>
-                <span class="tp"><b>${t.rolls * t.each}</b>{t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
+                <span class="tp"><b>${t.rolls * t.each}</b>{!PREORDER && t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
               </label>
             ))}
           </fieldset>
@@ -245,7 +245,7 @@ const faqs = [
 
   <div class="astick" id="astick" aria-hidden="true">
     {PREORDER
-      ? <div><b>Pre-order · ${FIRST} <s>${PRICE}</s></b><span>Ships by {SHIP_BY} · Full refund before it ships</span></div>
+      ? <div><b>Pre-order · ${FIRST} founding price</b><span>Ships by {SHIP_BY} · Full refund before it ships</span></div>
       : <div><b>30 nights · ${PRICE}</b><span>Free US shipping · No subscription</span></div>}
     <a class="add" href="#offer" tabindex="-1">{PREORDER ? 'Pre-order' : 'Get yours'}</a>
   </div>

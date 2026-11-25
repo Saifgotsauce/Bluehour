@@ -10,7 +10,7 @@ import Top from '../components/Top.astro';
 import Promo from '../components/Promo.astro';
 import Marquee from '../components/Marquee.astro';
 import Foot from '../components/Foot.astro';
-import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
 import { TIERS, PRICE, perNight, INGREDIENTS, SIGNATURE, SIGNATURE_NAME, MAX_CAPS } from '../data/ingredients.js';
 const FIRST = TIERS[0].each;
 const site = Astro.site!;
@@ -32,7 +32,7 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
 ---
 <Base
   title="Blue Hour | One nightly pouch for big nights"
-  description={`Out late. Up early. One sealed pouch of ${MAX_CAPS} capsules a night: ${ING}. 30 pouches on a roll, free US shipping, no subscription.`}
+  description={`Out late. Up early. A nightstand pouch for nights that run late: ${MAX_CAPS} capsules of magnesium, glycine, vitamin C, zinc, B12 and more. 30 pouches on a roll, free US shipping, no subscription.`}
   jsonld={jsonld}
 >
 
@@ -42,9 +42,9 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
     <Top />
     <div class="copy">
       <h1><span class="ln"><span>Out late.</span></span><span class="ln"><span style="--d:.09s">Up early.</span></span></h1>
-      <p class="sub">One sealed pouch of {MAX_CAPS} capsules for when you get home: {ING}. Thirty pouches on one roll.</p>
+      <p class="sub">A nightstand pouch for nights that run late. Take one before bed: {MAX_CAPS} capsules of magnesium, glycine, vitamin C, zinc, B12 and more, sealed together. Thirty pouches on one roll.</p>
       <a class="btn" href="/shop" data-cta="hero">{PREORDER ? 'Pre-order now' : 'Buy now'}</a>
-      <p class="note">{PREORDER ? <>30 nights. ${FIRST}{' '}<s>${PRICE}</s>{' '}founding price. Ships by {SHIP_BY}. Full refund before it ships.</> : `30 nights. $${PRICE}. Free US shipping.`}</p>
+      <p class="note">{PREORDER ? <>30 nights, ${FIRST} founding price for the first {FOUNDING_CAP} orders. Ships by {SHIP_BY}. Full refund before it ships.</> : `30 nights. $${PRICE}. Free US shipping.`}</p>
       <a class="savedchip" id="savedchip" href="/shop#build" data-cta="saved_build_home" hidden>Your custom pouch is saved →</a>
     </div>
     <div class="shot">
@@ -52,7 +52,6 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
       <div class="spin" aria-hidden="true">
         <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ" textLength="284" lengthAdjust="spacing">{PREORDER ? 'PRE-ORDER * 30 NIGHTS * ' : '30 NIGHTS * ONE ROLL * '}</textPath></text></svg>
         <b>${FIRST}</b>
-        {PREORDER && <s class="was">${PRICE}</s>}
       </div>
       <button class="cap" data-float=".14" style="--tt:1.7s;--f:.14;--x:3%;--y:22%;--w:27%;--r:-38deg;--t:5.200s" aria-label="Spin capsule"><span><img src="/images/cap-glycine.webp" alt="" width="900" height="340"></span></button>
       <button class="cap" data-float=".22" style="--tt:2.1s;--f:.22;--x:72%;--y:50%;--w:25%;--r:18deg;--t:4.300s" aria-label="Spin capsule"><span><img src="/images/cap-still.webp" alt="" width="900" height="340"></span></button>
@@ -150,12 +149,13 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
 
   <section class="sec pricey" data-sec="price">
     <div class="w stack rv">
-      <div class="bign">{perNight(FIRST)}{PREORDER && <s class="was">{perNight(PRICE)}</s>}</div>
+      <div class="bign">{perNight(FIRST)}</div>
       <h2 style="max-width:13em">a night. Less than a bottle of water at the club.</h2>
+      {PREORDER && <p class="fcount" data-founding hidden></p>}
       <p class="crewline">${FIRST} for 30 nights{PREORDER ? ', the founding price' : ''}. Or {perNight(TIERS[2].each)} a night when you order 3 rolls with your crew.</p>
       {PREORDER && (
         <ul class="assure hometerms">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Charged today at the founding price. ${PRICE} at launch.</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Founding price for the first {FOUNDING_CAP} orders. ${PRICE} a roll after that.</li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7zM7 18a1.5 1.5 0 1 0 0-.01M17 18a1.5 1.5 0 1 0 0-.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Ships free by {SHIP_BY}.</li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Full refund any time before it ships. No subscription.</li>
         </ul>
@@ -200,6 +200,7 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
     .sigfoot{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center}
     .txtlink{color:var(--white);font-weight:700;text-underline-offset:4px}
     .hometerms{max-width:34em}
+    .fcount{font-weight:800;font-size:18px}
     .savedchip{display:inline-block;margin-top:14px;padding:9px 16px;border-radius:99px;background:rgba(255,255,255,.16);color:var(--white);font-weight:700;font-size:15px;text-decoration:none}
     @media (min-width:900px){
       .boxlist{grid-template-columns:repeat(3,minmax(0,1fr))}

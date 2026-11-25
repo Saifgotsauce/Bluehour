@@ -8,7 +8,7 @@ import { findPromo } from './_promo.js';
 
 const KLAVIYO_REVISION = '2024-10-15';
 const WHEN = { 'this-weekend': 'This weekend', 'this-month': 'This month', later: 'Later this year', 'every-weekend': 'Every weekend' };
-const SOURCES = { popup: 'Blue Hour website popup', footer: 'Blue Hour website footer' };
+const SOURCES = { popup: 'Blue Hour website popup', footer: 'Blue Hour website footer', event: 'Blue Hour event pouch (QR)' };
 
 export const cleanEmail = (e) => {
   const s = String(e == null ? '' : e).trim().toLowerCase();
@@ -35,8 +35,10 @@ const klaviyo = (path, key, body) =>
     body: JSON.stringify(body),
   });
 
-export function profileBody(email, when, source) {
+// event: the event slug from an event-pouch QR code (src/data/events.js), so the morning-after emails can name it.
+export function profileBody(email, when, source, event) {
   const properties = { signup_source: source };
+  if (event) properties.tried_at_event = event;
   if (when) properties.next_big_night = WHEN[when];
   return { data: { type: 'profile', attributes: { email, properties } } };
 }
@@ -72,10 +74,11 @@ export default async function handler(req, res) {
   if (!email) return res.status(400).json({ error: 'bad_email' });
   const when = Object.prototype.hasOwnProperty.call(WHEN, body.when) ? body.when : '';
   const source = Object.prototype.hasOwnProperty.call(SOURCES, body.source) ? body.source : 'footer';
+  const event = typeof body.event === 'string' && /^[a-z0-9-]{2,40}$/.test(body.event) ? body.event : '';
 
   try {
     // Save the extra details first (not essential), then the subscription (essential).
-    await klaviyo('profile-import/', key, profileBody(email, when, source)).catch(() => null);
+    await klaviyo('profile-import/', key, profileBody(email, when, source, event)).catch(() => null);
     const r = await klaviyo('profile-subscription-bulk-create-jobs/', key, subscribeBody(email, list, source));
     if (!r.ok) {
       console.error('Klaviyo subscribe failed:', r.status, await r.text().catch(() => ''));

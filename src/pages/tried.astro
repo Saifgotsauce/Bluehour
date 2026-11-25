@@ -1,0 +1,65 @@
+---
+// /tried: where the QR code on an event pouch card lands (docs/FUNNEL.md, step 4 and 5).
+// The morning after is the moment the need is felt, so this page skips the education: it greets them, says what
+// was in the pouch, shows the founding offer with their event code, and asks for an email for the follow-ups.
+// The event name comes only from src/data/events.js (never from the URL itself), so nobody can put text on our page.
+import Base from '../layouts/Base.astro';
+import Top from '../components/Top.astro';
+import Foot from '../components/Foot.astro';
+import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { TIERS, PRICE, MAX_CAPS, perNight } from '../data/ingredients.js';
+const FIRST = TIERS[0].each;
+---
+<Base title="You tried Blue Hour | Blue Hour" description="You tried a Blue Hour pouch. Here's what was in it, and the founding offer." noindex>
+  <header class="jhero" data-sec="tried_hero">
+    <div class="mesh"><i></i><i></i><i></i></div>
+    <div class="grain"></div>
+    <Top />
+    <div class="in">
+      <p class="crumb"><span id="tev">You tried one</span></p>
+      <h1>Morning. How'd you wake up?</h1>
+      <p class="dek">Last night's pouch was {MAX_CAPS} capsules sealed together: magnesium, glycine, vitamin C, zinc, B12 and NAC. A roll is 30 of them, one for every late night.</p>
+      <a class="btn" href="/shop" data-cta="tried_shop">{PREORDER ? `Get a roll, $${FIRST}` : `Get a roll, $${PRICE}`}</a>
+      <p class="note" id="tcode" hidden></p>
+    </div>
+  </header>
+  <main class="w sec" style="padding-top:clamp(24px,5vw,50px)" data-sec="tried_offer">
+    <div class="prose">
+      {PREORDER && (
+        <>
+          <h2>The founding offer</h2>
+          <p>${FIRST} a roll ({perNight(FIRST)} a night) for the first {FOUNDING_CAP} orders, then ${PRICE}. Free US shipping, ships by {SHIP_BY}, full refund any time before it ships. No subscription.</p>
+          <p class="fcount" data-founding hidden></p>
+        </>
+      )}
+      <h2>Not ready yet?</h2>
+      <p>Leave your email and we'll send you the offer, plus one reminder before your next night out. That's it.</p>
+      <form class="form triedform" id="triedform" novalidate>
+        <label for="em-tried" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Email address</label>
+        <input id="em-tried" type="email" placeholder="Email address" autocomplete="email"><button type="submit">Send it</button>
+      </form>
+      <p class="formnote" role="status"></p>
+      <p style="font-size:14px;opacity:.8">One pouch a day, with food and water. Ask a pharmacist first if you take any medication. Blue Hour doesn't make alcohol or anything else safer, and it doesn't replace sleep or water.</p>
+    </div>
+  </main>
+  <Foot id="em-tried-foot" />
+  <style>
+    .triedform{display:flex;gap:10px;max-width:460px}
+    .triedform input{flex:1;min-width:0;padding:14px 16px;border-radius:14px;border:1px solid var(--line);font:inherit}
+    .triedform button{padding:14px 20px;border-radius:14px;border:0;background:var(--deep);color:var(--white);font-weight:800}
+    .fcount{font-weight:800;color:var(--cobalt)}
+  </style>
+  <script>
+    import { EVENTS } from '../data/events.js';
+    import { track } from '../scripts/track.js';
+    const q = new URLSearchParams(location.search);
+    const slug = (q.get('e') || '').toLowerCase();
+    const ev = Object.prototype.hasOwnProperty.call(EVENTS, slug) ? EVENTS[slug] : null;
+    if (ev) {
+      document.getElementById('tev').textContent = 'You tried one at ' + ev.name;
+      document.getElementById('triedform').setAttribute('data-event', slug);
+      if (ev.code) { const c = document.getElementById('tcode'); c.textContent = 'Your event code ' + ev.code + ' takes $5 off every roll at checkout.'; c.hidden = false; }
+    }
+    track('event_landing', { source: ev ? slug : 'unknown' });
+  </script>
+</Base>

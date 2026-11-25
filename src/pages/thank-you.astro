@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
-import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { CREW_OFF } from '../data/crew.js';
 ---
 <Base title="Order received | Blue Hour" description="Thanks for your Blue Hour order." noindex>
   <script is:inline>
@@ -22,6 +23,7 @@ import { PREORDER, SHIP_BY } from '../data/preorder.js';
     <Top />
     <div class="in">
       <p class="crumb"><span>{PREORDER ? 'Pre-order received' : 'Order received'}</span></p>
+      <p class="foundno" id="foundno" hidden></p>
       <h1>You're in. See you at the next one.</h1>
       {PREORDER
         ? <p class="dek">You've locked in the founding price. Your receipt is on its way by email, and your roll ships by {SHIP_BY}, packed to order with the capsules you picked.</p>
@@ -41,8 +43,34 @@ import { PREORDER, SHIP_BY } from '../data/preorder.js';
         <li>It ships free within the US{PREORDER && `, by ${SHIP_BY}`}. Delivery usually takes 3 to 8 business days after it ships, and we'll email you tracking.</li>
         <li>Take 1 pouch a day with food and water. Don't take more than 1 pouch a day.</li>
       </ol>
+      {PREORDER && (
+        <div class="crewcard">
+          <h2>Bring your people</h2>
+          <p>Join the Founding Crew and get your own code. Your friends get ${CREW_OFF} off every roll, and you earn on every roll they buy. 21+, US only.</p>
+          <a class="btn" href="/crew" data-cta="thanks_crew">Apply to the Founding Crew</a>
+        </div>
+      )}
       <p>Something wrong with your order? Email <a href="mailto:hello@bluehournights.com">hello@bluehournights.com</a> within 5 business days of delivery. See <a href="/refunds">Refunds and replacements</a>.</p>
     </div>
   </main>
   <Foot id="em-thanks" />
+  <style>
+    .foundno{display:inline-block;margin:0 0 14px;padding:8px 16px;border-radius:99px;background:rgba(255,255,255,.16);color:var(--white);font-weight:800;letter-spacing:.04em}
+    .crewcard{margin:28px 0;padding:22px;border-radius:20px;background:var(--mist);border:1px solid var(--line)}
+    .crewcard h2{margin-top:0}
+  </style>
+  <script>
+    // Founding member number (#001 to #100), from real paid orders in Stripe (api/founding.js).
+    // Stripe can take a moment to mark the payment as paid, so it tries again a few times.
+    const sid = new URLSearchParams(location.search).get('session_id');
+    const el = document.getElementById('foundno');
+    if (sid && el) {
+      let tries = 0;
+      const ask = () => fetch('/api/founding?session_id=' + encodeURIComponent(sid)).then((r) => r.json()).then((d) => {
+        if (d && d.number) { el.textContent = 'Founding member #' + String(d.number).padStart(3, '0') + ' of ' + d.cap; el.hidden = false; }
+        else if (++tries < 4) setTimeout(ask, 4000);
+      }).catch(() => {});
+      ask();
+    }
+  </script>
 </Base>
