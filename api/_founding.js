@@ -1,6 +1,6 @@
 // The founding offer counter (docs/FUNNEL.md section 1).
 // Counts real paid founding orders in Stripe: payments that succeeded, were made at the founding price
-// (metadata preorder=yes or founding=yes) and haven't been fully refunded. Nothing here is ever invented,
+// (metadata founding=yes) and haven't been fully refunded. Nothing here is ever invented,
 // so the number on the site is always the true one.
 import { FOUNDING_CAP } from '../src/data/preorder.js';
 
@@ -16,7 +16,8 @@ async function stripeGet(key, path) {
 // Paid founding payment intents, oldest first. Cached for 60 seconds per server instance.
 export async function foundingOrders(key, fresh) {
   if (!fresh && cache.ids && Date.now() - cache.at < 60e3) return cache.ids;
-  const q = encodeURIComponent("status:'succeeded' AND (metadata['preorder']:'yes' OR metadata['founding']:'yes')");
+  // Stripe search can't mix AND with OR. Every founding checkout (old pre-orders included) sets founding=yes.
+  const q = encodeURIComponent("status:'succeeded' AND metadata['founding']:'yes'");
   let page = null, all = [];
   for (let i = 0; i < 10; i++) {
     const d = await stripeGet(key, `payment_intents/search?query=${q}&limit=100&expand[]=data.latest_charge${page ? '&page=' + encodeURIComponent(page) : ''}`);
