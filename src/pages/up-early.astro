@@ -9,9 +9,9 @@ import Promo from '../components/Promo.astro';
 import Foot from '../components/Foot.astro';
 import Offer from '../components/Offer.astro';
 import { TIERS, PRICE, perNight } from '../data/ingredients.js';
-import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { FOUNDING, FOUNDING_CAP } from '../data/preorder.js';
 const FIRST = TIERS[0].each;
-const BUY = PREORDER ? 'Pre-order 30 nights' : 'Get 30 nights';
+const BUY = 'Order 30 nights';
 const faqs = [
   ['When do I take it?', 'When you get home, before bed. Tear one pouch off the roll and take the capsules with a snack and a big glass of water. One pouch a day, never more.'],
   ['Will it keep me up?', 'No. There is no caffeine and no stimulants in any Blue Hour capsule.'],
@@ -22,7 +22,7 @@ const faqs = [
 ---
 <Base
   title="Out late. Up early. | Blue Hour"
-  description={`One pouch on your nightstand for the nights that run late and the mornings that don't wait. ${PREORDER ? `$${FIRST} for 30 nights for the first ${FOUNDING_CAP} orders.` : `$${PRICE} for 30 nights.`} Free US shipping.`}
+  description={`One pouch on your nightstand for the nights that run late and the mornings that don't wait. ${FOUNDING ? `$${FIRST} for 30 nights for the first ${FOUNDING_CAP} orders.` : `$${PRICE} for 30 nights.`} Free US shipping.`}
   image="/images/hand.webp"
 >
   <Promo text="Free US shipping on every roll. No subscription." />
@@ -36,7 +36,7 @@ const faqs = [
       <p class="dek">One sealed pouch on your nightstand. Magnesium, glycine, vitamin C, zinc and B12 for the nights that run long, with nothing that keeps you up.*</p>
       <div class="hrow">
         <a class="btn solid" href="#offer" data-cta="hero">{BUY}</a>
-        <span class="hp">{PREORDER ? <>{perNight(FIRST)} a night · <s>${PRICE}</s> ${FIRST} a roll</> : <>{perNight(PRICE)} a night</>}</span>
+        <span class="hp">{FOUNDING ? <>{perNight(FIRST)} a night · <s>${PRICE}</s> ${FIRST} a roll</> : <>{perNight(PRICE)} a night</>}</span>
       </div>
     </div>
   </header>
@@ -78,7 +78,7 @@ const faqs = [
     </div>
   </section>
 
-  <Offer heading={PREORDER ? 'a night at the founding price. Less than a coffee on the way in.' : 'a night. Less than a coffee on the way in.'} pick={1} note={`Splitting with friends? Every roll in your cart counts, so 3 rolls are $${TIERS[2].each} each.`} />
+  <Offer heading={FOUNDING ? 'a night at the founding price. Less than a coffee on the way in.' : 'a night. Less than a coffee on the way in.'} pick={1} note={`Splitting with friends? Every roll in your cart counts, so 3 rolls are $${TIERS[2].each} each.`} />
 
   <section class="sec faq" data-sec="faq">
     <div class="w col">

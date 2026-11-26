@@ -6,7 +6,7 @@
 import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
-import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { FOUNDING, DELIVERY, FOUNDING_CAP } from '../data/preorder.js';
 import { TIERS, PRICE, MAX_CAPS, perNight } from '../data/ingredients.js';
 const FIRST = TIERS[0].each;
 ---
@@ -19,16 +19,16 @@ const FIRST = TIERS[0].each;
       <p class="crumb"><span id="tev">You tried one</span></p>
       <h1>Morning. How'd you wake up?</h1>
       <p class="dek">Last night's pouch was {MAX_CAPS} capsules sealed together: magnesium, glycine, vitamin C, zinc, B12 and NAC. A roll is 30 of them, one for every late night.</p>
-      <a class="btn" href="/shop" data-cta="tried_shop">{PREORDER ? `Get a roll, $${FIRST}` : `Get a roll, $${PRICE}`}</a>
+      <a class="btn" href="/shop" data-cta="tried_shop">{FOUNDING ? `Get a roll, $${FIRST}` : `Get a roll, $${PRICE}`}</a>
       <p class="note" id="tcode" hidden></p>
     </div>
   </header>
   <main class="w sec" style="padding-top:clamp(24px,5vw,50px)" data-sec="tried_offer">
     <div class="prose">
-      {PREORDER && (
+      {FOUNDING && (
         <>
           <h2>The founding offer</h2>
-          <p>${FIRST} a roll ({perNight(FIRST)} a night) for the first {FOUNDING_CAP} orders, then ${PRICE}. Free US shipping, ships by {SHIP_BY}, full refund any time before it ships. No subscription.</p>
+          <p>${FIRST} a roll ({perNight(FIRST)} a night) for the first {FOUNDING_CAP} orders, then ${PRICE}. Free US shipping, arrives in {DELIVERY}. No subscription.</p>
           <p class="fcount" data-founding hidden></p>
         </>
       )}

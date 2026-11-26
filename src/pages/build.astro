@@ -7,7 +7,7 @@ import Promo from '../components/Promo.astro';
 import Foot from '../components/Foot.astro';
 import Builder from '../components/Builder.astro';
 import { MAX_CAPS, TIERS, PRICE, perNight } from '../data/ingredients.js';
-import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { FOUNDING, DELIVERY } from '../data/preorder.js';
 const FIRST = TIERS[0].each;
 ---
 <Base
@@ -22,7 +22,7 @@ const FIRST = TIERS[0].each;
     <div class="in">
       <p class="crumb"><a href="/shop">Shop</a> / Build</p>
       <h1>Your pouch, your way.</h1>
-      <p class="dek">Pick a pack below or build your own, up to {MAX_CAPS} capsules. Every roll is 30 of the same pouch, ${FIRST}{PREORDER ? ` (${perNight(FIRST)} a night), ships by ${SHIP_BY}` : ''}. Save it and reorder any time.</p>
+      <p class="dek">Pick a pack below or build your own, up to {MAX_CAPS} capsules. Every roll is 30 of the same pouch, ${FIRST} ({perNight(FIRST)} a night), arrives in {DELIVERY}. Save it and reorder any time.</p>
     </div>
   </header>
   <Builder />

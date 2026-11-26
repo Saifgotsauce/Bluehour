@@ -6,7 +6,7 @@
 import { PRICE, INGREDIENTS, cleanMix, mixTotal, isSignature, eachFor, savingFor, tierFor, totalFor } from '../src/data/ingredients.js';
 import { findPromo, promoValue } from './_promo.js';
 import { readEgg, eggCoupon } from './_eggs.js';
-import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../src/data/preorder.js';
+import { FOUNDING, DELIVERY, FOUNDING_CAP } from '../src/data/preorder.js';
 import { foundingCount } from './_founding.js';
 import { findCrew, crewCouponFor } from './_crew.js';
 import { CREW_OFF } from '../src/data/crew.js';
@@ -46,26 +46,25 @@ export function sessionParams(lines, origin, disc, vid, attr) {
   p.set('success_url', `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`);
   p.set('cancel_url', `${origin}/shop`);
   p.set('shipping_address_collection[allowed_countries][0]', 'US');
-  // Pre-orders are already at the founding price, so no codes: the Stripe page shows no code box at all.
+  // Founding-price orders take no codes: the Stripe page shows no code box at all.
   if (disc && disc.promo) p.set('discounts[0][promotion_code]', disc.promo);
   else if (disc && disc.coupon) p.set('discounts[0][coupon]', disc.coupon);
-  else if (!PREORDER) p.set('allow_promotion_codes', 'true');
+  else if (!FOUNDING) p.set('allow_promotion_codes', 'true');
   p.set('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
   p.set('shipping_options[0][shipping_rate_data][fixed_amount][amount]', '0');
   p.set('shipping_options[0][shipping_rate_data][fixed_amount][currency]', 'usd');
   p.set('shipping_options[0][shipping_rate_data][display_name]', 'Free US shipping');
-  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][unit]', 'business_day');
-  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]', '4');
-  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]', 'business_day');
-  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '10');
+  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][unit]', 'day');
+  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]', '5');
+  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]', 'day');
+  p.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '9');
   p.set(
     'custom_text[submit][message]',
-    PREORDER
-      ? `Pre-order at the founding price: $${each} a roll${saving > 0 ? `, so you save $${saving} on the launch price` : ''}. First 100 orders only. ` +
-          `We charge you today and your order ships free by ${SHIP_BY}. Change your mind any time before it ships ` +
-          'and email hello@bluehournights.com for a full refund.'
+    FOUNDING
+      ? `Founding price: $${each} a roll${saving > 0 ? `, so you save $${saving} on the launch price` : ''}. First 100 orders only. ` +
+          `Packed to order and shipped free. Arrives in ${DELIVERY}.`
       : (saving > 0 ? `${tier.name} price: $${each} a roll, so you save $${saving}. ` : '') +
-          'Every roll is packed to order and ships free within the US.'
+          `Every roll is packed to order and shipped free. Arrives in ${DELIVERY}.`
   );
 
   const summary = [];
@@ -75,8 +74,8 @@ export function sessionParams(lines, origin, disc, vid, attr) {
     p.set(`line_items[${i}][quantity]`, String(l.qty));
     p.set(`line_items[${i}][price_data][currency]`, 'usd');
     p.set(`line_items[${i}][price_data][unit_amount]`, String(each * 100));
-    p.set(`line_items[${i}][price_data][product_data][name]`, PREORDER ? `Blue Hour, 30-night roll (pre-order, ships by ${SHIP_BY})` : 'Blue Hour, 30-night roll');
-    p.set(`line_items[${i}][price_data][product_data][description]`, (PREORDER ? `Founding price for the first 100 orders. Launch price $${PRICE} a roll. ` : '') + `${kind}: ${pack}`);
+    p.set(`line_items[${i}][price_data][product_data][name]`, FOUNDING ? 'Blue Hour, 30-night roll (founding price)' : 'Blue Hour, 30-night roll');
+    p.set(`line_items[${i}][price_data][product_data][description]`, (FOUNDING ? `Founding price for the first 100 orders. Launch price $${PRICE} a roll. ` : '') + `${kind}: ${pack}`);
     p.set(`line_items[${i}][price_data][product_data][images][0]`, `${origin}/images/checkout-box.jpg`);
     const line = `${l.qty} roll${l.qty > 1 ? 's' : ''}: ${pack}`.slice(0, 500);
     p.set(`metadata[pouch_${i + 1}]`, line);
@@ -102,15 +101,11 @@ export function sessionParams(lines, origin, disc, vid, attr) {
   }
   p.set('metadata[rolls]', String(rolls));
   p.set('metadata[price_each]', String(each));
-  if (PREORDER) {
-    p.set('metadata[preorder]', 'yes');
+  if (FOUNDING) {
     p.set('metadata[founding]', 'yes');
     p.set('payment_intent_data[metadata][founding]', 'yes');
-    p.set('metadata[ship_by]', SHIP_BY);
-    p.set('payment_intent_data[metadata][preorder]', 'yes');
-    p.set('payment_intent_data[metadata][ship_by]', SHIP_BY);
   }
-  p.set('payment_intent_data[description]', `Blue Hour${PREORDER ? ' pre-order' : ''}: ${summary.join(', ')}`);
+  p.set('payment_intent_data[description]', `Blue Hour${FOUNDING ? ' (founding)' : ''}: ${summary.join(', ')}`);
   return p;
 }
 
@@ -154,12 +149,12 @@ export default async function handler(req, res) {
     : null;
 
   // The founding price is only for the first FOUNDING_CAP paid orders (FTC: a "limited" offer must really be
-  // limited). Once they're gone, checkout stops selling at the founding price until PREORDER is switched off.
+  // limited). Once they're gone, checkout stops selling at the founding price until FOUNDING is switched off.
   // If Stripe can't be asked, don't block the sale; the count is checked again on the next order.
-  if (PREORDER) {
+  if (FOUNDING) {
     const claimed = await foundingCount(key).catch((e) => { console.error('Founding count failed:', e && e.message); return 0; });
     if (claimed >= FOUNDING_CAP) {
-      console.error(`FOUNDING CAP REACHED: ${claimed} founding orders. Switch PREORDER off (src/data/preorder.js) to sell at launch prices.`);
+      console.error(`FOUNDING CAP REACHED: ${claimed} founding orders. Switch FOUNDING off (src/data/preorder.js) to sell at launch prices.`);
       return res.status(409).json({ error: 'founding_full' });
     }
   }
@@ -172,15 +167,15 @@ export default async function handler(req, res) {
     const rolls = lines.reduce((a, l) => a + l.qty, 0);
     const subtotal = totalFor(rolls) * 100;
     const options = [];
-    // A Founding Crew code always works. During pre-order nothing else does: the founding price is the deal.
+    // A Founding Crew code always works. During the founding offer nothing else does: the founding price is the deal.
     const crew = body.code ? await findCrew(body.code, key).catch(() => null) : null;
     if (crew) {
       const coupon = await crewCouponFor(rolls, key).catch(() => null);
       if (coupon) options.push({ value: Math.min(CREW_OFF * 100 * rolls, subtotal), disc: { coupon, crew: crew.code } });
     }
-    const promo = !crew && !PREORDER && body.code ? await findPromo(body.code, key).catch(() => null) : null;
+    const promo = !crew && !FOUNDING && body.code ? await findPromo(body.code, key).catch(() => null) : null;
     if (promo) options.push({ value: promoValue(promo, subtotal), disc: { promo: promo.id } });
-    const egg = PREORDER ? null : readEgg(body.egg);
+    const egg = FOUNDING ? null : readEgg(body.egg);
     if (egg) {
       const coupon = await eggCoupon(egg, key).catch(() => null);
       if (coupon) options.push({ value: Math.min(egg.amount * 100, subtotal), disc: { coupon } });

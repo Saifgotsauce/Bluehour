@@ -13,9 +13,9 @@
 // \u2020 means no Daily Value is established.
 // SIGNATURE_NAME is what the default pouch is called everywhere on the site.
 
-import { PREORDER } from './preorder.js';
+import { FOUNDING } from './preorder.js';
 
-// PRICE is the launch price of one roll. During pre-order it's shown crossed out next to the founding price.
+// PRICE is the launch price of one roll. While FOUNDING is on it's shown crossed out next to the founding price.
 export const PRICE = 129;
 export const MAX_CAPS = 8;
 export const SIGNATURE_NAME = 'The Signature';
@@ -27,20 +27,20 @@ export const LAUNCH_TIERS = [
   { rolls: 2, each: 119, name: 'Duo' },
   { rolls: 3, each: 109, name: 'Crew' },
 ];
-// Founding prices, for pre-orders only (see preorder.js).
-export const PREORDER_TIERS = [
+// Founding prices, for the first 100 orders (see preorder.js).
+export const FOUNDING_TIERS = [
   { rolls: 1, each: 99, name: '' },
   { rolls: 2, each: 94, name: 'Duo' },
   { rolls: 3, each: 89, name: 'Crew' },
 ];
-export const TIERS = PREORDER ? PREORDER_TIERS : LAUNCH_TIERS;
+export const TIERS = FOUNDING ? FOUNDING_TIERS : LAUNCH_TIERS;
 export const tierFor = (rolls) => TIERS.filter((t) => rolls >= t.rolls).pop() || TIERS[0];
 export const eachFor = (rolls) => tierFor(rolls).each;
 export const totalFor = (rolls) => rolls * eachFor(rolls);
-// The crossed-out price for one roll. Normally the single-roll price. During pre-order it's the launch price for the
+// The crossed-out price for one roll. Normally the single-roll price. While FOUNDING is on it's the launch price for the
 // same number of rolls (3 rolls compare with $109 each, not $129), so the savings shown are never overstated.
 export const refEachFor = (rolls) =>
-  PREORDER ? (LAUNCH_TIERS.filter((t) => rolls >= t.rolls).pop() || LAUNCH_TIERS[0]).each : PRICE;
+  FOUNDING ? (LAUNCH_TIERS.filter((t) => rolls >= t.rolls).pop() || LAUNCH_TIERS[0]).each : PRICE;
 export const savingFor = (rolls) => rolls * refEachFor(rolls) - totalFor(rolls);
 export const nextTier = (rolls) => TIERS.find((t) => t.rolls > rolls) || null;
 export const perNight = (each) => '$' + (each / 30).toFixed(2);

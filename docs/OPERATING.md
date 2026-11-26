@@ -55,7 +55,7 @@ Read it by source and by device. Phone and desktop are different shops.
 | Thing | File |
 |---|---|
 | Prices, tiers, capsules, doses, limits, The Signature | `src/data/ingredients.js` |
-| Pre-order on/off, ship-by date | `src/data/preorder.js` (also update refunds.md, shipping.md, terms.md, which are plain text) |
+| Founding price on/off, delivery time | `src/data/preorder.js` (FOUNDING, DELIVERY) (also update refunds.md, shipping.md, terms.md, which are plain text) |
 | Crew commission and codes | `src/data/crew.js` |
 | Live experiments | `src/data/experiments.js` |
 | Health and product claims | `docs/CLAIMS.md` |

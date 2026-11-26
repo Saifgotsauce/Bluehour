@@ -58,9 +58,9 @@ Highest first. A visitor is in the first one that fits. Stored in their browser 
 | State | Signal | What the site does |
 |---|---|---|
 | `buyer` | Reached thank-you after paying | Order updates by email (Stripe receipt for now) |
-| `cart_holder` | Added a roll, hasn't paid | On their next visit, one line in the top bar: "Your roll is still in your cart." Shop shows the pre-order terms beside the buttons. |
+| `cart_holder` | Added a roll, hasn't paid | On their next visit, one line in the top bar: "Your roll is still in your cart." Shop shows the founding terms beside the buttons. |
 | `configurator` | Changed the builder | Custom pouch saved for next visit. After 6 changes or 45 seconds without adding, one offer of The Signature (once per visit). |
-| `price_evaluator` | Changed rolls, or opened a price, shipping or pre-order question | Shop shows "Charged today at $99. Ships free by Dec 20. Full refund any time before it ships." above the buttons |
+| `price_evaluator` | Changed rolls, or opened a price, shipping or pre-order question | Shop shows "$99 while the first 100 orders last, then $129. Ships free and arrives in 5 to 9 days." above the buttons |
 | `proof_seeker` | Opened Supplement Facts, a lab report, or a safety, testing or medication question | Shop shows the lab-tested line with a link to the reports above the buttons |
 | `curious` | Saw what you get, The Signature, how it works, or the shop | Nothing extra. The page order does the work. |
 | `cold` | Nothing yet | Nothing extra |

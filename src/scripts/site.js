@@ -2,7 +2,7 @@
 // Every block checks that its elements exist, because each page only has some of them.
 
 import { EGGS, eggById, inBlueHour, COLLECTOR_NEEDS } from '../data/eggs.js';
-import { PREORDER, SHIP_BY } from '../data/preorder.js';
+import { FOUNDING } from '../data/preorder.js';
 import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, SIGNATURE_NAME, PACKS, mixParam, mixFromParam, minFor, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier, refEachFor } from '../data/ingredients.js';
 import { track, keepRecording, watchSections, attribution, touchString, liveVariants, aid, pageType, visitNumber } from './track.js';
 import { signal, state, freshVisit, faqKind } from './state.js';
@@ -24,7 +24,7 @@ const CODE_DAYS = 14;
 function getCode() {
   try {
     const c = JSON.parse(store.get('bh-code') || 'null');
-    if (PREORDER && !(c && c.crew)) return null; // during pre-order only Founding Crew codes work
+    if (FOUNDING && !(c && c.crew)) return null; // during the founding offer only Founding Crew codes work
     if (c && c.code && Date.now() - c.at < CODE_DAYS * 864e5) return c;
   } catch (e) { /* ignore */ }
   return null;
@@ -63,7 +63,7 @@ function codeBar() {
 }
 const checkPromo = (code) =>
   fetch('/api/promo?code=' + encodeURIComponent(code)).then((r) => r.json()).catch(() => ({}));
-const usable = (d) => d && d.valid && (!PREORDER || d.crew);
+const usable = (d) => d && d.valid && (!FOUNDING || d.crew);
 (function readCodeFromLink() {
   let url;
   try { url = new URL(location.href); } catch (e) { return; }
@@ -89,7 +89,7 @@ function eggStore() {
   try { return JSON.parse(store.get('bh-eggs') || '{}') || {}; } catch (e) { return {}; }
 }
 function liveEggs() {
-  if (PREORDER) return []; // eggs are off during pre-order
+  if (FOUNDING) return []; // eggs are off during the founding offer
   const all = eggStore(), now = Date.now(), out = [];
   Object.keys(all).forEach((id) => {
     const e = eggById(id), t = all[id];
@@ -103,7 +103,7 @@ function eggsFoundCount() {
 }
 const asking = new Set();
 async function findEgg(id) {
-  if (PREORDER) return;
+  if (FOUNDING) return;
   const egg = eggById(id);
   if (!egg || asking.has(id) || liveEggs().some((e) => e.id === id)) return;
   asking.add(id);
@@ -238,10 +238,10 @@ function paint() {
   title.textContent = n ? 'Cart • ' + n : 'Cart';
   $('#shipbox').hidden = !n;
   $('#cft').hidden = !n;
-  $('#checkout').textContent = (PREORDER ? 'Pre-order • ' : 'Checkout • ') + money(totalFor(n));
+  $('#checkout').textContent = 'Checkout • ' + money(totalFor(n));
   const box = $('#citems');
   if (!n) {
-    box.innerHTML = '<div class="empty"><h3>Your cart is empty.</h3><p>' + (PREORDER ? 'Founding price on pre-orders, shipping by ' + SHIP_BY + '.' : 'Your next 30 nights are one tap away.') + '</p><a class="btn solid" href="/shop">' + (PREORDER ? 'Pre-order 30 nights' : 'Shop 30 nights') + '</a></div>';
+    box.innerHTML = '<div class="empty"><h3>Your cart is empty.</h3><p>' + (FOUNDING ? 'Founding price for the first 100 orders.' : 'Your next 30 nights are one tap away.') + '</p><a class="btn solid" href="/shop">' + 'Shop 30 nights' + '</a></div>';
     return;
   }
   // Crew pricing progress: the more rolls in the order, the less each one costs.
@@ -277,7 +277,7 @@ if (codeform) {
     out.textContent = 'Checking...';
     const d = await checkPromo(v);
     if (usable(d)) { setCode({ code: d.code, label: d.label, crew: d.crew }); inp.value = ''; out.textContent = ''; }
-    else out.textContent = PREORDER ? "That isn't a Founding Crew code. Check the spelling with whoever gave it to you." : "That code isn't working. Check the spelling, or it may have ended.";
+    else out.textContent = FOUNDING ? "That isn't a Founding Crew code. Check the spelling with whoever gave it to you." : "That code isn't working. Check the spelling, or it may have ended.";
   });
 }
 
@@ -863,8 +863,8 @@ function popAllowed() {
 // appears instead (after 8 seconds or a quarter of the way down) and opens the full sign-up only when tapped.
 // On desktop, heading for the tab bar to leave opens the full sign-up on any page.
 const IS_JOURNAL = /^\/blog(\/|$)/.test(location.pathname);
-// The welcome offer is off during pre-order: codes don't apply, and the founding price is the deal.
-let popArmed = !PREORDER && popAllowed();
+// The welcome offer is off during the founding offer: codes don't apply, and the founding price is the deal.
+let popArmed = !FOUNDING && popAllowed();
 function tryPop(full) {
   if (!popArmed) return;
   if ($('#cart.on, #menu.on, .wpop')) { setTimeout(() => tryPop(full), 6000); return; }
@@ -906,7 +906,7 @@ function openPop() {
     '<form class="popbody" novalidate><p class="popq">When\'s your next big night?</p>' +
     '<div class="popchips" role="radiogroup" aria-label="When\'s your next big night?">' +
     WHENS.map(([v, t]) => '<button type="button" role="radio" aria-checked="false" data-when="' + v + '">' + t + '</button>').join('') +
-    '</div><p class="pophint" hidden>Heads up: rolls are packed to order and usually arrive 4 to 10 business days after you order.</p>' +
+    '</div><p class="pophint" hidden>Heads up: rolls are packed to order and arrive in 5 to 9 days.</p>' +
     '<div class="form"><label for="popem" class="sr">Email address</label><input id="popem" type="email" placeholder="Email address" autocomplete="email"><button type="submit">Get 10% off</button></div>' +
     '<p class="fine">We\'ll nudge you to order in time for it. By joining you agree to get marketing emails from Blue Hour. Unsubscribe anytime. <a href="/privacy">Privacy</a></p>' +
     '<p class="formnote" role="status"></p></form>';
@@ -1125,14 +1125,14 @@ if (pageType === 'shop') { track('view_item', { value: eachFor(1), page_type: 's
   if (!bar) return;
   bar.classList.add('coded');
   bar.innerHTML = 'Your ' + (cartCount() > 1 ? cartCount() + ' rolls are' : 'roll is') + ' still in your cart' +
-    (PREORDER ? ', at the founding price.' : '.') + ' <button type="button" data-cart data-cta="cart_reminder">Open cart</button>';
+    (FOUNDING ? ', at the founding price.' : '.') + ' <button type="button" data-cart data-cta="cart_reminder">Open cart</button>';
   track('nudge_shown', { cta: 'cart_reminder' });
 })();
 // Founding counter (docs/FUNNEL.md): real paid orders from Stripe, shown only to warm visitors (been here before,
 // came in with a code, or already looking at the product closely), and only once there are enough orders to count.
 (function foundingCounter() {
   const els = $$('[data-founding]');
-  if (!els.length || !PREORDER) return;
+  if (!els.length || !FOUNDING) return;
   const warm = visitNumber > 1 || !!getCode() || state() !== 'cold' && state() !== 'curious';
   if (!warm) return;
   fetch('/api/founding').then((r) => r.json()).then((d) => {

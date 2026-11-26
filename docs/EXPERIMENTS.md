@@ -44,7 +44,7 @@ Baseline: none yet (no orders before the change). Watch `builder_change` with `a
 2. One-sentence clarity of the hero: hero > product rate.
 3. Primary ICP message by source: event-regular copy vs blended copy.
 4. Price placement: $99 total, $3.30 a night, free shipping and ship date together.
-5. Pre-order reassurance beside the button (done for price evaluators; test for everyone).
+5. Founding/delivery reassurance beside the button (done for price evaluators; test for everyone).
 6. Signature-first builder vs build-first.
 7. Proof placement near the price (done for proof seekers; test for everyone).
 8. What's-in-the-box visual.

@@ -2,7 +2,7 @@
 layout: ../layouts/Legal.astro
 title: Terms of service
 description: The terms for using bluehournights.com and buying Blue Hour, including who can order, what our supplements are and aren't, and how orders work.
-updated: November 14, 2026
+updated: November 25, 2026
 ---
 
 These terms apply when you use bluehournights.com or buy from Blue Hour ("we" or "us"). By placing an order, you agree to them.
@@ -27,13 +27,13 @@ Prices are in US dollars and include shipping. We may refuse or cancel an order,
 
 Product photos and capsule illustrations are for display. Your exact pouch is listed in the Supplement Facts in your pamphlet.
 
-## Pre-orders
+## Founding price
 
-Before launch, Blue Hour is sold as a pre-order at a founding price: 1 roll is $99, 2 rolls are $94 each, and 3 or more are $89 each. We charge the full amount at checkout. Your order ships by the date shown on the site and at checkout (currently December 20, 2026). You can cancel for a full refund any time before your order ships. If we can't ship by that date, we'll email you before it passes with a new date and the option to cancel for a full refund, and if we can't ship at all, we'll refund you in full. Codes and site discounts don't apply to pre-orders, except Founding Crew codes from our ambassadors, which take $5 off each roll.
+The first 100 paid orders get a founding price: 1 roll is $99, 2 rolls are $94 each, and 3 or more are $89 each. We charge the full amount at checkout, pack your roll to order and ship it; it arrives in 5 to 9 days. Once 100 founding orders have been paid, the founding price ends and the launch prices below apply. Codes and site discounts don't apply at the founding price, except Founding Crew codes from our ambassadors, which take $5 off each roll.
 
 ## Crew pricing and discounts
 
-Rolls cost less each when you order more than one. At launch, 1 roll is $129, 2 rolls are $119 each and 3 or more are $109 each. Every roll in one order counts, whatever pouch is in it.
+Rolls cost less each when you order more than one. After the founding price ends, 1 roll is $129, 2 rolls are $119 each and 3 or more are $109 each. Every roll in one order counts, whatever pouch is in it.
 
 Only one discount applies to each order. If you have more than one, such as a discount code and a discount you found on our site, we apply the one that saves you the most. Crew pricing isn't a discount, so it applies either way. Discounts you find on our site last 48 hours from when you find them. Discounts have no cash value, can't be swapped for money, and may change or end at any time, but never for an order you've already paid for.
 

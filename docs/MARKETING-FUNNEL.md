@@ -102,7 +102,7 @@ pouches handed out → QR scans.
 | /build with packs | "Lights Out", "Long Weekend", "The Basics", plus their own | **Live now** |
 | Lab reports and "why no 5-HTP, no caffeine" | Proof for `proof_seeker` visitors | Live (B12 report still missing) |
 | Email capture with a reason | "Email me this pouch" on /build, "Send me this tomorrow" after 11pm on phones, QR on event pouches | **Live now** |
-| Welcome popup | Off during pre-order (no discount codes; founding price is the deal) | Paused on purpose |
+| Welcome popup | Off while the founding price runs (no discount codes; founding price is the deal) | Paused on purpose |
 | Founding counter | Shows real paid orders once 10+ exist, warm visitors only | Built, untested on live Stripe |
 
 **Content at MOFU:** reviews with faces, "what's in the pouch" carousels, the lab report video, founder Q&A in

@@ -8,7 +8,7 @@ import Promo from '../components/Promo.astro';
 import Foot from '../components/Foot.astro';
 import Offer from '../components/Offer.astro';
 import { TIERS, PRICE, PACKS, mixParam, perNight } from '../data/ingredients.js';
-import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { FOUNDING, DELIVERY, FOUNDING_CAP } from '../data/preorder.js';
 const CREW = TIERS[2];
 const DUO = TIERS[1];
 const LW = PACKS.find((p) => p.id === 'long-weekend');
@@ -29,7 +29,7 @@ const faqs = [
 ---
 <Base
   title="Pack it for day three | Blue Hour festival kit"
-  description={`One pouch for every night of the weekend. A crew kit of 3 rolls is $${CREW.each} each${PREORDER ? ` for the first ${FOUNDING_CAP} orders` : ''}. Free US shipping.`}
+  description={`One pouch for every night of the weekend. A crew kit of 3 rolls is $${CREW.each} each${FOUNDING ? ` for the first ${FOUNDING_CAP} orders` : ''}. Free US shipping.`}
   image="/images/exploded.webp"
 >
   <Promo text="Crew kit: 3 rolls, one checkout, free US shipping." />
@@ -43,7 +43,7 @@ const faqs = [
       <p class="dek">One sealed pouch for every night of the weekend: magnesium, glycine, vitamin C and zinc for the days you're on your feet for twelve hours.* Tear off what you need, leave the rest at home.</p>
       <div class="hrow">
         <a class="btn solid" href="#offer" data-cta="hero">Get the crew kit</a>
-        <span class="hp">3 rolls · ${CREW.each} each{PREORDER && <> · ships by {SHIP_BY}</>}</span>
+        <span class="hp">3 rolls · ${CREW.each} each · arrives in {DELIVERY}</span>
       </div>
     </div>
   </header>
@@ -95,7 +95,7 @@ const faqs = [
       <button type="button" data-offer-pack="long-weekend" aria-pressed="false">Long Weekend</button>
     </div>
   </div>
-  <Offer heading={PREORDER ? 'a night for a crew of three at the founding price.' : 'a night for a crew of three.'} pick={3} note="Ordering for yourself? Pick 1 roll above. 30 pouches covers a lot of weekends." buildText="Change what's in it" />
+  <Offer heading={FOUNDING ? 'a night for a crew of three at the founding price.' : 'a night for a crew of three.'} pick={3} note="Ordering for yourself? Pick 1 roll above. 30 pouches covers a lot of weekends." buildText="Change what's in it" />
 
   <section class="sec faq" data-sec="faq">
     <div class="w col">

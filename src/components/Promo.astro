@@ -1,10 +1,10 @@
 ---
-import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { FOUNDING, DELIVERY, FOUNDING_CAP } from '../data/preorder.js';
 import { TIERS, PRICE } from '../data/ingredients.js';
 interface Props { text: string; link?: string; href?: string }
-// During pre-order every page shows the same banner, so the offer and ship date are always in view.
+// While the founding offer runs, every page shows the same banner, so the offer and delivery time are always in view.
 const { text, link, href } = Astro.props;
 ---
-{PREORDER
-  ? <div class="promo">Founding price: <b>${TIERS[0].each}</b>{' '}<s>${PRICE}</s>{' '}a roll for the first {FOUNDING_CAP} orders. Ships by {SHIP_BY}.</div>
+{FOUNDING
+  ? <div class="promo">Founding price: <b>${TIERS[0].each}</b>{' '}<s>${PRICE}</s>{' '}a roll for the first {FOUNDING_CAP} orders. Arrives in {DELIVERY}.</div>
   : <div class="promo">{text} {link && href && <a href={href}>{link}</a>}</div>}

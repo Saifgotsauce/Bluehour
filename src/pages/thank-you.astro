@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
-import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { FOUNDING, DELIVERY, FOUNDING_CAP } from '../data/preorder.js';
 import { CREW_OFF } from '../data/crew.js';
 ---
 <Base title="Order received | Blue Hour" description="Thanks for your Blue Hour order." noindex>
@@ -22,11 +22,11 @@ import { CREW_OFF } from '../data/crew.js';
     <div class="grain"></div>
     <Top />
     <div class="in">
-      <p class="crumb"><span>{PREORDER ? 'Pre-order received' : 'Order received'}</span></p>
+      <p class="crumb"><span>Order received</span></p>
       <p class="foundno" id="foundno" hidden></p>
       <h1>You're in. See you at the next one.</h1>
-      {PREORDER
-        ? <p class="dek">You've locked in the founding price. Your receipt is on its way by email, and your roll ships by {SHIP_BY}, packed to order with the capsules you picked.</p>
+      {FOUNDING
+        ? <p class="dek">You've locked in the founding price. Your receipt is on its way by email. Your roll is packed to order with the capsules you picked and arrives in {DELIVERY}.</p>
         : <p class="dek">Your receipt is on its way by email. Your roll is packed to order with the capsules you picked, and we'll email tracking when it ships.</p>}
       <div style="display:flex;flex-wrap:wrap;gap:12px">
         <a class="btn" href="/blog">Read the Journal</a>
@@ -38,9 +38,8 @@ import { CREW_OFF } from '../data/crew.js';
     <div class="prose">
       <h2>What happens next</h2>
       <ol>
-        {PREORDER && <li>Your pre-order is in the first run. Changed your mind? Email us any time before it ships for a full refund.</li>}
         <li>We pack your roll to order.</li>
-        <li>It ships free within the US{PREORDER && `, by ${SHIP_BY}`}. Delivery usually takes 3 to 8 business days after it ships, and we'll email you tracking.</li>
+        <li>It ships free within the US and arrives in {DELIVERY}. We'll email you tracking when it ships.</li>
         <li>Take 1 pouch a day with food and water. Don't take more than 1 pouch a day.</li>
       </ol>
       <div class="reorder" id="reorder" hidden>
@@ -48,7 +47,7 @@ import { CREW_OFF } from '../data/crew.js';
         <p>Your pouch is saved on this phone. These links bring it straight back:</p>
         <ul id="reorderlist"></ul>
       </div>
-      {PREORDER && (
+      {FOUNDING && (
         <div class="crewcard">
           <h2>Bring your people</h2>
           <p>Join the Founding Crew and get your own code. Your friends get ${CREW_OFF} off every roll, and you earn on every roll they buy. 21+, US only.</p>

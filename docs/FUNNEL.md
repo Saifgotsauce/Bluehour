@@ -191,5 +191,5 @@ Full breakdown in docs/CLARITY-2026-11.md. In short:
    costs about $40–60 plus Stripe's fee. The report counts this as a main trust fix.
 4. **Founding perks:** founding price locked for life on reorders? A vote on the next capsule? (Numbered founding
    members are already built.)
-5. **Order now vs pre-order:** switch once OK Capsule confirms it can pack the new 8-capsule Signature right away.
+5. **Order now vs pre-order:** decided 25 Nov: straight orders, founding price for the first 100, arrives in 5 to 9 days. OK Capsule confirmed it can pack and drop-ship the 8-capsule Signature.
 6. **Crew ads:** pause paid Crew ads until the Crew page is fixed, and recruit person to person first?

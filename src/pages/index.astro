@@ -1,7 +1,7 @@
 ---
 // Homepage, ordered the way the conversion report lays it out (section 5.3):
 // 1 hero (one occasion, one sentence, one CTA) > 2 what arrives > brand story > 3 format > ingredients and proof >
-// how it works > price with pre-order terms beside the button > short FAQ > final CTA.
+// how it works > price with order terms beside the button > short FAQ > final CTA.
 // Every section has data-sec so section views show up in tracking (docs/TRACKING.md).
 // Claims rule: structure/function wording only, with an asterisk. Nothing about hangovers, alcohol or drugs.
 import Seals from '../components/Seals.astro';
@@ -10,7 +10,7 @@ import Top from '../components/Top.astro';
 import Promo from '../components/Promo.astro';
 import Marquee from '../components/Marquee.astro';
 import Foot from '../components/Foot.astro';
-import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { FOUNDING, DELIVERY, FOUNDING_CAP } from '../data/preorder.js';
 import { TIERS, PRICE, perNight, INGREDIENTS, SIGNATURE, SIGNATURE_NAME, MAX_CAPS } from '../data/ingredients.js';
 const FIRST = TIERS[0].each;
 const site = Astro.site!;
@@ -43,16 +43,16 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
     <div class="copy">
       <h1><span class="ln"><span>Out late.</span></span><span class="ln"><span style="--d:.09s">Up early.</span></span></h1>
       <p class="sub">A nightstand pouch for nights that run late. Take one before bed: {MAX_CAPS} capsules of magnesium, glycine, vitamin C, zinc, B12 and more, sealed together. Thirty pouches on one roll.</p>
-      <a class="btn" href="/shop" data-cta="hero">{PREORDER ? 'Pre-order now' : 'Buy now'}</a>
-      <p class="note">{PREORDER ? <>30 nights. ${FIRST}{' '}<s>${PRICE}</s>{' '}founding price for the first {FOUNDING_CAP} orders. Ships by {SHIP_BY}. Full refund before it ships.</> : `30 nights. $${PRICE}. Free US shipping.`}</p>
+      <a class="btn" href="/shop" data-cta="hero">Order now</a>
+      <p class="note">{FOUNDING ? <>30 nights. ${FIRST}{' '}<s>${PRICE}</s>{' '}founding price for the first {FOUNDING_CAP} orders. Free US shipping, arrives in {DELIVERY}.</> : `30 nights. $${PRICE}. Free US shipping.`}</p>
       <a class="savedchip" id="savedchip" href="/build" data-cta="saved_build_home" hidden>Your custom pouch is saved →</a>
     </div>
     <div class="shot">
       <img class="ph" src="/images/angle.webp" alt="White Blue Hour dispenser with clear pouches of capsules rising from the top" width="1122" height="1402" fetchpriority="high">
       <div class="spin" aria-hidden="true">
-        <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ" textLength="284" lengthAdjust="spacing">{PREORDER ? 'PRE-ORDER * 30 NIGHTS * ' : '30 NIGHTS * ONE ROLL * '}</textPath></text></svg>
+        <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ" textLength="284" lengthAdjust="spacing">{FOUNDING ? 'FIRST 100 * 30 NIGHTS * ' : '30 NIGHTS * ONE ROLL * '}</textPath></text></svg>
         <b>${FIRST}</b>
-        {PREORDER && <s class="was">${PRICE}</s>}
+        {FOUNDING && <s class="was">${PRICE}</s>}
       </div>
       <button class="cap" data-float=".14" style="--tt:1.7s;--f:.14;--x:3%;--y:22%;--w:27%;--r:-38deg;--t:5.200s" aria-label="Spin capsule"><span><img src="/images/cap-glycine.webp" alt="" width="900" height="340"></span></button>
       <button class="cap" data-float=".22" style="--tt:2.1s;--f:.22;--x:72%;--y:50%;--w:25%;--r:18deg;--t:4.300s" aria-label="Spin capsule"><span><img src="/images/cap-still.webp" alt="" width="900" height="340"></span></button>
@@ -69,9 +69,9 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
         <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-roll"/></svg><div><b>30 sealed pouches on one roll</b><span>Inside a dispenser. Pull one, tear it off.</span></div></li>
         <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-list"/></svg><div><b>{MAX_CAPS} capsules in every pouch</b><span>{SIGNATURE_NAME} by default, or build your own.</span></div></li>
         <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-spark"/></svg><div><b>Every dose on the label</b><span>Outside lab reports, public on the shop page.</span></div></li>
-        <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-truck"/></svg><div><b>Free US shipping</b><span>{PREORDER ? `Pre-orders ship by ${SHIP_BY}.` : 'Packed to order.'}</span></div></li>
+        <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-truck"/></svg><div><b>Free US shipping</b><span>Packed to order, arrives in {DELIVERY}.</span></div></li>
         <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-free"/></svg><div><b>One-time purchase</b><span>No subscription. Nothing renews.</span></div></li>
-        {PREORDER && <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-moon"/></svg><div><b>Full refund before it ships</b><span>Change your mind any time before your roll ships.</span></div></li>}
+        <li><svg viewBox="0 0 96 96" aria-hidden="true"><use href="#i-moon"/></svg><div><b>Made right, or fixed</b><span>Anything wrong with your order, we replace or refund it.</span></div></li>
       </ul>
     </div>
   </section>
@@ -150,18 +150,18 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
 
   <section class="sec pricey" data-sec="price">
     <div class="w stack rv">
-      <div class="bign">{perNight(FIRST)}{PREORDER && <s class="was">{perNight(PRICE)}</s>}</div>
+      <div class="bign">{perNight(FIRST)}{FOUNDING && <s class="was">{perNight(PRICE)}</s>}</div>
       <h2 style="max-width:13em">a night. Less than a bottle of water at the club.</h2>
-      {PREORDER && <p class="fcount" data-founding hidden></p>}
-      <p class="crewline">${FIRST} for 30 nights{PREORDER ? ', the founding price' : ''}. Or {perNight(TIERS[2].each)} a night when you order 3 rolls with your crew.</p>
-      {PREORDER && (
+      {FOUNDING && <p class="fcount" data-founding hidden></p>}
+      <p class="crewline">${FIRST} for 30 nights{FOUNDING ? ', the founding price' : ''}. Or {perNight(TIERS[2].each)} a night when you order 3 rolls with your crew.</p>
+      {FOUNDING && (
         <ul class="assure hometerms">
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Founding price for the first {FOUNDING_CAP} orders. ${PRICE} a roll after that.</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7zM7 18a1.5 1.5 0 1 0 0-.01M17 18a1.5 1.5 0 1 0 0-.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Ships free by {SHIP_BY}.</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Full refund any time before it ships. No subscription.</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7zM7 18a1.5 1.5 0 1 0 0-.01M17 18a1.5 1.5 0 1 0 0-.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Ships free, arrives in {DELIVERY}.</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Replaced or refunded if anything arrives wrong. No subscription.</li>
         </ul>
       )}
-      <a class="btn solid" href="/shop" data-cta="price">{PREORDER ? 'Pre-order 30 nights' : 'Buy 30 nights'}</a>
+      <a class="btn solid" href="/shop" data-cta="price">Order 30 nights</a>
     </div>
   </section>
 
@@ -170,7 +170,7 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
       <h2 style="color:var(--deep);margin-bottom:18px">Before you buy</h2>
       <details><summary><span class="q">What is Blue Hour, exactly?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>A dietary supplement: one sealed pouch of {MAX_CAPS} capsules with {ING}, taken with food and water when you get home. It isn't a cure for anything, and it doesn't make alcohol or anything else you take safer. Water, food and sleep still do the heavy lifting.</p></details>
       <details><summary><span class="q">Why 30 nights, and why ${FIRST}?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Every roll is packed to order, pouch by pouch, and most of the cost is the packing, so a smaller roll would cost nearly as much to make. A roll is one pouch for every night out, not 30 nights in a row, and you can split one with a friend. That's {perNight(FIRST)} a night.</p></details>
-      {PREORDER && <details><summary><span class="q">When does it ship, and can I cancel?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pre-orders ship by {SHIP_BY}, free within the US. Change your mind any time before your roll ships and email <a href="mailto:hello@bluehournights.com">hello@bluehournights.com</a> for a full refund. If we can't ship by {SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.</p></details>}
+      <details><summary><span class="q">How fast does it arrive?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Every roll is packed to order and shipped free within the US. It arrives in {DELIVERY}, and we'll email you tracking when it ships.</p></details>
       <details><summary><span class="q">Can I take it with medication?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Ask a pharmacist first if you take any medication, especially heart medication like nitroglycerin, blood thinners, antibiotics or antidepressants. You can leave any capsule except glycine out of your pouch. The full list is in the <a href="/shop#faq">shop FAQs</a>.</p></details>
     </div>
   </section>
@@ -179,7 +179,7 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
     <div class="grain"></div>
     <div class="w">
       <h2>Out late.<br>Up early.</h2>
-      <a class="btn" href="/shop" data-cta="final">{PREORDER ? `Pre-order, $${FIRST}` : `Buy now, $${PRICE}`}</a>
+      <a class="btn" href="/shop" data-cta="final">{FOUNDING ? `Order now, $${FIRST}` : `Order now, $${PRICE}`}</a>
     </div>
   </section>
   <Foot id="em-home" />

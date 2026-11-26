@@ -3,18 +3,18 @@
 // #mixsum, [data-qty], [data-add] and [data-buy] are handled in src/scripts/site.js.
 // Props: heading (text after the per-night price), pick (which roll count starts selected), note (one line under the tiers).
 import { TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
-import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { FOUNDING, DELIVERY, FOUNDING_CAP } from '../data/preorder.js';
 interface Props { heading: string; pick?: number; note?: string; buildHref?: string; buildText?: string }
 const { heading, pick = 1, note = '', buildHref = '/build', buildText = 'Build your own instead' } = Astro.props;
 const FIRST = TIERS[0].each;
-const BUY = PREORDER ? 'Pre-order' : 'Buy now';
+const BUY = 'Order now';
 ---
 <section class="offer" id="offer" data-sec="offer">
   <div class="w col">
     <div class="bign">{perNight(TIERS.find((t) => t.rolls === pick)?.each ?? FIRST)}</div>
     <h2>{heading}</h2>
     <div class="obox">
-      {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for the first {FOUNDING_CAP} orders. ${PRICE} a roll after that.</span><span class="fcount" data-founding hidden></span></div>}
+      {FOUNDING && <div class="pre"><b>Order now · arrives in {DELIVERY}</b><span>Founding price for the first {FOUNDING_CAP} orders. ${PRICE} a roll after that.</span><span class="fcount" data-founding hidden></span></div>}
       <div class="mix"><b>Your pouch</b><span id="mixsum" data-clarity-mask="true">The Signature: magnesium ×2, glycine ×2, NAC, vitamin C, zinc, vitamin B12</span><a href={buildHref} data-cta="offer_build">{buildText}</a></div>
       <fieldset class="tiers">
         <legend>How many rolls?</legend>
@@ -32,8 +32,7 @@ const BUY = PREORDER ? 'Pre-order' : 'Buy now';
         <button class="add" data-buy data-cta="offer_buy">{BUY}</button>
       </div>
       <ul class="ticks">
-        {PREORDER && <li>Full refund any time before it ships</li>}
-        <li>{PREORDER ? `Ships free by ${SHIP_BY}` : 'Free US shipping'}</li>
+        <li>Free US shipping, arrives in {DELIVERY}</li>
         <li>One-time purchase, no subscription</li>
         <li>30 sealed pouches and the dispenser</li>
         <li>Packed to order, every dose on your pamphlet</li>

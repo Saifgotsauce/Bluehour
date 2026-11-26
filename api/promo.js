@@ -4,7 +4,7 @@
 
 import { cleanCode, findPromo, queryParam } from './_promo.js';
 import { findCrew } from './_crew.js';
-import { PREORDER } from '../src/data/preorder.js';
+import { FOUNDING } from '../src/data/preorder.js';
 import { CREW_OFF } from '../src/data/crew.js';
 
 export default async function handler(req, res) {
@@ -16,10 +16,10 @@ export default async function handler(req, res) {
   const code = cleanCode(queryParam(req, 'code'));
   if (!key || !code) return res.status(200).json({ valid: false });
   res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
-  // Founding Crew codes work any time, including pre-order. Other codes are paused during pre-order.
+  // Founding Crew codes work any time. Other codes are paused while the founding offer runs.
   const crew = await findCrew(code, key).catch(() => null);
   if (crew) return res.status(200).json({ valid: true, crew: true, code: crew.code, label: `$${CREW_OFF} off each roll from ${crew.name || 'the Founding Crew'}` });
-  const promo = PREORDER ? null : await findPromo(code, key).catch(() => null);
+  const promo = FOUNDING ? null : await findPromo(code, key).catch(() => null);
   if (!promo) return res.status(200).json({ valid: false });
   return res.status(200).json({ valid: true, code: promo.code, label: promo.label });
 }

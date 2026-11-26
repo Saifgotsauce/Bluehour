@@ -8,9 +8,9 @@ import Base from '../layouts/Base.astro';
 import Top from '../components/Top.astro';
 import Foot from '../components/Foot.astro';
 import { CREW_SPOTS, CREW_OFF, CREW_RATE, FREE_ROLL_AT, BOOST_AT, BOOST_RATE, FIRST_BONUS } from '../data/crew.js';
-import { PREORDER_TIERS } from '../data/ingredients.js';
-import { SHIP_BY } from '../data/preorder.js';
-const FOUNDING = PREORDER_TIERS[0].each;
+import { FOUNDING_TIERS } from '../data/ingredients.js';
+import { DELIVERY } from '../data/preorder.js';
+const FOUNDING = FOUNDING_TIERS[0].each;
 const WITH_CODE = FOUNDING - CREW_OFF;
 const NIGHT = (WITH_CODE / 30).toFixed(2);
 ---
@@ -95,7 +95,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
         <ul class="plain">
           <li>Magnesium, glycine, NAC, vitamin C, zinc and vitamin B12.</li>
           <li>No caffeine, no stimulants. Lab reports are public.</li>
-          <li>${WITH_CODE} with your code, about ${NIGHT} a night. Ships by {SHIP_BY}.</li>
+          <li>${WITH_CODE} with your code, about ${NIGHT} a night. Arrives in {DELIVERY}.</li>
         </ul>
         <a class="btn" href="/shop">See the roll</a>
       </div>
@@ -122,10 +122,10 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
     <details><summary><span class="q">Do I need a big following?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. We look at how often you go out and how many people go with you. A busy group chat counts as much as a big following.</p></details>
     <details><summary><span class="q">Do I have to buy anything?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Joining is free and there's nothing to buy.</p></details>
     <details><summary><span class="q">Do I have to post?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No quotas. Share your code however works for you: group chat, bio, out loud. If you do post about Blue Hour, add #ad or mark it as a paid partnership.</p></details>
-    <details><summary><span class="q">Can I try it first?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not yet. The first rolls ship by {SHIP_BY}. Once {FREE_ROLL_AT} rolls have sold with your code, your own roll is free. Until then, the lab reports for every capsule are on our <a href="/shop#tested">shop page</a>.</p></details>
+    <details><summary><span class="q">Can I try it first?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not as a sample yet. Once {FREE_ROLL_AT} rolls have sold with your code, your own roll is free. Until then, the lab reports for every capsule are on our <a href="/shop#tested">shop page</a>.</p></details>
     <details><summary><span class="q">What if my friends think 30 nights is a lot?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>It's not 30 nights in a row. It's one pouch for every night out, so it covers a lot of weekends. Or two friends can split one, about ${(WITH_CODE / 2).toFixed(0)} each with your code.</p></details>
-    <details><summary><span class="q">Why is 30 nights the only size?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Every roll is packed to order, pouch by pouch, in a cGMP-certified facility. Most of the cost is the packing, so a 10-night roll would cost nearly as much to make as 30. Bigger pre-order runs bring that cost down, and that's what gets us to smaller rolls. The Founding Crew gets those first.</p></details>
-    <details><summary><span class="q">When do I get paid?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Once a month by PayPal. Pre-orders count 14 days after they ship, so the first payouts go out in January.</p></details>
+    <details><summary><span class="q">Why is 30 nights the only size?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Every roll is packed to order, pouch by pouch, in a cGMP-certified facility. Most of the cost is the packing, so a 10-night roll would cost nearly as much to make as 30. Bigger runs bring that cost down, and that's what gets us to smaller rolls. The Founding Crew gets those first.</p></details>
+    <details><summary><span class="q">When do I get paid?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Once a month by PayPal. A sale counts 30 days after it's placed (that window is for refunds), so your first payout comes the month after.</p></details>
     <details><summary><span class="q">What do the first {CREW_SPOTS} get if Blue Hour grows?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You keep the founding rate (${CREW_RATE} a roll, ${BOOST_RATE} after {BOOST_AT}) even if new members get less. You also get new capsules, smaller rolls and drops first, first call on paid roles and events, and a spot for you and a friend on the list when Blue Hour throws its own nights.</p></details>
     <details><summary><span class="q">Can friends outside the US order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not yet. We only ship within the US for now.</p></details>
   </section>
@@ -137,7 +137,7 @@ const NIGHT = (WITH_CODE / 30).toFixed(2);
   <section class="w smallprint" aria-labelledby="sph">
     <h2 id="sph">The small print</h2>
     <ul>
-      <li>Commission counts on orders that shipped and weren't refunded or disputed. Pre-orders count 14 days after they ship, and orders after launch count 30 days after they're placed. We pay by PayPal once a month.</li>
+      <li>Commission counts on orders that shipped and weren't refunded or disputed. Orders count 30 days after they're placed. We pay by PayPal once a month.</li>
       <li>Your own orders never count. That means anything paid by you, shipped to your address or paid with your card, even if a friend places it.</li>
       <li>Each buyer counts once every 30 days on your code.</li>
       <li>Your code takes ${CREW_OFF} off every roll in the order. It doesn't combine with other codes.</li>

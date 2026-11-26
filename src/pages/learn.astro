@@ -8,9 +8,9 @@ import Promo from '../components/Promo.astro';
 import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
 import { TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
-import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+import { FOUNDING, DELIVERY, FOUNDING_CAP } from '../data/preorder.js';
 const FIRST = TIERS[0].each;
-const BUY = PREORDER ? 'Pre-order' : 'Buy now';
+const BUY = 'Order now';
 
 const pouch = [
   { img: 'cap-still', two: true, name: 'Level ×2', what: 'Magnesium glycinate · 266 mg', why: 'Helps support normal muscle and nerve function.*' },
@@ -21,10 +21,9 @@ const pouch = [
   { img: 'cap-nac', name: 'Prime', what: 'NAC · 600 mg', why: 'A form of cysteine your body uses to make the antioxidant glutathione.*' },
 ];
 
-const preFaqs = PREORDER ? [
-  ['When will my roll ship?', `Pre-orders ship by ${SHIP_BY}, free within the US. Delivery usually takes 3 to 8 business days after that, and we'll email you tracking.`],
-  ['When am I charged?', `Today, at the founding price. It's for the first ${FOUNDING_CAP} orders. After that, one roll is $${PRICE}.`],
-  ['Can I cancel?', `Yes. Any time before your roll ships, email hello@bluehournights.com with your order number and we'll refund you in full, no questions. If we ever can't ship by ${SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.`],
+const preFaqs = FOUNDING ? [
+  ['How fast does it arrive?', `Every roll is packed to order and shipped free within the US. It arrives in ${DELIVERY}, and we'll email you tracking.`],
+  ['How long does the founding price last?', `For the first ${FOUNDING_CAP} orders. After that, one roll is $${PRICE}.`],
 ] : [];
 const faqs = [
   ...preFaqs,
@@ -79,10 +78,10 @@ const faqs = [
       <h2><i>2</i>You sweated out more than water</h2>
       <p>Sweat is mostly water and salt, but it also carries small amounts of minerals like magnesium and zinc. In one study of athletes cycling in the heat, whole-body sweat held about 10 mg of magnesium per liter.<sup>2</sup></p>
       <p>That's not much on its own, and a good meal covers a lot of it. The catch is that plenty of people start low. US dietary surveys find that about half of Americans already get less magnesium from food and drink than they need.<sup>3</sup> And at 5am, nobody's eating leafy greens.</p>
-      {PREORDER && (
+      {FOUNDING && (
         <a class="nudge" href="#offer">
           <img src="/images/pouch.webp" alt="" width="1122" height="1402" loading="lazy">
-          <span><b>Blue Hour is on pre-order.</b> ${FIRST} for 30 nights for the first {FOUNDING_CAP} orders, shipping by {SHIP_BY}. <u>See the founding offer</u></span>
+          <span><b>Founding price: ${FIRST} for 30 nights.</b> For the first {FOUNDING_CAP} orders, arrives in {DELIVERY}. <u>See the founding offer</u></span>
         </a>
       )}
 
@@ -161,11 +160,11 @@ const faqs = [
       </div>
     </section>
 
-    {PREORDER && (
+    {FOUNDING && (
       <section class="w col"><div class="fnote">
-        <p class="kick">Why pre-order?</p>
-        <p>Every Blue Hour roll is packed to order, and before we launch we want to know who's in. So the first {FOUNDING_CAP} orders get a founding price: ${FIRST} a roll. After that, it's ${PRICE}.</p>
-        <p>We charge you today and your roll ships by {SHIP_BY}. If you change your mind any time before it ships, email us and you get every cent back. No forms, no questions.</p>
+        <p class="kick">Why a founding price?</p>
+        <p>Blue Hour is new, and the people who back us first should get the best deal we'll ever have. So the first {FOUNDING_CAP} orders get a founding price: ${FIRST} a roll. After that, it's ${PRICE}.</p>
+        <p>Order today and your roll is packed and shipped free, arriving in {DELIVERY}. If anything arrives wrong, we replace it or refund it.</p>
         <p class="fsig">Saif, founder of Blue Hour</p>
       </div></section>
     )}
@@ -173,9 +172,9 @@ const faqs = [
     <section class="offer" id="offer">
       <div class="w col">
         <div class="bign">{perNight(FIRST)}</div>
-        <h2>a night{PREORDER && ' at the founding price'}. Less than a bottle of water at the club.</h2>
+        <h2>a night{FOUNDING && ' at the founding price'}. Less than a bottle of water at the club.</h2>
         <div class="obox">
-          {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for the first {FOUNDING_CAP} orders. ${PRICE} a roll after that.</span></div>}
+          {FOUNDING && <div class="pre"><b>Order now · arrives in {DELIVERY}</b><span>Founding price for the first {FOUNDING_CAP} orders. ${PRICE} a roll after that.</span></div>}
           <div class="mix"><b>Your pouch</b><span id="mixsum" data-clarity-mask="true">The Signature: magnesium ×2, glycine ×2, NAC, vitamin C, zinc, vitamin B12</span><a href="/build">Build your own instead</a></div>
           <fieldset class="tiers">
             <legend>How many rolls?</legend>
@@ -193,8 +192,7 @@ const faqs = [
             <button class="add" data-buy>{BUY}</button>
           </div>
           <ul class="ticks">
-            {PREORDER && <li>Full refund any time before it ships</li>}
-            <li>{PREORDER ? `Ships free by ${SHIP_BY}` : 'Free US shipping'}</li>
+            <li>Free US shipping, arrives in {DELIVERY}</li>
             <li>One-time purchase, no subscription</li>
             <li>30 sealed pouches and the dispenser</li>
             <li>Packed to order, every dose on your pamphlet</li>
@@ -226,7 +224,7 @@ const faqs = [
     <section class="sec tagband last">
       <div class="w">
         <h2>Out late.<br>Up early.<br>Show up anyway.</h2>
-        <a class="btn solid" href="#offer">{PREORDER ? 'Pre-order 30 nights' : 'Get 30 nights'}</a>
+        <a class="btn solid" href="#offer">{'Order 30 nights'}</a>
       </div>
     </section>
 
@@ -244,10 +242,10 @@ const faqs = [
   <Foot id="em-learn" />
 
   <div class="astick" id="astick" aria-hidden="true">
-    {PREORDER
-      ? <div><b>Pre-order · ${FIRST} <s>${PRICE}</s></b><span>Ships by {SHIP_BY} · Full refund before it ships</span></div>
+    {FOUNDING
+      ? <div><b>Founding price · ${FIRST} <s>${PRICE}</s></b><span>Free US shipping · arrives in {DELIVERY}</span></div>
       : <div><b>30 nights · ${PRICE}</b><span>Free US shipping · No subscription</span></div>}
-    <a class="add" href="#offer" tabindex="-1">{PREORDER ? 'Pre-order' : 'Get yours'}</a>
+    <a class="add" href="#offer" tabindex="-1">{'Order now'}</a>
   </div>
 </Base>
 

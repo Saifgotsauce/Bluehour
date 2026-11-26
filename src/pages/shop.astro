@@ -7,9 +7,9 @@ import Seals from '../components/Seals.astro';
 import Foot from '../components/Foot.astro';
 import { reviews } from '../data/reviews';
 import { INGREDIENTS, MAX_CAPS, SIGNATURE, SIGNATURE_NAME, LAB_PENDING, labPendingText, mixSummary, TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
-import { PREORDER, SHIP_BY , FOUNDING_CAP } from '../data/preorder.js';
+import { FOUNDING, DELIVERY, FOUNDING_CAP } from '../data/preorder.js';
 const FIRST = TIERS[0].each;
-const BUY = PREORDER ? 'Pre-order now' : 'Buy now';
+const BUY = 'Order now';
 const signatureSummary = mixSummary(SIGNATURE);
 // Gallery: product shots mixed with slides that sell (how a night works, what it costs).
 // gal-callouts and gal-six were removed in Nov 2026: their artwork says 6 capsules, and The Signature is now 8.
@@ -19,7 +19,7 @@ const SLIDES = [
   { img: 'angle', w: 1122, h: 1402, alt: 'Blue Hour dispenser with pouches rising from the top' },
   { img: 'hand', w: 1122, h: 1402, alt: 'A hand holding one Blue Hour pouch, about the size of a palm' },
   { img: 'gal-steps', w: 1080, h: 1350, alt: 'How it works: pull one pouch, tear it off, take it with a snack and water, lights out' },
-  ...(PREORDER ? [{ img: 'gal-receipt', w: 1080, h: 1350, alt: 'A night out receipt where the Blue Hour pouch, $3.30, is the cheapest line' }] : []),
+  ...(FOUNDING ? [{ img: 'gal-receipt', w: 1080, h: 1350, alt: 'A night out receipt where the Blue Hour pouch, $3.30, is the cheapest line' }] : []),
   { img: 'exploded', w: 1122, h: 1402, alt: 'Dispenser, tray and roll of pouches floating apart' },
   { img: 'flat', w: 1122, h: 1402, alt: 'Pouch ribbon curving out of the Blue Hour dispenser' },
 ];
@@ -36,7 +36,7 @@ const jsonld = {
     price: FIRST.toFixed(2),
     priceCurrency: 'USD',
     url: new URL('/shop', site).href,
-    availability: PREORDER ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock',
+    availability: FOUNDING ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock',
     itemCondition: 'https://schema.org/NewCondition',
     seller: { '@type': 'Organization', name: 'Blue Hour' },
     shippingDetails: {
@@ -49,7 +49,7 @@ const jsonld = {
 ---
 <Base
   title="Blue Hour Nightly Pouches, 30 Nights | Blue Hour"
-  description={`${PREORDER ? `Pre-order now: 30 sealed pouches on one roll for a $${FIRST} founding price (the first 100 orders; $${PRICE} after that), shipping by ${SHIP_BY}.` : `30 sealed pouches on one roll for $${PRICE} with free US shipping.`} Build your own pouch or take The Signature.`}
+  description={`${FOUNDING ? `30 sealed pouches on one roll for a $${FIRST} founding price (the first 100 orders; $${PRICE} after that), free US shipping, arrives in ${DELIVERY}.` : `30 sealed pouches on one roll for $${PRICE} with free US shipping.`} Build your own pouch or take The Signature.`}
   jsonld={jsonld}
 >
 
@@ -73,7 +73,7 @@ const jsonld = {
       </div>
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
-        <p class="pricehead"><b>${FIRST}</b>{FIRST < PRICE && <s>${PRICE}</s>}<span>30 nights, {perNight(FIRST)} a night{PREORDER ? `. Ships by ${SHIP_BY}` : ''}</span></p>
+        <p class="pricehead"><b>${FIRST}</b>{FIRST < PRICE && <s>${PRICE}</s>}<span>30 nights, {perNight(FIRST)} a night. Arrives in {DELIVERY}</span></p>
         <ul class="perks">
           <li><span>One sealed pouch of 8 capsules a night</span></li>
           <li><span>No caffeine, stimulants or <span class="nw">5-HTP</span></span></li>
@@ -81,10 +81,10 @@ const jsonld = {
           <li><span>Free US shipping, no subscription</span></li>
         </ul>
         <Seals prefix="s" labHref="#tested" />
-        {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price on our first run. We charge you today, and if you change your mind any time before your roll ships, you get a full refund.</span></div>}
+        {FOUNDING && <div class="pre"><b>Order now · arrives in {DELIVERY}</b><span>Founding price for the first {FOUNDING_CAP} orders. Packed to order and shipped free.</span></div>}
         <p class="tag">One pouch. One night.</p>
         <p>For people who stay out late and still show up the next day. The Signature holds 8 capsules with magnesium, glycine, NAC, vitamin C, zinc and vitamin B12, or you can build your own. Every pouch is sealed and ready on one 30-night roll.*</p>
-        <div class="mix"><b>Your pouch</b><span id="mixsum" data-clarity-mask="true">{SIGNATURE_NAME}: {signatureSummary}</span><a href="#build">Build your own pouch</a></div>
+        <div class="mix"><b>Your pouch</b><span id="mixsum" data-clarity-mask="true">{SIGNATURE_NAME}: {signatureSummary}</span><a href="/build">Build your own pouch</a></div>
         <fieldset class="tiers">
           <legend>How many rolls?</legend>
           {TIERS.map((t, i) => (
@@ -96,25 +96,25 @@ const jsonld = {
             </label>
           ))}
         </fieldset>
-        {PREORDER && <p class="launchnote">Founding prices for the first {FOUNDING_CAP} orders. After that, one roll is ${PRICE}.</p>}
-        {PREORDER && <p class="fcount" data-founding hidden></p>}
+        {FOUNDING && <p class="launchnote">Founding prices for the first {FOUNDING_CAP} orders. After that, one roll is ${PRICE}.</p>}
+        {FOUNDING && <p class="fcount" data-founding hidden></p>}
         <p class="rollnote"><b>What's a roll?</b> Our 30 sealed pouches, wound on one strip inside the dispenser. Just the capsules on the label, nothing else. <a href="#why30">Why only 30 nights?</a></p>
         <p class="crewnote">Ordering with friends? Every roll in your cart counts toward the price, even with different pouches. 3 or more rolls are ${TIERS[2].each} each.</p>
         {/* Shown only to visitors in a matching state (src/scripts/state.js, docs/TRACKING.md). */}
         <p class="ifstate" data-for="proof_seeker">Our capsules are tested by outside labs: Eurofins, Intertek and New Wave Scientific. Every report is public. <a href="#tested">See the reports</a></p>
-        {PREORDER && <p class="ifstate" data-for="price_evaluator cart_holder">Charged today at ${FIRST}. Ships free by {SHIP_BY}. Full refund any time before it ships.</p>}
+        {FOUNDING && <p class="ifstate" data-for="price_evaluator cart_holder">${FIRST} while the first {FOUNDING_CAP} orders last, then ${PRICE}. Ships free and arrives in {DELIVERY}.</p>}
         <div class="row" id="buyrow">
           <button class="add ghost" data-add>Add to cart</button>
           <button class="add" data-buy>{BUY}</button>
         </div>
         <ul class="assure">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>{PREORDER ? 'Full refund any time before it ships' : 'Replaced or refunded if anything arrives wrong'}</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7zM7 18a1.5 1.5 0 1 0 0-.01M17 18a1.5 1.5 0 1 0 0-.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Free US shipping{PREORDER ? `, ships by ${SHIP_BY}` : ''}</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Replaced or refunded if anything arrives wrong</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7zM7 18a1.5 1.5 0 1 0 0-.01M17 18a1.5 1.5 0 1 0 0-.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Free US shipping, arrives in {DELIVERY}</li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>One-time purchase, nothing recurring</li>
         </ul>
         <p class="paynote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M5.5 10h13a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5v-8A1.5 1.5 0 0 1 5.5 10Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Secure Stripe checkout · Apple Pay · Google Pay</p>
         <div class="spec"><b>Suggested use</b><span>Take 1 pouch a day with food and water, like with supper or a late snack before bed.</span><strong class="maxone">Do not take more than 1 pouch a day.</strong></div>
-        <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. One-time purchase, no subscription.{PREORDER && ` Pre-orders ship by ${SHIP_BY}.`}</span></div>
+        <div class="spec"><b>Free US shipping on every order.</b><span>US only for now. Arrives in {DELIVERY}. One-time purchase, no subscription.</span></div>
       </div>
     </div>
   </section>
@@ -259,10 +259,9 @@ const jsonld = {
   <section class="sec faq" id="faq" style="background:#FAFBFF">
     <div class="w">
       <h2 style="color:var(--deep);margin-bottom:18px">FAQs</h2>
-      {PREORDER && <>
-        <details><summary><span class="q">When will my roll ship?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pre-orders ship by {SHIP_BY}, free within the US. Delivery usually takes 3 to 8 business days after that, and we'll email you tracking when it ships.</p></details>
-        <details><summary><span class="q">When am I charged?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Today, at the founding price. The founding price is for the first {FOUNDING_CAP} orders. After that, one roll is ${PRICE}.</p></details>
-        <details><summary><span class="q">Can I cancel my pre-order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Any time before your roll ships, email <a href="mailto:hello@bluehournights.com">hello@bluehournights.com</a> with your order number and we'll refund you in full, with no questions. If we ever can't ship by {SHIP_BY}, we'll email you before then with a new date, and you can cancel for a full refund.</p></details>
+      {FOUNDING && <>
+        <details><summary><span class="q">How fast does it arrive?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Your roll is packed to order and shipped free within the US. It arrives in {DELIVERY}, and we'll email you tracking when it ships.</p></details>
+        <details><summary><span class="q">How long does the founding price last?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>For the first {FOUNDING_CAP} orders only. After that, one roll is ${PRICE}. It's a normal order, not a pre-order: we pack your roll and ship it, and it arrives in {DELIVERY}.</p></details>
       </>}
       <details><summary><span class="q">Is Blue Hour third-party tested?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Independent labs (Eurofins, Intertek and New Wave Scientific) tested {LAB_PENDING.length ? `every capsule on our menu except ${labPendingText()}` : 'every capsule on our menu'} for strength or contaminants, and you can open every full report on this page. Each capsule tested for strength came back at or above its label. These are lab tests, not a certification like NSF or USP.</p></details>
       <details><summary><span class="q">Is there a smaller size than 30 nights?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not yet. Every roll is packed to order, pouch by pouch, and most of the cost is the packing, not the capsules, so a 10-night roll would cost nearly as much as 30. Bigger runs bring that cost down, and smaller rolls like a weekend or festival pack are next once we get there. Until then, a roll isn't 30 nights in a row, it's one pouch for every night out. You can also split one with a friend.</p></details>
@@ -272,14 +271,14 @@ const jsonld = {
       <details><summary><span class="q">How and when do I take it?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Pull one pouch from the dispenser, tear it off along the perforated line, and take the capsules with food and water, like with supper or a late snack before bed. Take 1 pouch a day, and never more than 1. Always follow the directions on your pamphlet.</p></details>
       <details><summary><span class="q">Does it cure anything?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. Blue Hour is a dietary supplement. It isn't intended to diagnose, treat, cure or prevent any disease, and it doesn't make alcohol or anything else you take safer. Water, food and sleep still do the heavy lifting.</p></details>
       <details><summary><span class="q">Is it only for nights out?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. It's for any day that asks a lot of you: a long set, a festival weekend, a hard training session or a double shift. Take 1 pouch a day with food.</p></details>
-      {PREORDER
+      {FOUNDING
         ? <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. At the founding price, one roll is ${TIERS[0].each}, or {perNight(TIERS[0].each)} a night. Order 2 rolls and each is ${TIERS[1].each}. Order 3 or more and each is ${TIERS[2].each}, which is {perNight(TIERS[2].each)} a night. After the first {FOUNDING_CAP} orders, one roll is ${PRICE}.</p></details>
         : <details><summary><span class="q">Why does it cost what it does?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>You get 30 sealed single-serve pouches, the dispenser and free US shipping. One roll works out at $4.30 a night. Order 2 rolls and each is $119. Order 3 or more and each is $109, which is $3.63 a night. Rolls with different pouches count together, so you can order with friends.</p></details>}
       <details><summary><span class="q">What's in {SIGNATURE_NAME}?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>{MAX_CAPS} capsules: 2 Level (266 mg magnesium), 2 Glow (1,700 mg glycine), 1 Prime (600 mg NAC), 1 Bright (1,000 mg vitamin C), 1 Core (25 mg zinc) and 1 Spark (1,000 mcg vitamin B12). Every capsule's Supplement Facts and lab report are in the menu above.</p></details>
       <details><summary><span class="q">Can I change what's in my pouch?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Yes. Start from The Signature or build your own from our menu of 8 capsules, up to 8 per pouch, always with at least 2 glycine. Every roll is packed to order, and your pamphlet lists exactly what's in it.</p></details>
       <details><summary><span class="q">What if something's wrong with my order?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Tell us within 5 business days of delivery and we'll send a replacement or a refund. Rolls are packed to order, so we can't take returns for change of mind. See <a href="/refunds">Refunds and replacements</a>.</p></details>
-      {PREORDER
-        ? <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not during pre-order. The founding price is already our best deal, so codes and hidden discounts are paused until launch. Crew pricing still applies when you order more than one roll. The one exception is a Founding Crew code from one of our ambassadors, which takes $5 off each roll.</p></details>
+      {FOUNDING
+        ? <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Not while the founding price runs. It's already our best deal, so codes and hidden discounts are paused until the first {FOUNDING_CAP} orders are gone. Crew pricing still applies when you order more than one roll. The one exception is a Founding Crew code from one of our ambassadors, which takes $5 off each roll.</p></details>
         : <details><summary><span class="q">Do you have discount codes?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>New visitors can get 10% off their first roll through the welcome pop-up. The offer only lasts while the pop-up is open, and once it's closed it won't come back on that browser for 24 hours. If you came from a link with a code, it's saved and comes off at checkout automatically. You can also type a code on the payment page. And a few discounts are hidden around this site, if you look closely. Only one discount applies per order, and we always use the one that saves you the most.</p></details>}
       <details><summary><span class="q">Is this a subscription?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>No. You buy a roll when you want one, and nothing renews.</p></details>
       <details><summary><span class="q">Can I take Blue Hour with medication?</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>Most people can, but ask a pharmacist first if you take seizure medication, blood thinners, heart or blood pressure medication (including nitrates or nitrites), antibiotics, ADHD medication, antidepressants or other psychiatric medication, or methotrexate. Take antibiotics at least 2 hours apart from your pouch. If your immune system is weakened, talk to your doctor before taking the probiotic.</p></details>

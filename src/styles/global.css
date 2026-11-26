@@ -526,7 +526,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .price s{font-weight:500;font-size:14px;color:var(--soft);margin-right:4px}
 .codeline{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-radius:14px;background:var(--white);border:1px dashed var(--cobalt);font-size:14px;color:var(--ink)}
 .codeline[hidden]{display:none}
-.codeform{display:grid;gap:6px}
+.codeform{display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
 .codeform label{font:700 13px/1.2 var(--display)}
 .codeform div{display:flex;gap:8px}
 .codeform input{flex:1;min-width:0;height:44px;border:2px solid var(--ink);border-radius:12px;padding:0 12px;font:800 15px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;background:var(--white)}
