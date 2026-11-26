@@ -43,6 +43,11 @@ import { CREW_OFF } from '../data/crew.js';
         <li>It ships free within the US{PREORDER && `, by ${SHIP_BY}`}. Delivery usually takes 3 to 8 business days after it ships, and we'll email you tracking.</li>
         <li>Take 1 pouch a day with food and water. Don't take more than 1 pouch a day.</li>
       </ol>
+      <div class="reorder" id="reorder" hidden>
+        <h2>Reorder in one tap</h2>
+        <p>Your pouch is saved on this phone. These links bring it straight back:</p>
+        <ul id="reorderlist"></ul>
+      </div>
       {PREORDER && (
         <div class="crewcard">
           <h2>Bring your people</h2>
@@ -56,6 +61,8 @@ import { CREW_OFF } from '../data/crew.js';
   <Foot id="em-thanks" />
   <style>
     .foundno{display:inline-block;margin:0 0 14px;padding:8px 16px;border-radius:99px;background:rgba(255,255,255,.16);color:var(--white);font-weight:800;letter-spacing:.04em}
+    .reorder{margin:24px 0}
+    .reorder ul{padding-left:18px}
     .crewcard{margin:28px 0;padding:22px;border-radius:20px;background:var(--mist);border:1px solid var(--line)}
     .crewcard h2{margin-top:0}
   </style>

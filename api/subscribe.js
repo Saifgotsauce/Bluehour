@@ -8,7 +8,7 @@ import { findPromo } from './_promo.js';
 
 const KLAVIYO_REVISION = '2024-10-15';
 const WHEN = { 'this-weekend': 'This weekend', 'this-month': 'This month', later: 'Later this year', 'every-weekend': 'Every weekend' };
-const SOURCES = { popup: 'Blue Hour website popup', footer: 'Blue Hour website footer', event: 'Blue Hour event pouch (QR)' };
+const SOURCES = { popup: 'Blue Hour website popup', footer: 'Blue Hour website footer', event: 'Blue Hour event pouch (QR)', build: 'Blue Hour builder (email my pouch)', tomorrow: 'Blue Hour late-night (send me this tomorrow)' };
 
 export const cleanEmail = (e) => {
   const s = String(e == null ? '' : e).trim().toLowerCase();
@@ -36,9 +36,12 @@ const klaviyo = (path, key, body) =>
   });
 
 // event: the event slug from an event-pouch QR code (src/data/events.js), so the morning-after emails can name it.
-export function profileBody(email, when, source, event) {
+// link: a page on our site to send them back to (a saved pouch, or the page they were on late at night).
+// Saved on the profile as saved_link, with the time, so a Klaviyo flow can email it (docs/MARKETING-FUNNEL.md).
+export function profileBody(email, when, source, event, link) {
   const properties = { signup_source: source };
   if (event) properties.tried_at_event = event;
+  if (link) { properties.saved_link = 'https://www.bluehournights.com' + link; properties.saved_link_at = new Date().toISOString(); }
   if (when) properties.next_big_night = WHEN[when];
   return { data: { type: 'profile', attributes: { email, properties } } };
 }
@@ -75,10 +78,11 @@ export default async function handler(req, res) {
   const when = Object.prototype.hasOwnProperty.call(WHEN, body.when) ? body.when : '';
   const source = Object.prototype.hasOwnProperty.call(SOURCES, body.source) ? body.source : 'footer';
   const event = typeof body.event === 'string' && /^[a-z0-9-]{2,40}$/.test(body.event) ? body.event : '';
+  const link = typeof body.link === 'string' && /^\/[a-z0-9/-]{0,40}(\?mix=[a-z0-9.-]{3,120})?$/.test(body.link) ? body.link : '';
 
   try {
     // Save the extra details first (not essential), then the subscription (essential).
-    await klaviyo('profile-import/', key, profileBody(email, when, source, event)).catch(() => null);
+    await klaviyo('profile-import/', key, profileBody(email, when, source, event, link)).catch(() => null);
     const r = await klaviyo('profile-subscription-bulk-create-jobs/', key, subscribeBody(email, list, source));
     if (!r.ok) {
       console.error('Klaviyo subscribe failed:', r.status, await r.text().catch(() => ''));

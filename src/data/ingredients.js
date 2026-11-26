@@ -111,6 +111,31 @@ export const labPendingText = () => LAB_PENDING.length ? LAB_PENDING.join(' and 
 
 export const SIGNATURE = Object.fromEntries(INGREDIENTS.filter((i) => i.signature).map((i) => [i.id, i.signature]));
 
+// Blue Hour packs on /build: ready-made pouches to start from (docs/FUNNEL.md). Named for occasions, never for a
+// condition (no "hangover", "recovery" or "detox" packs). Every pack must pass cleanMix unchanged: 2+ glycine,
+// within each capsule's max, 8 capsules at most. Have a pharmacist look over each one before relying on them.
+export const PACKS = [
+  { id: 'signature', name: 'The Signature', tag: 'Our default', line: 'The full eight. Magnesium, glycine, NAC, vitamin C, zinc and B12.',
+    mix: { level: 2, glow: 2, prime: 1, bright: 1, core: 1, spark: 1 } },
+  { id: 'lights-out', name: 'Lights Out', tag: 'Extra glycine', line: 'For the nights you get home latest: three glycine, two magnesium, plus vitamin C, zinc and B12.',
+    mix: { glow: 3, level: 2, bright: 1, core: 1, spark: 1 } },
+  { id: 'long-weekend', name: 'Long Weekend', tag: 'Festivals and travel', line: 'For multi-day weekends away: swaps NAC and B12 for a probiotic and ginger.',
+    mix: { glow: 2, level: 2, bright: 1, core: 1, culture: 1, root: 1 } },
+  { id: 'basics', name: 'The Basics', tag: 'No NAC', line: 'The essentials without NAC: magnesium, glycine, vitamin C, zinc and B12. Seven capsules.',
+    mix: { glow: 2, level: 2, bright: 1, core: 1, spark: 1 } },
+];
+
+// A pouch as a short link, for saved packs and reorders: /build?mix=level-2.glow-2.prime-1
+export const mixParam = (mix) => INGREDIENTS.filter((i) => mix[i.id]).map((i) => `${i.id}-${mix[i.id]}`).join('.');
+export const mixFromParam = (str) => {
+  const out = {};
+  String(str || '').split('.').forEach((p) => {
+    const m = p.match(/^([a-z]+)-(\d)$/);
+    if (m && INGREDIENTS.some((i) => i.id === m[1])) out[m[1]] = +m[2];
+  });
+  return out;
+};
+
 // Keeps only known capsules, within each capsule's min, max and the pouch limit.
 // Minimums are filled first (glycine x2), then everything else in menu order until the pouch is full.
 export function cleanMix(mix) {

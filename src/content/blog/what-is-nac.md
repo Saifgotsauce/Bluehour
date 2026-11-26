@@ -86,7 +86,7 @@ NAC is in Blue Hour as a capsule called **Prime**, and there's one in every Sign
 
 - Each Prime capsule contains **600 mg** of NAC.
 - An independent lab (Eurofins) measured **639 mg** per capsule in the batch we use. The full lab report is on our [shop page](/shop).
-- When you [build your own pouch](/shop#build), you can take it out, or add a second, for **1,200 mg a day**.
+- When you [build your own pouch](/build), you can take it out, or add a second, for **1,200 mg a day**.
 
 If any of the points in "who should check with a doctor first" apply to you, leave Prime out of your pouch until you've asked.
 

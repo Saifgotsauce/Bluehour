@@ -1,5 +1,7 @@
 # Blue Hour funnel plan (v2, 25 Nov 2026)
 
+The marketing funnel (TOFU / MOFU / BOFU, channels, flows, budget) is in docs/MARKETING-FUNNEL.md.
+
 Built from the ICP research report ("ICP Deep-Dive, First 100 Offer Verdict, and Cold-Traffic Conversion
 System"), the conversion report, and Clarity recordings from 19 to 25 Nov 2026 (section 9).
 This replaces the old plan of boosting posts straight to a $99 checkout.
@@ -128,14 +130,14 @@ someone's drinking or drug use; ads 21+ (Meta's minimum for supplements is 18+, 
 | Spend time on the ingredients | "Why these six" and the lab reports, then a soft CTA | Live |
 | Open a lab report | Show the guarantee and a "Questions? DM the founder" link | Proof line live; DM link to build |
 | Check the price and leave | Next visit: honest founding counter | Needs the counter |
-| Build a custom pouch, don't buy | Save it, offer "email me my pouch" | Saved in browser live; email to build |
+| Build a custom pouch, don't buy | Save it, offer "email me my pouch" | Live on /build (saved packs, email with `saved_link`); Klaviyo flow to set up |
 | Add to cart and leave | Next visit: cart reminder. With opt-in: email at 1h, 24h, 72h. **No new discount** | Reminder live; emails need Klaviyo or Stripe recovery |
 | Come back within 7 days | Founding counter and what founding members get | Needs the counter |
-| Arrive from an event QR | "You tried one at [event]", code applied, skip the education | To build (/tried) |
+| Arrive from an event QR | "You tried one at [event]", code applied, skip the education | Live (/tried) |
 | Arrive with a creator code | "Picked by @name", code applied | Code applies now; header to build |
-| Arrive from festival content | /festival page with the crew kit | To build |
-| Visit on a phone between 11pm and 4am | Keep it short: one-tap "send me this tomorrow" | To build |
-| Buy | Founding number, Crew invite, review request after about 5 nights | To build |
+| Arrive from festival content | /festival page with the crew kit | Live (/festival) |
+| Visit on a phone between 11pm and 5am | Keep it short: one-tap "send me this tomorrow" | Live (bar on home, shop, build, learn, segment pages); Klaviyo flow to set up |
+| Buy | Founding number, Crew invite, reorder links, review request after about 5 nights | Number, invite and reorder links live; review email to set up |
 
 ## 6. Compliance lines (every message)
 

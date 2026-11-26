@@ -104,7 +104,7 @@ Our signature pouch, The Signature, has eight capsules:
 - **2 glycine capsules:** 1,700 mg
 - **1 NAC capsule:** 600 mg
 
-When you [build your own pouch](/shop#build), the builder won't let you add more than 2 magnesium capsules or more than 1 zinc capsule. Every capsule's full Supplement Facts are on the shop page. If you take other supplements too, add up your zinc and magnesium before you build.
+When you [build your own pouch](/build), the builder won't let you add more than 2 magnesium capsules or more than 1 zinc capsule. Every capsule's full Supplement Facts are on the shop page. If you take other supplements too, add up your zinc and magnesium before you build.
 
 ## FAQ
 

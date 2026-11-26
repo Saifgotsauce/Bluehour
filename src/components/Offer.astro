@@ -1,0 +1,60 @@
+---
+// The buy box used on segment landing pages (/up-early, /festival). Same wiring as /learn:
+// #mixsum, [data-qty], [data-add] and [data-buy] are handled in src/scripts/site.js.
+// Props: heading (text after the per-night price), pick (which roll count starts selected), note (one line under the tiers).
+import { TIERS, PRICE, perNight, refEachFor } from '../data/ingredients.js';
+import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+interface Props { heading: string; pick?: number; note?: string; buildHref?: string; buildText?: string }
+const { heading, pick = 1, note = '', buildHref = '/build', buildText = 'Build your own instead' } = Astro.props;
+const FIRST = TIERS[0].each;
+const BUY = PREORDER ? 'Pre-order' : 'Buy now';
+---
+<section class="offer" id="offer" data-sec="offer">
+  <div class="w col">
+    <div class="bign">{perNight(TIERS.find((t) => t.rolls === pick)?.each ?? FIRST)}</div>
+    <h2>{heading}</h2>
+    <div class="obox">
+      {PREORDER && <div class="pre"><b>Pre-order · ships by {SHIP_BY}</b><span>Founding price for the first {FOUNDING_CAP} orders. ${PRICE} a roll after that.</span><span class="fcount" data-founding hidden></span></div>}
+      <div class="mix"><b>Your pouch</b><span id="mixsum" data-clarity-mask="true">The Signature: magnesium ×2, glycine ×2, NAC, vitamin C, zinc, vitamin B12</span><a href={buildHref} data-cta="offer_build">{buildText}</a></div>
+      <fieldset class="tiers">
+        <legend>How many rolls?</legend>
+        {TIERS.map((t) => (
+          <label class="tier">
+            <input type="radio" name="rolls" value={t.rolls} checked={t.rolls === pick} data-qty />
+            <span class="tn"><b>{t.rolls} roll{t.rolls > 1 ? 's' : ''}{t.name && <em>{t.name}</em>}</b><small>{t.rolls * 30} nights · {perNight(t.each)} a night</small></span>
+            <span class="tp"><b>${t.rolls * t.each}</b>{t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
+          </label>
+        ))}
+      </fieldset>
+      {note && <p class="crew">{note}</p>}
+      <div class="row" id="buyrow">
+        <button class="add ghost" data-add data-cta="offer_add">Add to cart</button>
+        <button class="add" data-buy data-cta="offer_buy">{BUY}</button>
+      </div>
+      <ul class="ticks">
+        {PREORDER && <li>Full refund any time before it ships</li>}
+        <li>{PREORDER ? `Ships free by ${SHIP_BY}` : 'Free US shipping'}</li>
+        <li>One-time purchase, no subscription</li>
+        <li>30 sealed pouches and the dispenser</li>
+        <li>Packed to order, every dose on your pamphlet</li>
+      </ul>
+      <p class="fine">Something wrong with your order? Tell us within 5 business days of delivery and we'll replace or refund it.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .col{max-width:720px}
+  .offer{padding-block:clamp(56px,12vw,110px)}
+  .offer .col{display:flex;flex-direction:column;gap:16px}
+  .offer h2{max-width:13em;color:var(--ink);font-size:clamp(28px,7.4vw,44px)}
+  .obox{display:flex;flex-direction:column;gap:18px;margin-top:14px;padding:22px 18px;border-radius:26px;background:var(--mist);border:2px solid var(--line)}
+  .crew{font-size:15px;color:var(--soft)}
+  .fcount{font-weight:700;color:var(--cobalt)}
+  .ticks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .ticks li{position:relative;padding-left:30px;font-weight:600;font-size:15.5px}
+  .ticks li::before{content:"";position:absolute;left:0;top:3px;width:20px;height:20px;border-radius:50%;background:var(--cobalt) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+  .add.ghost{flex:1;background:var(--white);color:var(--ink)}
+  .row .add:not(.ghost){flex:1}
+  @media (min-width:900px){ .obox{padding:34px} }
+</style>

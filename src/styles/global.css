@@ -405,7 +405,7 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 .bhead{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
 .bhead h2{color:var(--deep)}
 .tray{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;padding:12px 14px;border-radius:20px;background:var(--ink);color:var(--white);box-shadow:0 12px 30px rgba(14,19,48,.24)}
-.slots{flex:1;min-width:0;max-width:360px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.slots{flex:1;min-width:0;max-width:360px;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
 .slots i{aspect-ratio:1;display:grid;place-items:center;border-radius:10px;border:1.5px dashed rgba(255,255,255,.35)}
 .slots i.on{border:1.5px solid transparent;background:rgba(255,255,255,.12)}
 .slots img{width:90%;transform:rotate(-32deg);filter:drop-shadow(-2px 3px 2px rgba(0,0,0,.35))}
@@ -799,3 +799,40 @@ button,select,input{font:inherit;letter-spacing:inherit;color:inherit}
 /* the price gets its own light colour so it pops off the title */
 .pricehead b{color:var(--cobalt)}
 @media (max-width:899px){.pricehead b{color:#BFF3FF}.pricehead s{color:var(--first)}}
+
+/* Builder extras: Blue Hour packs, saved packs, save form, email-my-pouch (src/components/Builder.astro) */
+.bnote{margin:14px 0 0;padding:14px 16px;border-radius:16px;background:var(--mist);border:1px solid var(--line);font-size:15px;line-height:1.45;max-width:none}
+.bnote button{margin-left:4px;padding:0;border:0;background:none;color:var(--cobalt);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.packs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 18px}
+.pack{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:14px;border-radius:18px;border:1.5px solid var(--line);background:var(--white);color:var(--ink);font:inherit;cursor:pointer}
+.pack b{font:800 17px/1.15 var(--display);letter-spacing:-.01em}
+.pack .ptag{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--cobalt)}
+.pack .pline{font-size:13px;line-height:1.35;color:var(--soft)}
+.pack.on{border-color:var(--cobalt);box-shadow:0 0 0 2px var(--cobalt) inset}
+.mypacks{margin:0 0 18px;padding:14px 16px;border-radius:18px;background:var(--mist);border:1px solid var(--line)}
+.mypacks h3{font-size:16px;margin:0 0 8px;color:var(--deep)}
+.mypacks ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.mypacks li{display:flex;align-items:center;gap:10px;justify-content:space-between;font-size:14.5px}
+.mypacks li span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.mypacks li button{padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--white);font:700 13px/1 inherit;cursor:pointer}
+.mypacks li button[data-del]{border:0;background:none;color:var(--soft);font-weight:600}
+.savepack,.mailpouch{display:flex;flex-direction:column;gap:8px;margin-top:16px;width:100%;max-width:460px}
+.savepack label,.mailpouch label{font-weight:700;font-size:15px}
+.savepack div,.mailpouch div{display:flex;gap:8px}
+.savepack input,.mailpouch input{flex:1;min-width:0;padding:12px 14px;border-radius:14px;border:1px solid var(--line);font:inherit;background:var(--white)}
+.savepack button,.mailpouch button{padding:12px 18px;border-radius:14px;border:0;background:var(--deep);color:var(--white);font-weight:800;cursor:pointer}
+.savemsg,.mailpouch .formnote{font-size:14px;margin:0}
+@media (min-width:900px){.packs{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* "Send me this tomorrow" (late-night phones, src/scripts/site.js tomorrowBar) */
+.tmr{position:fixed;z-index:57;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 20px),460px);display:flex;flex-direction:column;gap:10px;padding:16px 16px 14px;border-radius:22px;background:var(--deep);color:var(--white);box-shadow:0 18px 44px rgba(7,18,104,.42),inset 0 0 0 1px rgba(255,255,255,.14);transform:translate(-50%,160%);transition:transform .8s var(--ease-out),bottom .3s}
+.tmr.on{transform:translate(-50%,0)}
+.tmr-t{font-size:16px;line-height:1.35;padding-right:34px}
+.tmr-t b{font-family:var(--display)}
+.tmr-f{display:flex;gap:8px}
+.tmr-f input{flex:1;min-width:0;height:48px;border-radius:99px;border:0;padding:0 16px;font:500 16px var(--body,inherit);color:var(--ink)}
+.tmr-f button{flex:none;height:48px;padding:0 18px;border-radius:99px;border:0;background:var(--dawn);color:var(--deep);font:800 15px/1 var(--display);cursor:pointer}
+.tmr-x{position:absolute;top:8px;right:8px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:var(--white);display:grid;place-items:center;cursor:pointer}
+.tmr-x svg{width:16px;height:16px}
+.tmr-n{font-size:13.5px;color:#C7D2F5}
+.tmr-n:empty{display:none}

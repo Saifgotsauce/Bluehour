@@ -1,0 +1,123 @@
+---
+// /up-early: landing page for S1 "Out Late, Up Early" (docs/MARKETING-FUNNEL.md).
+// 21–30, a 9–5 or class, out two or more nights a month. The job: show up Monday.
+// Copy rules (docs/CLAIMS.md): no alcohol, hangover, cure or detox words. Structure/function claims only, with an asterisk.
+// Don't headline NAC. Lead with the product and the ritual, not the Crew.
+import Base from '../layouts/Base.astro';
+import Top from '../components/Top.astro';
+import Promo from '../components/Promo.astro';
+import Foot from '../components/Foot.astro';
+import Offer from '../components/Offer.astro';
+import { TIERS, PRICE, perNight } from '../data/ingredients.js';
+import { PREORDER, SHIP_BY, FOUNDING_CAP } from '../data/preorder.js';
+const FIRST = TIERS[0].each;
+const BUY = PREORDER ? 'Pre-order 30 nights' : 'Get 30 nights';
+const faqs = [
+  ['When do I take it?', 'When you get home, before bed. Tear one pouch off the roll and take the capsules with a snack and a big glass of water. One pouch a day, never more.'],
+  ['Will it keep me up?', 'No. There is no caffeine and no stimulants in any Blue Hour capsule.'],
+  ['Does it fix a rough Monday?', 'No supplement can promise that, and we won\'t. Blue Hour is a dietary supplement with nutrients a long night leans on. Water, food and sleep still do the heavy lifting.'],
+  ['Is it a subscription?', 'No. You buy a roll when you want one, and nothing renews.'],
+  ['Is it right for me?', 'For adults 18 and over. If you are pregnant, nursing, taking medication, have a medical condition, or are under medical supervision, talk to your doctor first.'],
+];
+---
+<Base
+  title="Out late. Up early. | Blue Hour"
+  description={`One pouch on your nightstand for the nights that run late and the mornings that don't wait. ${PREORDER ? `$${FIRST} for 30 nights for the first ${FOUNDING_CAP} orders.` : `$${PRICE} for 30 nights.`} Free US shipping.`}
+  image="/images/hand.webp"
+>
+  <Promo text="Free US shipping on every roll. No subscription." />
+  <header class="jhero" data-sec="hero">
+    <div class="mesh"><i></i><i></i><i></i></div>
+    <div class="grain"></div>
+    <Top />
+    <div class="in">
+      <p class="crumb">For the 9am after the 3am</p>
+      <h1>Out late. Up early. Show up anyway.</h1>
+      <p class="dek">One sealed pouch on your nightstand. Magnesium, glycine, vitamin C, zinc and B12 for the nights that run long, with nothing that keeps you up.*</p>
+      <div class="hrow">
+        <a class="btn solid" href="#offer" data-cta="hero">{BUY}</a>
+        <span class="hp">{PREORDER ? <>{perNight(FIRST)} a night · <s>${PRICE}</s> ${FIRST} a roll</> : <>{perNight(PRICE)} a night</>}</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="sec" data-sec="pull_tear_sleep">
+    <div class="w two">
+      <img class="pic" src="/images/hand.webp" alt="A hand holding one frosted Blue Hour pouch against a blue sky" width="1122" height="1402" loading="lazy">
+      <div class="stack" style="gap:22px">
+        <h2 style="color:var(--deep)">The whole routine takes 30 seconds.</h2>
+        <ol class="rsteps">
+          <li>Get home. Pull one pouch off the roll on your nightstand.</li>
+          <li>Tear it open along the line.</li>
+          <li>Take it with a snack and a big glass of water. Lights out.</li>
+        </ol>
+        <p class="note">No tubs, no lids, no counting capsules at 3am. It's already sorted.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec mon" data-sec="monday">
+    <div class="w col">
+      <h2>Your night got shorter. Your day didn't.</h2>
+      <p>Adults need at least seven hours of sleep, and about 3 in 10 US adults already get less on an ordinary night.<sup>1</sup> After a big one you might get four. The meeting, the shift or the 9am lecture shows up on time anyway.</p>
+      <p>Blue Hour doesn't replace sleep, food or water. It's a small habit for the gap: the nutrients a long night leans on, in one pouch, ready before you are.*</p>
+      <div class="grid3">
+        <article><b>Magnesium ×2</b><span>Helps support normal muscle and nerve function.*</span></article>
+        <article><b>Glycine ×2</b><span>An amino acid your body uses to build proteins, including collagen.*</span></article>
+        <article><b>C, zinc and B12</b><span>Help support normal immune function and energy metabolism.*</span></article>
+      </div>
+      <a class="txt" href="/shop#ingredients" data-cta="see_ingredients">Every capsule and dose →</a>
+    </div>
+  </section>
+
+  <section class="sec" data-sec="nightstand" style="background:#FAFBFF">
+    <div class="w col">
+      <h2 style="color:var(--deep)">Leave it where you'll see it.</h2>
+      <p>The dispenser lives on your nightstand, so the habit is the last thing you do before bed. Tear off two or three for the weekend away and leave the rest at home.</p>
+      <ul class="chips dk"><span>No caffeine</span><span>No stimulants</span><span>No subscription</span><span>Every dose on the label</span></ul>
+    </div>
+  </section>
+
+  <Offer heading={PREORDER ? 'a night at the founding price. Less than a coffee on the way in.' : 'a night. Less than a coffee on the way in.'} pick={1} note={`Splitting with friends? Every roll in your cart counts, so 3 rolls are $${TIERS[2].each} each.`} />
+
+  <section class="sec faq" data-sec="faq">
+    <div class="w col">
+      <h2 style="font-size:clamp(30px,8vw,52px);margin-bottom:10px">Quick questions</h2>
+      {faqs.map(([q, a]) => (
+        <details><summary><span class="q">{q}</span><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></summary><p>{a}</p></details>
+      ))}
+    </div>
+  </section>
+
+  <section class="w col src">
+    <p class="fine">*These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease.</p>
+    <p class="fine">1. CDC National Center for Health Statistics data brief, 2026: 30.5% of US adults surveyed in 2024 slept less than 7 hours a night. <a href="https://www.hppr.org/npr-news/2026-05-02/americans-arent-sleeping-enough-heres-what-could-help" rel="noopener" target="_blank">NPR report</a></p>
+  </section>
+
+  <Foot id="em-upearly" />
+</Base>
+
+<style>
+  .col{max-width:720px;display:flex;flex-direction:column;gap:18px;align-items:flex-start}
+  .hrow{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin-top:6px}
+  .hp{font-weight:700;font-size:16px}
+  .hp s{opacity:.75;font-weight:500}
+  .pic{width:100%;border-radius:22px;aspect-ratio:4/4.4;object-fit:cover;object-position:50% 42%}
+  .rsteps{list-style:none;margin:0;padding:0;display:grid;gap:16px;counter-reset:s}
+  .rsteps li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;font-size:clamp(17px,4.6vw,20px);line-height:1.35;font-weight:500;color:var(--ink);counter-increment:s}
+  .rsteps li::before{content:counter(s);font:800 38px/1 var(--display);color:var(--cobalt);letter-spacing:-.05em}
+  .note{font-size:17px;color:var(--soft)}
+  .mon h2{color:var(--deep)}
+  .mon p,.col>p{font-size:clamp(17px,4.5vw,19px);line-height:1.6}
+  sup{font-size:.6em;font-weight:700;color:var(--cobalt)}
+  .grid3{display:grid;gap:12px;width:100%}
+  .grid3 article{border:2px solid var(--ink);border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;background:var(--white)}
+  .grid3 b{font:800 19px/1.2 var(--display);color:var(--deep)}
+  .grid3 span{font-size:15.5px;color:var(--soft)}
+  .txt{font-weight:700;color:var(--cobalt);text-underline-offset:4px}
+  .chips.dk{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0}
+  .chips.dk span{padding:8px 12px;border-radius:99px;border:1.5px solid var(--line);font-weight:700;font-size:14px;color:var(--deep);background:var(--white)}
+  .src{padding-block:10px 50px;gap:10px}
+  .src a{color:var(--cobalt)}
+  @media (min-width:900px){ .grid3{grid-template-columns:repeat(3,minmax(0,1fr))} }
+</style>

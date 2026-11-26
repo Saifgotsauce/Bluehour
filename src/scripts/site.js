@@ -3,7 +3,7 @@
 
 import { EGGS, eggById, inBlueHour, COLLECTOR_NEEDS } from '../data/eggs.js';
 import { PREORDER, SHIP_BY } from '../data/preorder.js';
-import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, SIGNATURE_NAME, minFor, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier, refEachFor } from '../data/ingredients.js';
+import { PRICE, MAX_CAPS, INGREDIENTS, SIGNATURE, SIGNATURE_NAME, PACKS, mixParam, mixFromParam, minFor, cleanMix, mixTotal, mixKey, isSignature, mixSummary, packSummary, eachFor, totalFor, savingFor, nextTier, refEachFor } from '../data/ingredients.js';
 import { track, keepRecording, watchSections, attribution, touchString, liveVariants, aid, pageType, visitNumber } from './track.js';
 import { signal, state, freshVisit, faqKind } from './state.js';
 
@@ -312,7 +312,8 @@ function paintBuilder() {
   const t = mixTotal(current);
   $$('[data-add], [data-buy]').forEach((b) => { b.disabled = t === 0; });
   const sum = $('#mixsum');
-  if (sum) sum.textContent = t === 0 ? 'Pick at least one capsule.' : (isSignature(current) ? SIGNATURE_NAME + ': ' : 'Your custom ' + t + ': ') + mixSummary(current);
+  const pk = PACKS.find((p) => mixKey(cleanMix(p.mix)) === mixKey(current));
+  if (sum) sum.textContent = t === 0 ? 'Pick at least one capsule.' : (pk ? pk.name + ': ' : 'Your custom ' + t + ': ') + mixSummary(current);
   if (!build) return;
   $$('.icard', build).forEach((card) => {
     const id = card.getAttribute('data-id'), max = +card.getAttribute('data-max'), n = current[id] || 0;
@@ -329,6 +330,7 @@ function paintBuilder() {
   });
   const tally = $('#tally');
   if (tally) tally.textContent = t + ' of ' + MAX_CAPS;
+  $$('.pack', build).forEach((b) => { b.classList.toggle('on', mixKey(cleanMix(JSON.parse(b.getAttribute('data-mix')))) === mixKey(current)); });
 }
 // Builder tracking and the "builder hesitator" rule (report 6.4): lots of changes or a long time in the builder
 // without adding to cart gets one plain offer of The Signature, once per visit. Never a countdown or pressure.
@@ -359,6 +361,23 @@ if (build) {
       if (t.closest('[data-use-signature]')) { track('nudge_click', { cta: t.closest('#bsaved') ? 'saved_build' : 'builder_signature' }); $$('#bnudge, #bsaved').forEach((n) => { n.hidden = true; }); }
       return;
     }
+    const pk = t.closest('[data-pack]');
+    if (pk) {
+      current = cleanMix(JSON.parse(pk.getAttribute('data-mix')));
+      paintBuilder(); saveBuild();
+      track('builder_change', { action: 'pack', from: pk.getAttribute('data-pack'), count: mixTotal(current) });
+      if (!buildStart) { buildStart = Date.now(); track('build_started', { from: pageType }); signal('build'); }
+      const tray = $('.tray', build); if (tray) tray.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    const sp = t.closest('[data-load], [data-del]');
+    if (sp) {
+      const list = loadPacks(), i = +sp.getAttribute('data-load') || +sp.getAttribute('data-del') || 0;
+      const item = list[Math.abs(i) - 1];
+      if (item && sp.hasAttribute('data-load')) { current = cleanMix(item.mix); paintBuilder(); saveBuild(); track('builder_change', { action: 'load_saved', count: mixTotal(current) }); }
+      if (item && sp.hasAttribute('data-del')) { list.splice(Math.abs(i) - 1, 1); savePacks(list); paintPacks(); }
+      return;
+    }
     const card = t.closest('.icard');
     if (!card) return;
     const id = card.getAttribute('data-id');
@@ -372,8 +391,12 @@ if (build) {
     track('builder_change', { action, count: mixTotal(current) });
     paintBuilder(); saveBuild(); builderNudge();
   });
-  // Bring back a custom pouch saved on an earlier visit.
-  try {
+  // A pouch link (/build?mix=level-2.glow-2...) from a reorder link, a saved-pouch email or a share wins.
+  const fromUrl = cleanMix(mixFromParam(new URLSearchParams(location.search).get('mix')));
+  if (mixTotal(fromUrl) && new URLSearchParams(location.search).get('mix')) {
+    current = fromUrl;
+    track('nudge_shown', { cta: 'pouch_link' });
+  } else try {
     const saved = JSON.parse(store.get('bh-build') || 'null');
     if (saved && mixTotal(cleanMix(saved)) && !isSignature(cleanMix(saved))) {
       current = cleanMix(saved);
@@ -475,6 +498,7 @@ async function goCheckout(btn) {
     track('begin_checkout', { rolls, value: totalFor(rolls), crew: !!(code && code.crew) });
     keepRecording('begin_checkout');
     store.set('bh-pending', JSON.stringify({ rolls, value: totalFor(rolls), at: Date.now() }));
+    store.set('bh-lastorder', JSON.stringify(cart.map((l) => ({ mix: l.mix, qty: l.qty }))));
     const r = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -524,6 +548,19 @@ $$('[data-qty]').forEach((el) => el.addEventListener('change', () => {
   setPicked(parseInt(el.value, 10));
   track('quantity_selected', { qty: picked, value: totalFor(picked) });
   signal('price');
+}));
+
+// A page can start on a different roll count (e.g. /festival starts on the 3-roll crew price).
+{ const c = $('[data-qty][type="radio"]:checked'); if (c && +c.value !== picked) setPicked(+c.value); }
+// Pack switch inside a segment page's buy box (/festival: The Signature or Long Weekend).
+$$('[data-offer-pack]').forEach((b) => b.addEventListener('click', () => {
+  const p = PACKS.find((x) => x.id === b.getAttribute('data-offer-pack'));
+  if (!p) return;
+  current = cleanMix(p.mix); paintBuilder();
+  $$('[data-offer-pack]').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+  const link = $('#offer [data-cta="offer_build"]');
+  if (link) link.setAttribute('href', '/build?mix=' + mixParam(current));
+  track('builder_change', { action: 'pack', from: p.id, count: mixTotal(current) });
 }));
 
 /* ---------- carousels ---------- */
@@ -606,6 +643,45 @@ $$('[data-gal]').forEach((gal) => {
   }
 });
 
+/* ---------- saved packs (browser only, "bh-packs") ---------- */
+function loadPacks() { try { const l = JSON.parse(store.get('bh-packs') || '[]'); return Array.isArray(l) ? l.slice(0, 12) : []; } catch (e) { return []; } }
+function savePacks(l) { store.set('bh-packs', JSON.stringify(l.slice(0, 12))); }
+// auto = saved by us (emailed pouch, a past order), not named by the visitor: if they already saved the
+// same pouch under their own name, keep their name.
+function addPack(name, mix, auto) {
+  const clean = cleanMix(mix);
+  if (!mixTotal(clean)) return false;
+  const all = loadPacks(), same = all.find((p) => mixKey(cleanMix(p.mix)) === mixKey(clean));
+  if (auto && same) name = same.name;
+  const l = all.filter((p) => p !== same);
+  l.unshift({ name: String(name || 'My pouch').replace(/[<>]/g, '').slice(0, 24), mix: clean, at: Date.now() });
+  savePacks(l);
+  return true;
+}
+function paintPacks() {
+  const box = $('#mypacks'), ul = $('#packlist');
+  if (!box || !ul) return;
+  const l = loadPacks();
+  box.hidden = !l.length;
+  ul.innerHTML = '';
+  l.forEach((p, i) => {
+    const li = document.createElement('li');
+    const sp = document.createElement('span'); sp.textContent = p.name + ' · ' + mixTotal(cleanMix(p.mix));
+    const ld = document.createElement('button'); ld.type = 'button'; ld.setAttribute('data-load', String(i + 1)); ld.textContent = 'Use';
+    const dl = document.createElement('button'); dl.type = 'button'; dl.setAttribute('data-del', String(i + 1)); dl.textContent = 'Remove';
+    li.append(sp, ld, dl); ul.append(li);
+  });
+}
+const savepack = $('#savepack');
+if (savepack) savepack.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = $('#packname').value.trim() || 'My pouch';
+  const ok = addPack(name, current);
+  $('#savemsg').textContent = ok ? 'Saved. It\'s in "Your saved packs" next time, on this phone.' : 'Pick at least one capsule first.';
+  if (ok) { $('#packname').value = ''; paintPacks(); track('pack_saved', { count: mixTotal(current) }); }
+});
+paintPacks();
+
 /* ---------- FAQ accordion ---------- */
 const faqSeen = new Set();
 function faqOpened(d) {
@@ -649,12 +725,12 @@ $$('.faq details').forEach((d) => {
 /* ---------- email sign-up and the welcome offer ---------- */
 // Both the footer form and the popup post to /api/subscribe, which adds the email to Klaviyo and returns
 // the welcome code. The code is saved like a link code, so it comes off at checkout without typing it.
-async function subscribe(email, when, source, event) {
+async function subscribe(email, when, source, event, link) {
   try {
     const r = await fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, when, source, event }),
+      body: JSON.stringify({ email, when, source, event, link }),
     });
     const d = await r.json().catch(() => ({}));
     if (r.ok && d.ok) {
@@ -670,6 +746,20 @@ const subError = (e) =>
   e === 'bad_email' ? 'That email doesn\'t look right. Check it and try again.'
   : e === 'not_configured' ? 'Sign-ups go live very soon.'
   : 'That didn\'t go through. Try again in a moment.';
+
+// Builder: "Not ready? Email yourself this pouch." Sends the pouch link to Klaviyo (property saved_link).
+$$('.mailpouch').forEach((f) => {
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const note = $('.formnote', f), input = $('input', f), btn = $('button', f);
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const r = await subscribe(input.value, '', 'build', '', '/build?mix=' + mixParam(current));
+    btn.disabled = false;
+    if (r.ok) { input.value = ''; note.textContent = 'Sent to your inbox. Your pouch is saved in the link.'; addPack('Emailed pouch', current, true); paintPacks(); }
+    else note.textContent = subError(r.error);
+  });
+});
 
 // Event pouch page (/tried): email for the founding offer and a reminder before the next night out.
 $$('.triedform').forEach((f) => {
@@ -698,6 +788,65 @@ $$('.foot .form').forEach((f) => {
     else note.textContent = subError(r.error);
   });
 });
+
+// Late-night visitors (docs/MARKETING-FUNNEL.md): on a phone between 11pm and 5am, someone browsing in bed
+// isn't going to type a card number. Offer one tap instead: "send me this tomorrow". It saves the page they
+// were on to Klaviyo (saved_link) and a flow emails it the next morning. Shows once a day at most, never to
+// people already signed up, and it switches off the welcome popup for this visit so they never get both.
+(function tomorrowBar() {
+  const PAGES = ['home', 'shop', 'build', 'up_early', 'festival', 'advertorial'];
+  if (!PAGES.includes(pageType) || store.get('bh-sub')) return;
+  const h = new Date().getHours();
+  if (!(h >= 23 || h < 5)) return;
+  if (!matchMedia('(max-width: 760px)').matches) return;
+  if (Date.now() - (+store.get('bh-tmr') || 0) < 864e5) return;
+  let shown = false;
+  const link = () => (pageType === 'build' ? '/build?mix=' + mixParam(current) : location.pathname.replace(/\/$/, '') || '/');
+  function show() {
+    if (shown || $('#cart.on, #menu.on, .wpop')) return;
+    shown = true;
+    removeEventListener('scroll', onScroll);
+    store.set('bh-tmr', String(Date.now()));
+    try { sessionStorage.setItem('bh-pop', '1'); } catch (e) { /* ignore */ }
+    popArmed = false;
+    const bar = document.createElement('div');
+    bar.className = 'tmr';
+    bar.setAttribute('role', 'dialog');
+    bar.setAttribute('aria-label', 'Send me this tomorrow');
+    bar.innerHTML =
+      '<button class="tmr-x" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><use href="#i-x"/></svg></button>' +
+      '<p class="tmr-t"><b>Up late?</b> We\'ll email you this page in the morning.</p>' +
+      '<form class="tmr-f" novalidate><label for="tmr-em" class="sr">Email address</label><input id="tmr-em" type="email" placeholder="Email address" autocomplete="email"><button type="submit">Send it</button></form>' +
+      '<p class="tmr-n" role="status"></p>';
+    document.body.append(bar);
+    const lift = () => {
+      const s = $('.stick.on, .astick.on');
+      bar.style.bottom = 'calc(' + ((s ? s.getBoundingClientRect().height : 0) + 10) + 'px + env(safe-area-inset-bottom,0px))';
+    };
+    lift();
+    addEventListener('scroll', lift, { passive: true });
+    const hide = () => { bar.classList.remove('on'); removeEventListener('scroll', lift); setTimeout(() => bar.remove(), 700); };
+    $('.tmr-x', bar).addEventListener('click', () => { track('nudge_click', { cta: 'tomorrow_close' }); hide(); });
+    $('form', bar).addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = $('button', e.target), input = $('input', e.target), note = $('.tmr-n', bar);
+      if (btn.disabled) return;
+      btn.disabled = true;
+      const r = await subscribe(input.value, '', 'tomorrow', '', link());
+      btn.disabled = false;
+      if (r.ok) { e.target.remove(); $('.tmr-t', bar).innerHTML = '<b>Done.</b> It\'ll be in your inbox in the morning. Get some sleep.'; setTimeout(hide, 4000); }
+      else note.textContent = subError(r.error);
+    });
+    track('nudge_shown', { cta: 'tomorrow' });
+    requestAnimationFrame(() => requestAnimationFrame(() => bar.classList.add('on')));
+  }
+  function onScroll() {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    if (max > 300 && scrollY / max > 0.4) show();
+  }
+  setTimeout(show, 20000);
+  addEventListener('scroll', onScroll, { passive: true });
+})();
 
 const OFFER_LOCK = 864e5; // 24 hours
 const POP_SKIP = /^\/(thank-you|welcome|privacy|terms|refunds|shipping|contact)/;
@@ -941,7 +1090,7 @@ float();
 function flushSoon() { try { dispatchEvent(new Event('pagehide')); } catch (e) { /* ignore */ } }
 watchSections((name) => {
   // Seeing how it works or what's in the box counts as getting to know the product.
-  if (/^(nights|inbox|signature|pull_tear_sleep|how|build|ingredients|tested)/.test(name)) signal('product');
+  if (/^(nights|inbox|signature|pull_tear_sleep|how|build|ingredients|tested|monday|festival_steps|offer)/.test(name)) signal('product');
 });
 if (pageType === 'shop') { track('view_item', { value: eachFor(1), page_type: 'shop' }); signal('product'); }
 // Purchase: Stripe sends buyers to /thank-you?session_id=... (Stripe stays the record of what was paid).
@@ -952,6 +1101,18 @@ if (pageType === 'shop') { track('view_item', { value: eachFor(1), page_type: 's
   let pend = {};
   try { pend = JSON.parse(store.get('bh-pending') || '{}') || {}; } catch (e) { /* ignore */ }
   track('purchase', { tx: sidp.slice(-12), rolls: pend.rolls, value: pend.value });
+  // Reorder links: each pouch from this order becomes a saved pack and a /build?mix=... link.
+  try {
+    const lines = JSON.parse(store.get('bh-lastorder') || '[]');
+    const ul = $('#reorderlist');
+    lines.forEach((l, i) => {
+      const mix = cleanMix(l.mix);
+      if (!mixTotal(mix)) return;
+      addPack(isSignature(mix) ? SIGNATURE_NAME : 'Your order ' + (i + 1), mix, true);
+      if (ul) { const li = document.createElement('li'); const a = document.createElement('a'); a.href = '/build?mix=' + mixParam(mix); const pk = PACKS.find((x) => mixKey(cleanMix(x.mix)) === mixKey(mix)); a.textContent = (pk ? pk.name : 'Your custom pouch') + ': ' + mixSummary(mix); li.append(a); ul.append(li); }
+    });
+    if (ul && ul.children.length) $('#reorder').hidden = false;
+  } catch (e) { /* ignore */ }
   keepRecording('purchase');
   store.set('bh-tx', sidp); store.set('bh-pending', '');
   signal('purchase');

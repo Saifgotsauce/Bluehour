@@ -1,0 +1,83 @@
+---
+// The pouch builder (used on /build). The logic lives in src/scripts/site.js (anything inside #build).
+// Packs come from PACKS in src/data/ingredients.js. Saved packs live in the visitor's browser ("bh-packs").
+import { INGREDIENTS, MAX_CAPS, SIGNATURE_NAME, TIERS, PACKS, mixSummary } from '../data/ingredients.js';
+const FIRST = TIERS[0].each;
+---
+  <section class="sec build" id="build">
+    <div class="w">
+      <div class="bhead">
+        <h2>Build your pouch.</h2>
+        <p>Start with The Signature or swap in what you want. Pick up to {MAX_CAPS} capsules, always with at least 2 Glow (glycine). Some have a per-pouch limit, so one pouch never stacks up too much of one nutrient. Every roll is packed to order, and the price stays the same.</p>
+      </div>
+      <div class="packs" aria-label="Blue Hour packs">
+        {PACKS.map((p) => (
+          <button type="button" class="pack" data-pack={p.id} data-mix={JSON.stringify(p.mix)}>
+            <span class="ptag">{p.tag}</span>
+            <b>{p.name}</b>
+            <span class="pline">{p.line}</span>
+          </button>
+        ))}
+      </div>
+      <div class="mypacks" id="mypacks" hidden>
+        <h3>Your saved packs</h3>
+        <ul id="packlist"></ul>
+      </div>
+      <div class="tray" aria-live="polite">
+        <div class="slots" id="slots">{Array.from({ length: MAX_CAPS }, () => <i></i>)}</div>
+        <div class="tally"><b id="tally">{MAX_CAPS} of {MAX_CAPS}</b><button type="button" id="reset">Back to {SIGNATURE_NAME}</button></div>
+      </div>
+      <p class="bnote" id="bsaved" hidden>This is the pouch you built last time. <button type="button" data-use-signature>Use {SIGNATURE_NAME} instead</button></p>
+      <p class="bnote" id="bnudge" hidden>Not sure what to pick? {SIGNATURE_NAME} is the simple choice, and you can change it next roll. <button type="button" data-use-signature>Use {SIGNATURE_NAME}</button></p>
+      <div class="ilist">
+        {INGREDIENTS.map((i) => (
+          <article class:list={['icard', { on: i.signature > 0 }]} data-id={i.id} data-max={i.max}>
+            <img src={`/images/${i.img}.webp`} alt="" width="900" height="340" loading="lazy" />
+            <div class="it">
+              <h3>{i.name}{i.signature > 0 && <span class="sig">Signature</span>}</h3>
+              <div class="ing">{i.ingredient}{i.dose && ` · ${i.dose}`}</div>
+              <div class="lim">Up to {i.max} per pouch{i.min ? `, at least ${i.min}` : ''}</div>
+              <p>{i.blurb}</p>
+            </div>
+            <div class="step">
+              <button type="button" data-inc aria-label={`Add ${i.name}`}>+</button>
+              <span data-n>{i.signature}</span>
+              <button type="button" data-dec aria-label={`Remove ${i.name}`}>&minus;</button>
+            </div>
+            {i.facts && (
+              <details class="facts">
+                <summary>Supplement Facts, per capsule</summary>
+                <div class="factwrap">
+                  <table>
+                    <thead><tr><th scope="col">Nutrient</th><th scope="col">Amount</th><th scope="col">% DV</th></tr></thead>
+                    <tbody>{i.facts.map(([n, a, dv]) => <tr><td>{n}</td><td>{a}</td><td>{dv}</td></tr>)}</tbody>
+                  </table>
+                </div>
+                {i.facts.some((f) => f[2] === '\u2020') && <p class="other">&dagger; Daily Value not established.</p>}
+                {i.other && <p class="other">Other ingredients: {i.other}</p>}
+                {i.warn && <p class="other">Warnings: {i.warn}</p>}
+                {i.coa
+                  ? <div class="coa"><b>Lab tested by {i.coa.lab}, {i.coa.date}</b><span>{i.coa.found && `Found ${i.coa.found}. `}{i.coa.metals && `${i.coa.metals} `}{i.coa.micro}</span>{(i.coa.files || [['Open the full lab report (PDF)', i.coa.file]]).map(([label, href]) => <a href={href} target="_blank" rel="noopener">{label}</a>)}</div>
+                  : <p class="other">Lab report for this capsule coming soon.</p>}
+              </details>
+            )}
+          </article>
+        ))}
+      </div>
+      <form class="savepack" id="savepack" novalidate>
+        <label for="packname">Save this pouch to reorder later</label>
+        <div><input id="packname" maxlength="24" placeholder="Name it, e.g. Festival mix" autocomplete="off"><button type="submit">Save</button></div>
+        <p class="savemsg" id="savemsg" role="status"></p>
+      </form>
+      <div class="bfoot">
+        <div class="leftout"><b>Not on the menu:</b> <span class="nw">5-HTP</span>, caffeine and stimulants.</div>
+        <button class="btn solid" data-add>Add this pouch, <span data-price-short>${FIRST}</span></button>
+        <form class="form mailpouch" id="mailpouch" novalidate>
+          <label for="em-pouch">Not ready? Email yourself this pouch.</label>
+          <div><input id="em-pouch" type="email" placeholder="Email address" autocomplete="email"><button type="submit">Send it</button></div>
+          <p class="formnote" role="status"></p>
+        </form>
+        <p class="fine">Talk to a doctor or pharmacist before adding anything new if you take medication, have a medical condition, or are pregnant or nursing. Capsules shown are illustrations. Your exact pouch is listed on the Supplement Facts in your pamphlet.</p>
+      </div>
+    </div>
+  </section>

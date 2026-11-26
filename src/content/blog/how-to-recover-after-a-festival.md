@@ -90,7 +90,7 @@ What helps:
 
 No pill undoes a festival weekend. Sleep, food, water and time do most of the work.
 
-If you want to keep a simple daily routine going around big weekends, that's what we built Blue Hour for: a roll of daily pouches where you take our Signature mix or [pick your own capsules](/shop#build), with every ingredient and its lab report on the shop page. It's a routine, not a replacement for sleep.
+If you want to keep a simple daily routine going around big weekends, that's what we built Blue Hour for: a roll of daily pouches where you take our Signature mix or [pick your own capsules](/build), with every ingredient and its lab report on the shop page. It's a routine, not a replacement for sleep.
 
 ## FAQ
 

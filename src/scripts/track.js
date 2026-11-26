@@ -162,6 +162,10 @@ const PAGE = location.pathname === '/' ? 'home'
   : /^\/blog\/./.test(location.pathname) ? 'journal_post'
   : /^\/blog/.test(location.pathname) ? 'journal'
   : /^\/thank-you/.test(location.pathname) ? 'thank_you'
+  : /^\/build/.test(location.pathname) ? 'build'
+  : /^\/up-early/.test(location.pathname) ? 'up_early'
+  : /^\/festival/.test(location.pathname) ? 'festival'
+  : /^\/tried/.test(location.pathname) ? 'tried'
   : 'other';
 export const pageType = PAGE;
 

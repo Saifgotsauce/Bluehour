@@ -106,7 +106,7 @@ Even the most positive magnesium trial found a small effect. These habits do far
 
 ## Magnesium in Blue Hour
 
-Our **Level** capsule contains 133 mg of magnesium as magnesium glycinate. The Signature pouch has two of them, for **266 mg a day**, which is under the 350 mg supplement limit. When you [build your own pouch](/shop#build), the builder won't let you add more than two.
+Our **Level** capsule contains 133 mg of magnesium as magnesium glycinate. The Signature pouch has two of them, for **266 mg a day**, which is under the 350 mg supplement limit. When you [build your own pouch](/build), the builder won't let you add more than two.
 
 We put magnesium in the pouch because it's an essential mineral a lot of people don't get enough of, not because it's a sleep aid. If you want better sleep, start with the basics above.
 
