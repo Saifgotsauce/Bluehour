@@ -169,4 +169,25 @@ real counter and perks.
 
 ## 9. What the Clarity recordings showed (19–25 Nov 2026)
 
-See docs/CLARITY-2026-11.md for every recording, group by group.
+Full breakdown in docs/CLARITY-2026-11.md. In short:
+- 118 of 137 non-Canadian visits came from the two Founding Crew ads and all landed on /crew. The ads have been
+  recruiting ambassadors, not selling rolls.
+- 76% left from the first screen (24% in under 10 seconds, 52% after reading it without scrolling). Only 19% got
+  far enough to see what the product is. No recording shows a finished application.
+- The questions people tapped: do I have to post, can I try it first, do I need a big following, when do I get paid,
+  why only 30 nights. The same trial and entry-price problem the research found.
+- "Get $10 every time a friend buys" kept people about twice as far down the page as the vaguer headlines.
+- iPhone visitors bounced far more than Android (23 of 71 vs 4 of 46). Check load speed in Instagram's browser.
+
+## 10. Decisions only Saif can make
+
+1. **Pilot events:** charge $99 a roll as now, or give the first 1–2 events their pouches free to get data and
+   reviews faster? (The report recommends free pilots in exchange for exit handout, a Story mention and a code.)
+2. **Seeding budget:** about $50–120 for 1–2 rolls split into single pouches for Crew members and pilots.
+   Needs a US person to receive them (OK Capsule doesn't ship to Canada).
+3. **Guarantee:** keep "no refunds unless something's wrong", or add a first-roll guarantee? Each refunded roll
+   costs about $40–60 plus Stripe's fee. The report counts this as a main trust fix.
+4. **Founding perks:** founding price locked for life on reorders? A vote on the next capsule? (Numbered founding
+   members are already built.)
+5. **Order now vs pre-order:** switch once OK Capsule confirms it can pack the new 8-capsule Signature right away.
+6. **Crew ads:** pause paid Crew ads until the Crew page is fixed, and recruit person to person first?
