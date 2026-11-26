@@ -6,5 +6,5 @@ interface Props { text: string; link?: string; href?: string }
 const { text, link, href } = Astro.props;
 ---
 {PREORDER
-  ? <div class="promo">Founding price: <b>${TIERS[0].each}</b> a roll for the first {FOUNDING_CAP} orders. Ships by {SHIP_BY}.</div>
+  ? <div class="promo">Founding price: <b>${TIERS[0].each}</b>{' '}<s>${PRICE}</s>{' '}a roll for the first {FOUNDING_CAP} orders. Ships by {SHIP_BY}.</div>
   : <div class="promo">{text} {link && href && <a href={href}>{link}</a>}</div>}

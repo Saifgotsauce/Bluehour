@@ -61,7 +61,7 @@ export function sessionParams(lines, origin, disc, vid, attr) {
   p.set(
     'custom_text[submit][message]',
     PREORDER
-      ? `Pre-order at the founding price: $${each} a roll, for the first 100 orders. ` +
+      ? `Pre-order at the founding price: $${each} a roll${saving > 0 ? `, so you save $${saving} on the launch price` : ''}. First 100 orders only. ` +
           `We charge you today and your order ships free by ${SHIP_BY}. Change your mind any time before it ships ` +
           'and email hello@bluehournights.com for a full refund.'
       : (saving > 0 ? `${tier.name} price: $${each} a roll, so you save $${saving}. ` : '') +
@@ -76,7 +76,7 @@ export function sessionParams(lines, origin, disc, vid, attr) {
     p.set(`line_items[${i}][price_data][currency]`, 'usd');
     p.set(`line_items[${i}][price_data][unit_amount]`, String(each * 100));
     p.set(`line_items[${i}][price_data][product_data][name]`, PREORDER ? `Blue Hour, 30-night roll (pre-order, ships by ${SHIP_BY})` : 'Blue Hour, 30-night roll');
-    p.set(`line_items[${i}][price_data][product_data][description]`, (PREORDER ? `Founding price for the first 100 orders. ` : '') + `${kind}: ${pack}`);
+    p.set(`line_items[${i}][price_data][product_data][description]`, (PREORDER ? `Founding price for the first 100 orders. Launch price $${PRICE} a roll. ` : '') + `${kind}: ${pack}`);
     p.set(`line_items[${i}][price_data][product_data][images][0]`, `${origin}/images/checkout-box.jpg`);
     const line = `${l.qty} roll${l.qty > 1 ? 's' : ''}: ${pack}`.slice(0, 500);
     p.set(`metadata[pouch_${i + 1}]`, line);

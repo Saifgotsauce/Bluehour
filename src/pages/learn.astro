@@ -183,7 +183,7 @@ const faqs = [
               <label class="tier">
                 <input type="radio" name="rolls" value={t.rolls} checked={i === 0} data-qty />
                 <span class="tn"><b>{t.rolls} roll{t.rolls > 1 ? 's' : ''}{t.name && <em>{t.name}</em>}</b><small>{t.rolls * 30} nights · {perNight(t.each)} a night</small></span>
-                <span class="tp"><b>${t.rolls * t.each}</b>{!PREORDER && t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
+                <span class="tp"><b>${t.rolls * t.each}</b>{t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
               </label>
             ))}
           </fieldset>
@@ -245,7 +245,7 @@ const faqs = [
 
   <div class="astick" id="astick" aria-hidden="true">
     {PREORDER
-      ? <div><b>Pre-order · ${FIRST} founding price</b><span>Ships by {SHIP_BY} · Full refund before it ships</span></div>
+      ? <div><b>Pre-order · ${FIRST} <s>${PRICE}</s></b><span>Ships by {SHIP_BY} · Full refund before it ships</span></div>
       : <div><b>30 nights · ${PRICE}</b><span>Free US shipping · No subscription</span></div>}
     <a class="add" href="#offer" tabindex="-1">{PREORDER ? 'Pre-order' : 'Get yours'}</a>
   </div>

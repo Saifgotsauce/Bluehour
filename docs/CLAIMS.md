@@ -12,7 +12,7 @@ before it's used. Not legal advice: have a US supplement regulatory reviewer che
 - Never put Prime (NAC) next to anything about drinking, mornings after, or "the night before".
 - Ingredient research is about the ingredient, never "Blue Hour is proven to". Nobody has tested the pouch itself.
 - Lab reports prove what's in a capsule, not what it does.
-- Founding price comparison ($99 vs $129) is only allowed while $129 is the real price at launch. If launch stays at $99, remove the $129.
+- The crossed-out $129 next to $99 stays (founder's decision). It must become the real price after the first 100 orders. If the plan ever changes to keep $99, take the $129 down.
 
 ## Ingredient claims
 

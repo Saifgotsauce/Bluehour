@@ -17,8 +17,8 @@ This replaces the old plan of boosting posts straight to a $99 checkout.
   4. Founding price locked for life on reorders.
   5. A vote on the next pouch or capsule.
   6. Opt-in "Founding 100" wall on the site.
-- **No crossed-out $129 until $129 has actually been charged** (FTC 16 CFR 233). Wording now:
-  "$99 founding price for the first 100 orders. $129 a roll after that." Done on the site.
+- **The crossed-out $129 stays** (founder's decision). What keeps it honest: the cap is real, the counter is real, and
+  the price genuinely goes to $129 at order #100. Never extend the cap quietly.
 
 ## 2. Who we're selling to
 

@@ -257,7 +257,7 @@ function paint() {
     '</h3><div class="mt">' + packSummary(l.mix) + '</div><div class="mt">30 nights per roll</div><div class="ctl"><div class="qty"><button data-line="' + i +
     '" data-d="-1" aria-label="Remove one roll">−</button><span>' + l.qty + '</span><button data-line="' + i +
     '" data-d="1" aria-label="Add one roll">+</button></div><div class="price">' +
-    (!PREORDER && each < refEachFor(n) ? '<s>' + money(l.qty * refEachFor(n)) + '</s> ' : '') + money(l.qty * each) +
+    (each < refEachFor(n) ? '<s>' + money(l.qty * refEachFor(n)) + '</s> ' : '') + money(l.qty * each) +
     '</div></div><button class="trash" data-rm="' + i + '">Remove</button></div></div>'
   ).join('');
   const code = getCode(), egg = bestEgg(), cl = $('#codeline');

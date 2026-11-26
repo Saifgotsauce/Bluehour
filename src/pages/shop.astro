@@ -73,7 +73,7 @@ const jsonld = {
       </div>
       <div class="buy" id="buybox">
         <h1>Blue Hour nightly pouches</h1>
-        <p class="pricehead"><b>${FIRST}</b>{!PREORDER && FIRST < PRICE && <s>${PRICE}</s>}<span>30 nights, {perNight(FIRST)} a night{PREORDER ? `. Ships by ${SHIP_BY}` : ''}</span></p>
+        <p class="pricehead"><b>${FIRST}</b>{FIRST < PRICE && <s>${PRICE}</s>}<span>30 nights, {perNight(FIRST)} a night{PREORDER ? `. Ships by ${SHIP_BY}` : ''}</span></p>
         <ul class="perks">
           <li><span>One sealed pouch of 8 capsules a night</span></li>
           <li><span>No caffeine, stimulants or <span class="nw">5-HTP</span></span></li>
@@ -91,7 +91,7 @@ const jsonld = {
             <label class="tier">
               <input type="radio" name="rolls" value={t.rolls} checked={i === 0} data-qty />
               <span class="tn"><b>{t.rolls} roll{t.rolls > 1 ? 's' : ''}{t.name && <em>{t.name}</em>}</b><small>{t.rolls * 30} nights · {perNight(t.each)} a night</small></span>
-              <span class="tp"><b>${t.rolls * t.each}</b>{!PREORDER && t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
+              <span class="tp"><b>${t.rolls * t.each}</b>{t.each < refEachFor(t.rolls) && <s>${t.rolls * refEachFor(t.rolls)}</s>}</span>
               {t.each < refEachFor(t.rolls) && <span class="save">Save ${t.rolls * (refEachFor(t.rolls) - t.each)}</span>}
             </label>
           ))}

@@ -11,8 +11,8 @@ export const PREORDER = true;
 // and if we can't ship by this date we must email them before it passes, give a new date, and offer a full refund.
 export const SHIP_BY = 'December 20';
 
-// Founding offer (docs/FUNNEL.md). The founding prices are an introductory offer for the first FOUNDING_CAP paid
-// orders. FTC rules (16 CFR 233): never show $129 crossed out until $129 has really been charged, and the cap must
-// be real. When order #100 is paid, the price must go to the launch prices and stay there.
+// Founding offer (docs/FUNNEL.md). The founding prices are for the first FOUNDING_CAP paid orders, shown next to the
+// crossed-out launch price (founder's decision). Keep it true: the cap must be real, and once order #100 is paid the
+// launch prices ($129 / $119 / $109) must become the real prices.
 export const FOUNDING_CAP = 100;
 export const SHIP_BY_FULL = 'Sunday, December 20, 2026';

@@ -44,7 +44,7 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
       <h1><span class="ln"><span>Out late.</span></span><span class="ln"><span style="--d:.09s">Up early.</span></span></h1>
       <p class="sub">A nightstand pouch for nights that run late. Take one before bed: {MAX_CAPS} capsules of magnesium, glycine, vitamin C, zinc, B12 and more, sealed together. Thirty pouches on one roll.</p>
       <a class="btn" href="/shop" data-cta="hero">{PREORDER ? 'Pre-order now' : 'Buy now'}</a>
-      <p class="note">{PREORDER ? <>30 nights, ${FIRST} founding price for the first {FOUNDING_CAP} orders. Ships by {SHIP_BY}. Full refund before it ships.</> : `30 nights. $${PRICE}. Free US shipping.`}</p>
+      <p class="note">{PREORDER ? <>30 nights. ${FIRST}{' '}<s>${PRICE}</s>{' '}founding price for the first {FOUNDING_CAP} orders. Ships by {SHIP_BY}. Full refund before it ships.</> : `30 nights. $${PRICE}. Free US shipping.`}</p>
       <a class="savedchip" id="savedchip" href="/shop#build" data-cta="saved_build_home" hidden>Your custom pouch is saved →</a>
     </div>
     <div class="shot">
@@ -52,6 +52,7 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
       <div class="spin" aria-hidden="true">
         <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ" textLength="284" lengthAdjust="spacing">{PREORDER ? 'PRE-ORDER * 30 NIGHTS * ' : '30 NIGHTS * ONE ROLL * '}</textPath></text></svg>
         <b>${FIRST}</b>
+        {PREORDER && <s class="was">${PRICE}</s>}
       </div>
       <button class="cap" data-float=".14" style="--tt:1.7s;--f:.14;--x:3%;--y:22%;--w:27%;--r:-38deg;--t:5.200s" aria-label="Spin capsule"><span><img src="/images/cap-glycine.webp" alt="" width="900" height="340"></span></button>
       <button class="cap" data-float=".22" style="--tt:2.1s;--f:.22;--x:72%;--y:50%;--w:25%;--r:18deg;--t:4.300s" aria-label="Spin capsule"><span><img src="/images/cap-still.webp" alt="" width="900" height="340"></span></button>
@@ -149,7 +150,7 @@ const ING = 'magnesium, glycine, NAC, vitamin C, zinc and vitamin B12';
 
   <section class="sec pricey" data-sec="price">
     <div class="w stack rv">
-      <div class="bign">{perNight(FIRST)}</div>
+      <div class="bign">{perNight(FIRST)}{PREORDER && <s class="was">{perNight(PRICE)}</s>}</div>
       <h2 style="max-width:13em">a night. Less than a bottle of water at the club.</h2>
       {PREORDER && <p class="fcount" data-founding hidden></p>}
       <p class="crewline">${FIRST} for 30 nights{PREORDER ? ', the founding price' : ''}. Or {perNight(TIERS[2].each)} a night when you order 3 rolls with your crew.</p>
